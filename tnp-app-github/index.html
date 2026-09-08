@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#F5F2EB">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="TNP">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<title>TNP · Tu Nuevo Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,600&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --papel:#FBF5EF; --tinta:#43303E; --coral:#F2705B; --salvia:#9DB89F; --oro:#C9A96A;
+    --teal:#2F7E8B; --rosewood:#B85C79; --terracota:#C0654E; --sage:#5E9166; --glp:#6D5BD0;
+    --borde:#F0E4DC; --blush:#FFE7DE; --blush2:#FDD9E0; --durazno:#FFC7B6; --rosa:#C77D93; --gris:#8B7A80;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{background:var(--papel);color:var(--tinta);font-family:'Poppins',sans-serif;-webkit-font-smoothing:antialiased}
+  #app{max-width:430px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;position:relative;background:linear-gradient(180deg,#FFEDE4 0,#FFF4EE 150px,var(--papel) 320px)}
+  main{flex:1;padding:14px 18px 96px}
+  .view{display:none;animation:fade .28s}
+  .view.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  h2{font-family:'Fraunces',serif;font-weight:700;letter-spacing:-0.03em}
+
+  /* HOY */
+  .hello{display:flex;justify-content:space-between;align-items:center;padding:8px 4px 2px}
+  .hello h2{font-size:24px}
+  .hello .sub{font-size:12px;font-weight:500;color:color-mix(in srgb,var(--tinta) 62%,var(--papel));margin-top:3px}
+  .hello .sub b{color:var(--coral);font-weight:700}
+  .avatar{width:42px;height:42px;border-radius:50%;background:var(--tinta);color:var(--papel);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;font-size:15px;position:relative;flex:none}
+  .avatar::after{content:"";position:absolute;inset:-3px;border-radius:50%;border:2px solid var(--oro);opacity:.7}
+  .week{display:flex;justify-content:space-between;margin:16px 2px 6px}
+  .day{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:10px;font-weight:600;letter-spacing:.08em;color:color-mix(in srgb,var(--tinta) 55%,var(--papel))}
+  .day .n{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--tinta);background:#fff;border:1px solid var(--borde)}
+  .day.done .n{background:color-mix(in srgb,var(--salvia) 26%,#fff);border-color:color-mix(in srgb,var(--salvia) 55%,#fff);color:var(--sage)}
+  .day.today .n{background:var(--coral);border-color:var(--coral);color:#fff;box-shadow:0 6px 14px -4px rgba(242,112,91,.55)}
+  .day.today{color:var(--coral)}
+  .card{background:#fff;border:1px solid var(--borde);border-radius:26px;padding:18px;margin-top:14px;position:relative;box-shadow:0 18px 34px -22px rgba(67,48,62,.32)}
+  .hero{display:flex;gap:16px;align-items:center}
+  .ringbox{position:relative;width:148px;height:148px;flex:none}
+  .ringbox svg{transform:rotate(-90deg)}
+  .ringlbl{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+  .ringlbl .big{font-family:'Fraunces',serif;font-weight:900;font-size:34px;letter-spacing:-0.03em;line-height:1}
+  .ringlbl .cap{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:color-mix(in srgb,var(--tinta) 55%,#fff);margin-top:4px}
+  .macros{flex:1;display:flex;flex-direction:column;gap:12px}
+  .macro .top{display:flex;justify-content:space-between;font-size:11.5px;font-weight:600;margin-bottom:5px}
+  .macro .top span:last-child{font-weight:500;color:color-mix(in srgb,var(--tinta) 58%,#fff)}
+  .bar{height:7px;border-radius:99px;background:color-mix(in srgb,var(--tinta) 8%,#fff);overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:99px;transition:width .4s}
+  .heroFoot{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:13px;border-top:1px dashed var(--borde);gap:8px}
+  .streak{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--terracota);background:color-mix(in srgb,var(--terracota) 11%,#fff);border-radius:99px;padding:7px 12px;white-space:nowrap}
+  .heroFoot .meta{font-size:11px;color:color-mix(in srgb,var(--tinta) 55%,#fff);font-weight:500;text-align:right}
+  .quick{display:flex;gap:10px;margin-top:12px}
+  .btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:700;border-radius:999px;padding:14px 10px;border:none;font-family:'Poppins',sans-serif;cursor:pointer}
+  .btn.solid{background:var(--coral);color:#fff;box-shadow:0 10px 20px -8px rgba(242,112,91,.5)}
+  .btn.ghost{background:#fff;border:1.5px solid color-mix(in srgb,var(--teal) 45%,#fff);color:var(--teal)}
+  .btn:active{transform:scale(.98)}
+  .secT{display:flex;justify-content:space-between;align-items:baseline;margin:20px 4px 10px}
+  .secT h3{font-family:'Fraunces',serif;font-weight:700;font-size:17px;letter-spacing:-0.02em}
+  .secT a{font-size:11.5px;font-weight:600;color:var(--coral);text-decoration:none;cursor:pointer}
+  .insights{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+  .insights::-webkit-scrollbar{display:none}
+  .ins{flex:none;width:138px;border-radius:20px;padding:14px 13px;border:1px solid transparent;cursor:pointer}
+  .ins .ic{width:32px;height:32px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;margin-bottom:22px}
+  .ins h4{font-size:12.5px;font-weight:700;line-height:1.25;margin-bottom:3px}
+  .ins p{font-size:10.5px;line-height:1.35;color:color-mix(in srgb,var(--tinta) 62%,#fff)}
+  .ins.a{background:color-mix(in srgb,var(--rosewood) 12%,#fff);border-color:color-mix(in srgb,var(--rosewood) 22%,#fff)}
+  .ins.a .ic{color:var(--rosewood)}
+  .ins.b{background:color-mix(in srgb,var(--teal) 11%,#fff);border-color:color-mix(in srgb,var(--teal) 20%,#fff)}
+  .ins.b .ic{color:var(--teal)}
+  .ins.c{background:color-mix(in srgb,var(--oro) 16%,#fff);border-color:color-mix(in srgb,var(--oro) 30%,#fff)}
+  .ins.c .ic{color:color-mix(in srgb,var(--oro) 75%,var(--tinta))}
+  .meals{margin-top:4px}
+  .meal{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--borde);border-radius:20px;padding:13px 14px;margin-top:9px;cursor:pointer;box-shadow:0 10px 20px -18px rgba(67,48,62,.35)}
+  .meal .st{width:34px;height:34px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center}
+  .meal.done .st{background:color-mix(in srgb,var(--salvia) 25%,#fff);color:var(--sage)}
+  .meal.next .st{background:color-mix(in srgb,var(--coral) 14%,#fff);color:var(--coral)}
+  .meal.later .st{background:color-mix(in srgb,var(--tinta) 7%,#fff);color:color-mix(in srgb,var(--tinta) 45%,#fff)}
+  .meal .tx{flex:1;min-width:0}
+  .meal .tx b{display:block;font-size:13px;font-weight:700}
+  .meal .tx span{font-size:11px;color:color-mix(in srgb,var(--tinta) 58%,#fff)}
+  .meal .tx span em{font-style:normal;font-weight:600;color:var(--sage)}
+  .meal .cta{font-size:11px;font-weight:700;color:var(--coral);white-space:nowrap}
+  .meal .chev{color:color-mix(in srgb,var(--tinta) 35%,#fff)}
+  /* upgrade CTA (nivel app) */
+  .upCard{background:var(--tinta);color:#fff;border-radius:22px;padding:18px;margin-top:12px}
+  .upCard h4{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:#fff}
+  .upCard p{font-size:12px;color:rgba(255,255,255,.72);margin:5px 0 12px}
+  .upBtn{background:var(--coral);color:#fff;border:none;border-radius:13px;font-weight:700;font-size:12.5px;padding:10px 16px;font-family:'Poppins',sans-serif;cursor:pointer;box-shadow:0 8px 18px -8px rgba(242,112,91,.6)}
+
+  /* nav */
+  .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;display:flex;justify-content:space-around;align-items:center;background:#fff;border-top:1px solid var(--borde);padding:11px 8px calc(14px + env(safe-area-inset-bottom));z-index:50}
+  .nav button{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9.5px;font-weight:600;letter-spacing:.04em;color:color-mix(in srgb,var(--tinta) 48%,#fff);background:none;border:none;font-family:'Poppins',sans-serif;cursor:pointer}
+  .nav button.on{color:var(--coral)}
+  .nav button i{width:4px;height:4px;border-radius:50%;background:transparent}
+  .nav button.on i{background:var(--coral)}
+
+  /* PLAN */
+  .vhead{padding:8px 4px 2px}
+  .vhead h2{font-size:24px}
+  .vhead .sub{font-size:12px;font-weight:500;color:color-mix(in srgb,var(--tinta) 62%,var(--papel));margin-top:3px}
+  .seg{display:flex;background:#fff;border:1px solid var(--borde);border-radius:14px;padding:4px;margin-top:12px}
+  .seg button{flex:1;border:none;background:none;font-family:'Poppins',sans-serif;font-size:12.5px;font-weight:700;padding:9px;border-radius:10px;color:color-mix(in srgb,var(--tinta) 55%,#fff);cursor:pointer}
+  .seg button.on{background:var(--tinta);color:#fff}
+  .pday{background:#fff;border:1px solid var(--borde);border-radius:18px;margin-top:10px;overflow:hidden}
+  .pday summary{list-style:none;display:flex;align-items:center;justify-content:space-between;padding:14px 16px;font-weight:700;font-size:14px;cursor:pointer}
+  .pday summary::-webkit-details-marker{display:none}
+  .pday summary .kc{font-size:11px;font-weight:600;color:color-mix(in srgb,var(--tinta) 55%,#fff)}
+  .pday[open] summary{border-bottom:1px solid var(--borde)}
+  .prow{display:flex;gap:11px;align-items:baseline;padding:10px 16px;border-top:1px dashed color-mix(in srgb,var(--borde) 60%,#fff)}
+  .prow:first-of-type{border-top:none}
+  .prow .t{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--salvia);border-radius:99px;padding:3px 8px;flex:none;min-width:70px;text-align:center}
+  .prow .n{font-size:12.5px;flex:1}
+  .prow .m{font-size:10.5px;color:color-mix(in srgb,var(--tinta) 55%,#fff);white-space:nowrap}
+  .prow .sw{font-size:10px;font-weight:700;color:var(--coral);cursor:pointer;white-space:nowrap}
+  .planbtns{display:flex;gap:10px;margin-top:14px}
+  /* recetario */
+  .chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+  .fchip{font-size:11.5px;font-weight:700;background:#fff;border:1.5px solid var(--borde);border-radius:99px;padding:7px 13px;color:color-mix(in srgb,var(--tinta) 60%,#fff);cursor:pointer;font-family:'Poppins',sans-serif}
+  .fchip.on{border-color:var(--coral);color:var(--coral);background:color-mix(in srgb,var(--coral) 8%,#fff)}
+  .rgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  .rcard{background:#fff;border:1px solid var(--borde);border-radius:16px;padding:13px;cursor:pointer}
+  .rcard .rt{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sage);margin-bottom:5px}
+  .rcard h4{font-size:12.5px;font-weight:700;line-height:1.3}
+  .rcard p{font-size:10.5px;color:color-mix(in srgb,var(--tinta) 55%,#fff);margin-top:3px}
+
+  /* RETOS */
+  .retoHero{background:var(--tinta);color:#fff;border-radius:24px;padding:20px;margin-top:14px}
+  .retoHero .wk{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--oro)}
+  .retoHero h3{font-family:'Fraunces',serif;font-weight:700;font-size:22px;letter-spacing:-0.02em;margin:6px 0 4px;color:#fff}
+  .retoHero p{font-size:12.5px;color:rgba(255,255,255,.72)}
+  .retoHero .prog{height:8px;border-radius:99px;background:rgba(255,255,255,.15);margin-top:14px;overflow:hidden}
+  .retoHero .prog i{display:block;height:100%;width:57%;background:var(--oro);border-radius:99px}
+  .retoHero .plabel{display:flex;justify-content:space-between;font-size:10.5px;margin-top:7px;color:rgba(255,255,255,.6)}
+  .retoBtn{margin-top:14px;width:100%;background:var(--coral);border:none;color:#fff;font-weight:700;font-size:13px;border-radius:14px;padding:12px;font-family:'Poppins',sans-serif;cursor:pointer;box-shadow:0 8px 18px -8px rgba(242,112,91,.6)}
+  .rrow{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--borde);border-radius:16px;padding:11px 14px;margin-top:9px}
+  .rrow .pos{width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;font-size:13px;flex:none;background:color-mix(in srgb,var(--tinta) 7%,#fff)}
+  .rrow.top1 .pos{background:color-mix(in srgb,var(--oro) 30%,#fff);color:color-mix(in srgb,var(--oro) 80%,var(--tinta))}
+  .rrow .nm{flex:1;font-size:13px;font-weight:600}
+  .rrow .nm span{display:block;font-size:10.5px;font-weight:500;color:color-mix(in srgb,var(--tinta) 55%,#fff)}
+  .rrow .pts{font-size:12.5px;font-weight:700;color:var(--sage)}
+  .rrow.me{border-color:var(--coral);box-shadow:0 8px 18px -12px rgba(242,112,91,.5)}
+  .logro{display:flex;gap:11px;background:#fff;border:1px solid var(--borde);border-radius:16px;padding:12px 14px;margin-top:9px;font-size:12px}
+  .logro .av2{width:32px;height:32px;border-radius:50%;background:color-mix(in srgb,var(--salvia) 30%,#fff);color:var(--sage);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;flex:none}
+  .logro p{color:color-mix(in srgb,var(--tinta) 70%,#fff);line-height:1.4}
+  .logro b{color:var(--tinta)}
+  .logro .like{font-size:10.5px;font-weight:700;color:var(--coral);cursor:pointer;white-space:nowrap;align-self:center}
+  /* videos */
+  .vrow{display:flex;gap:12px;background:#fff;border:1px solid var(--borde);border-radius:16px;padding:12px;margin-top:9px;cursor:pointer;align-items:center}
+  .vrow .th{width:56px;height:56px;border-radius:13px;background:color-mix(in srgb,var(--rosewood) 14%,#fff);color:var(--rosewood);display:flex;align-items:center;justify-content:center;flex:none}
+  .vrow b{font-size:13px;display:block}
+  .vrow span{font-size:11px;color:color-mix(in srgb,var(--tinta) 55%,#fff)}
+  .vrow .badge{margin-left:auto;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:color-mix(in srgb,var(--rosewood) 14%,#fff);color:var(--rosewood);border-radius:99px;padding:3px 8px;white-space:nowrap}
+
+  /* TIENDA */
+  .kitCard{border-radius:24px;padding:20px;margin-top:14px;background:var(--tinta);color:#fff}
+  .kitCard .tag{font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:var(--oro);color:var(--tinta);border-radius:99px;padding:4px 10px}
+  .kitCard h3{font-family:'Fraunces',serif;font-size:24px;margin:10px 0 4px;color:#fff}
+  .kitCard p{font-size:12.5px;color:rgba(255,255,255,.72);max-width:250px}
+  .kitCard .pr{font-family:'Fraunces',serif;font-weight:700;font-size:26px;margin-top:10px;color:#fff}
+  .kitCard .pr small{font-size:12px;font-family:'Poppins',sans-serif;font-weight:500;color:rgba(255,255,255,.6)}
+  .kitBtn{display:inline-block;margin-top:12px;background:var(--coral);color:#fff;font-weight:700;font-size:13px;border-radius:14px;padding:11px 20px;border:none;font-family:'Poppins',sans-serif;cursor:pointer;box-shadow:0 10px 20px -8px rgba(242,112,91,.5)}
+  .savRow{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--borde);border-radius:16px;padding:12px 16px;margin-top:12px;font-size:12.5px;font-weight:600}
+  .tog{width:44px;height:26px;border-radius:99px;background:color-mix(in srgb,var(--tinta) 12%,#fff);position:relative;cursor:pointer;transition:.2s;flex:none}
+  .tog::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(31,43,69,.25);transition:.2s}
+  .tog.on{background:var(--sage)}
+  .tog.on::after{left:21px}
+  .prods{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  .prod{background:#fff;border:1px solid var(--borde);border-radius:18px;padding:14px;position:relative}
+  .prod .sw2{width:34px;height:34px;border-radius:12px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Fraunces',serif;font-weight:700;font-size:14px}
+  .prod .pimg{width:100%;aspect-ratio:1;border-radius:14px;overflow:hidden;background:color-mix(in srgb,var(--blush) 40%,#fff);margin-bottom:10px;display:flex;align-items:center;justify-content:center}
+  .prod .pimg img{width:100%;height:100%;object-fit:cover;display:block}
+  .prod h4{font-size:13.5px;font-weight:700}
+  .prod p{font-size:10.5px;color:color-mix(in srgb,var(--tinta) 58%,#fff);margin:2px 0 8px}
+  .prod .pfoot{display:flex;align-items:center;justify-content:space-between}
+  .prod .pp{font-family:'Fraunces',serif;font-weight:700;font-size:16px}
+  .prod .pp s{font-size:11px;color:color-mix(in srgb,var(--tinta) 45%,#fff);font-weight:400;margin-right:3px}
+  .prod .add{font-size:10.5px;font-weight:700;color:var(--coral);cursor:pointer}
+  .prod .sub{position:absolute;top:12px;right:12px;font-size:8.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:color-mix(in srgb,var(--salvia) 22%,#fff);color:var(--sage);padding:3px 7px;border-radius:99px}
+  .fda{font-size:9.5px;line-height:1.5;color:color-mix(in srgb,var(--tinta) 50%,var(--papel));margin-top:16px;padding-top:12px;border-top:1px solid var(--borde)}
+
+  /* PERFIL */
+  .pcard{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--borde);border-radius:24px;padding:18px;margin-top:14px}
+  .pcard .avatar{width:54px;height:54px;font-size:19px}
+  .pcard h3{font-family:'Fraunces',serif;font-size:19px;font-weight:700}
+  .lvl{display:inline-flex;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:color-mix(in srgb,var(--oro) 25%,#fff);color:color-mix(in srgb,var(--oro) 75%,var(--tinta));border-radius:99px;padding:4px 10px;margin-top:4px}
+  .prow2{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--borde);border-radius:16px;padding:13px 16px;margin-top:9px;font-size:13px;font-weight:600;gap:10px}
+  .prow2 span:last-child{font-weight:500;font-size:12px;color:color-mix(in srgb,var(--tinta) 58%,#fff);text-align:right}
+  .progcard{background:#fff;border:1px solid var(--borde);border-radius:20px;padding:16px;margin-top:9px}
+  .progcard .top{display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:7px}
+  .progcard .top span:last-child{color:var(--sage)}
+  .progcard .bar{height:8px}
+  .progcard .bar i{background:var(--sage)}
+  .pnote{font-size:10.5px;color:color-mix(in srgb,var(--tinta) 55%,var(--papel));margin-top:8px}
+  .demoRow{display:flex;gap:7px;margin-top:10px}
+  .demoRow .fchip{flex:1;text-align:center}
+
+  /* sheet + toast */
+  .sheetBg{position:fixed;inset:0;background:rgba(31,43,69,.45);z-index:120;display:none;align-items:flex-end;justify-content:center}
+  .sheetBg.on{display:flex}
+  .sheet{background:var(--papel);border-radius:26px 26px 0 0;width:100%;max-width:430px;padding:22px 20px calc(24px + env(safe-area-inset-bottom));animation:up .28s;max-height:80dvh;overflow-y:auto}
+  @keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+  .sheet h3{font-family:'Fraunces',serif;font-weight:700;font-size:20px;letter-spacing:-0.02em;margin-bottom:4px}
+  .sheet .sm{font-size:12px;color:color-mix(in srgb,var(--tinta) 60%,var(--papel));margin-bottom:12px}
+  .sheet ul{list-style:none;margin:10px 0}
+  .sheet ul li{font-size:13px;padding:7px 0 7px 18px;position:relative;border-top:1px dashed var(--borde)}
+  .sheet ul li:first-child{border-top:none}
+  .sheet ul li::before{content:"";position:absolute;left:0;top:14px;width:6px;height:6px;border-radius:50%;background:var(--coral)}
+  #toast{position:fixed;left:50%;transform:translateX(-50%) translateY(20px);bottom:104px;background:var(--tinta);color:#fff;font-size:12.5px;font-weight:600;border-radius:99px;padding:10px 18px;opacity:0;transition:.3s;z-index:130;pointer-events:none;white-space:nowrap}
+  #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ONBOARDING */
+  #onb{position:fixed;inset:0;background:var(--papel);z-index:100;display:none;justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #onb.on{display:flex}
+  .onbIn{width:100%;max-width:430px;padding:26px 22px calc(26px + env(safe-area-inset-bottom));display:flex;flex-direction:column;min-height:100dvh}
+  .onbTop{display:flex;align-items:center;justify-content:space-between}
+  .lg{display:flex;flex-direction:column;align-items:center;line-height:1}
+  .lg .t{font-family:'Fraunces',serif;font-weight:700;letter-spacing:-.045em;font-size:20px;color:var(--tinta)}
+  .lg .f{width:24px;height:2.6px;border-radius:99px;background:var(--coral);margin:3px 0 2.5px}
+  .lg .s{font-size:5.6px;font-weight:600;letter-spacing:.42em;color:var(--tinta);text-indent:.42em}
+  .onbTop a{font-size:11.5px;font-weight:600;color:color-mix(in srgb,var(--tinta) 55%,#fff);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  .dots{display:flex;gap:6px;justify-content:center;margin:18px 0 8px}
+  .dots i{width:7px;height:7px;border-radius:50%;background:var(--borde)}
+  .dots i.on{background:var(--coral);width:20px;border-radius:99px}
+  .onbStep{flex:1;display:flex;flex-direction:column;justify-content:center}
+  .onbStep .k{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--coral);margin-bottom:8px}
+  .onbStep h1{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(26px,7vw,32px);letter-spacing:-0.03em;line-height:1.12;margin-bottom:8px}
+  .onbStep .d{font-size:13.5px;color:color-mix(in srgb,var(--tinta) 62%,var(--papel));margin-bottom:18px}
+  .opt{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--borde);border-radius:16px;padding:14px 16px;margin-top:9px;cursor:pointer;font-size:14px;font-weight:600}
+  .opt .sw3{width:12px;height:12px;border-radius:4px;flex:none}
+  .opt.on{border-color:var(--coral);box-shadow:0 8px 18px -12px rgba(242,112,91,.5)}
+  .opt small{display:block;font-size:11px;font-weight:500;color:color-mix(in srgb,var(--tinta) 55%,#fff)}
+  .inRow{display:flex;gap:10px;margin-top:9px}
+  .inp{flex:1;background:#fff;border:1.5px solid var(--borde);border-radius:14px;padding:12px 14px}
+  .inp label{display:block;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:color-mix(in srgb,var(--tinta) 50%,#fff);margin-bottom:3px}
+  .inp input{border:none;background:none;font-family:'Fraunces',serif;font-size:20px;font-weight:600;width:100%;color:var(--tinta);outline:none}
+  .inp select{border:none;background:none;font-family:'Fraunces',serif;font-size:19px;font-weight:600;width:100%;color:var(--tinta);outline:none;appearance:none;-webkit-appearance:none;padding:0}
+  .uSeg{display:inline-flex;gap:4px;margin-left:8px;vertical-align:middle}
+  .uSeg b{cursor:pointer;font-weight:700;font-size:10px;padding:2px 8px;border-radius:99px;border:1px solid var(--borde);color:color-mix(in srgb,var(--tinta) 50%,#fff);letter-spacing:.02em}
+  .uSeg b.on{background:var(--coral);border-color:var(--coral);color:#fff}
+  .tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+  .onbBtn{width:100%;background:linear-gradient(180deg,var(--coral),#e15c48);color:#fff;border:none;border-radius:999px;font-family:'Poppins',sans-serif;font-weight:700;font-size:15px;padding:16px;cursor:pointer;box-shadow:0 14px 26px -10px rgba(242,112,91,.55);margin-top:18px}
+  .resNums{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+  .resN{background:#fff;border:1px solid var(--borde);border-bottom:4px solid var(--coral);border-radius:16px;padding:16px;text-align:center}
+  .resN b{font-family:'Fraunces',serif;font-size:26px;font-weight:600;display:block;color:var(--coral)}
+  .resN span{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:color-mix(in srgb,var(--tinta) 55%,#fff)}
+
+  .ins.d{background:color-mix(in srgb,var(--terracota) 11%,#fff);border-color:color-mix(in srgb,var(--terracota) 20%,#fff)}
+  .ins.d .ic{color:var(--terracota)}
+  .ins .ic.ph{padding:0;overflow:hidden}
+  .ins .ic.ph img{width:100%;height:100%;object-fit:cover}
+  .sosBtn{position:fixed;bottom:100px;right:max(14px,calc(50% - 201px));z-index:60;width:56px;height:56px;border-radius:50%;
+    background:var(--coral);color:#fff;border:none;font-family:'Poppins',sans-serif;font-weight:800;font-size:13px;letter-spacing:.02em;
+    cursor:pointer;box-shadow:0 12px 26px -8px rgba(242,112,91,.65), 0 0 0 6px color-mix(in srgb,var(--coral) 14%,transparent)}
+  .sosBtn:active{transform:scale(.94)}
+  .sph{width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid var(--oro);flex:none}
+  .shead{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+  .shead h3{margin:0}
+  .shead .sm{margin:0}
+  .sit{display:flex;gap:7px;flex-wrap:wrap;margin:6px 0 12px}
+  .guion{background:#fff;border:1px solid var(--borde);border-radius:14px;padding:13px 15px;font-size:13px}
+  .guion b{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--terracota);margin-bottom:5px}
+  .guion ul{margin:0 0 8px}
+  .guion .tip{font-size:12px;color:var(--gris,#6B7180);border-top:1px dashed var(--borde);padding-top:8px;color:color-mix(in srgb,var(--tinta) 60%,#fff)}
+  .aud{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--borde);border-radius:14px;padding:11px 13px;margin-top:8px}
+  .aud .pl{width:38px;height:38px;border-radius:50%;background:color-mix(in srgb,var(--rosewood) 14%,#fff);color:var(--rosewood);display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer;border:none}
+  .aud b{font-size:12.5px;display:block}
+  .aud span{font-size:10.5px;color:color-mix(in srgb,var(--tinta) 55%,#fff)}
+  .withS{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--borde);border-radius:99px;padding:6px 14px 6px 6px;font-size:11.5px;font-weight:700;margin-bottom:14px;width:fit-content}
+  .withS img{width:28px;height:28px;border-radius:50%;object-fit:cover}
+
+  /* HABITOS */
+  .habGrid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-top:10px}
+  .habTile{background:#fff;border:1px solid var(--borde);border-radius:16px;padding:11px 8px 10px;text-align:center;cursor:pointer;position:relative}
+  .habTile:active{transform:scale(.97)}
+  .habIc{width:26px;height:26px;margin:0 auto 5px;display:flex;align-items:center;justify-content:center}
+  .habV{font-family:'Fraunces',serif;font-weight:700;font-size:17px;line-height:1;color:var(--tinta)}
+  .habV small{font-size:10px;font-weight:600;font-family:'Poppins',sans-serif;margin-left:1px;color:color-mix(in srgb,var(--tinta) 50%,#fff)}
+  .habL{font-size:9.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:color-mix(in srgb,var(--tinta) 52%,#fff);margin-top:3px}
+  .habBar{height:4px;border-radius:99px;background:color-mix(in srgb,var(--tinta) 8%,#fff);overflow:hidden;margin-top:7px}
+  .habBar i{display:block;height:100%;border-radius:99px;transition:width .4s}
+  .chk{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;margin-top:12px;color:color-mix(in srgb,var(--tinta) 75%,#fff);cursor:pointer}
+  .chk input{width:18px;height:18px;accent-color:var(--coral)}
+
+  /* SCANNER */
+  .scanWrap{position:relative;width:100%;height:210px;border-radius:20px;overflow:hidden;background:#11161f;margin-top:4px;display:flex;align-items:center;justify-content:center}
+  .scanWrap video{width:100%;height:100%;object-fit:cover}
+  .scanFrame{position:absolute;inset:34px 34px;border:2px solid rgba(255,255,255,.9);border-radius:16px;box-shadow:0 0 0 100vmax rgba(17,22,31,.35)}
+  .scanFrame::after{content:"";position:absolute;left:8px;right:8px;top:50%;height:2px;background:var(--coral);box-shadow:0 0 10px 1px var(--coral);animation:scanline 2s ease-in-out infinite}
+  @keyframes scanline{0%,100%{top:14%}50%{top:86%}}
+  .scanHint{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:600;color:#fff;background:rgba(17,22,31,.6);padding:5px 12px;border-radius:99px;white-space:nowrap;max-width:90%;text-align:center}
+  .scanCand{display:flex;align-items:center;gap:12px;justify-content:space-between;background:#fff;border:1.5px solid var(--coral);border-radius:16px;padding:12px 14px;margin-top:12px;box-shadow:0 8px 18px -12px rgba(242,112,91,.5)}
+  .scanCand b{font-size:14px;display:block}
+  .scanCand span{font-size:11.5px;color:color-mix(in srgb,var(--tinta) 55%,#fff)}
+  .scanList{display:flex;gap:7px;flex-wrap:wrap}
+
+  /* MURO DE PROGRESO */
+  .transHead{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--tinta);color:#fff;border-radius:18px;padding:14px 16px;margin-top:14px}
+  .transHead b{font-family:'Fraunces',serif;font-size:15px;display:block}
+  .transHead span{font-size:11px;color:rgba(255,255,255,.68)}
+  .transCard{background:#fff;border:1px solid var(--borde);border-radius:20px;overflow:hidden;margin-top:12px}
+  .transPics{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--borde)}
+  .transPics figure{position:relative;margin:0;aspect-ratio:7/8;background:var(--papel)}
+  .transPics img{width:100%;height:100%;object-fit:cover;display:block}
+  .transPics figcaption{position:absolute;top:8px;left:8px;font-size:9px;font-weight:800;letter-spacing:.08em;color:#fff;background:rgba(31,43,69,.62);padding:3px 8px;border-radius:99px}
+  .transBody{padding:13px 15px 15px}
+  .transTop{display:flex;align-items:center;gap:10px}
+  .transTop .av2{width:32px;height:32px;border-radius:50%;background:color-mix(in srgb,var(--salvia) 30%,#fff);color:var(--sage);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;flex:none}
+  .transTop b{font-size:13px;display:block}
+  .transTop span{font-size:10.5px;color:color-mix(in srgb,var(--tinta) 55%,#fff)}
+  .transTop .like{margin-left:auto;font-size:10.5px;font-weight:700;color:var(--coral);cursor:pointer;white-space:nowrap}
+  .transBody p{font-size:12.5px;line-height:1.45;color:color-mix(in srgb,var(--tinta) 78%,#fff);margin-top:9px;font-style:italic}
+
+  /* MI PROGRESO */
+  .miFotos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:9px}
+  .fotoSlot{background:#fff;border:1px solid var(--borde);border-radius:16px;overflow:hidden;position:relative;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .fotoSlot img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+  .fotoSlot span{position:absolute;bottom:0;left:0;right:0;font-size:10px;font-weight:700;color:#fff;background:linear-gradient(transparent,rgba(31,43,69,.7));padding:14px 8px 6px;text-align:center}
+  .fotoSlot.add{border-style:dashed;border-color:color-mix(in srgb,var(--coral) 45%,#fff);cursor:pointer}
+  .fotoSlot.add span{position:static;background:none;color:var(--coral);padding:6px 4px}
+  .fotoAdd{width:34px;height:34px;border-radius:50%;background:color-mix(in srgb,var(--coral) 12%,#fff);color:var(--coral);display:flex;align-items:center;justify-content:center}
+  .upl{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px dashed color-mix(in srgb,var(--coral) 45%,#fff);border-radius:16px;padding:16px;cursor:pointer;font-size:13px;font-weight:600;color:var(--coral)}
+
+  /* ENTRENA */
+  .woHero{position:relative;border-radius:22px;overflow:hidden;margin-top:14px;color:#fff;padding:18px;min-height:140px;display:flex;flex-direction:column;justify-content:flex-end;cursor:pointer}
+  .woHero .tag{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--oro)}
+  .woHero h3{font-family:'Fraunces',serif;font-weight:700;font-size:21px;margin:5px 0 4px;color:#fff;line-height:1.15}
+  .woHero p{font-size:12px;color:rgba(255,255,255,.82)}
+  .woHero .play{position:absolute;top:16px;right:16px;width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.92);color:var(--tinta);display:flex;align-items:center;justify-content:center}
+  .woHero .play svg{width:20px;height:20px}
+  .woGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  .woCard{background:#fff;border:1px solid var(--borde);border-radius:16px;overflow:hidden;cursor:pointer}
+  .woCard:active{transform:scale(.98)}
+  .woThumb{height:82px;display:flex;align-items:center;justify-content:center;position:relative}
+  .woThumb .pl{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.88);color:var(--tinta);display:flex;align-items:center;justify-content:center}
+  .woThumb .dur{position:absolute;bottom:6px;right:6px;font-size:9.5px;font-weight:700;background:rgba(31,43,69,.55);color:#fff;border-radius:99px;padding:2px 7px}
+  .woBody{padding:9px 11px 11px}
+  .woBody h4{font-size:12.5px;font-weight:700;line-height:1.25}
+  .woBody .m{font-size:9.5px;font-weight:700;color:color-mix(in srgb,var(--tinta) 52%,#fff);margin-top:4px;text-transform:uppercase;letter-spacing:.04em}
+  .exRow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-top:1px dashed var(--borde);font-size:13px}
+  .exRow:first-of-type{border-top:none}
+  .exRow b{font-weight:600}
+  .exRow span{font-size:12px;font-weight:700;color:var(--teal);white-space:nowrap}
+
+  /* ONBOARDING femenino */
+  .lg2{display:flex;align-items:center;gap:9px}
+  .lg2 svg{border-radius:11px}
+  .lg2 span{font-family:'Fraunces',serif;font-weight:700;font-size:17px;letter-spacing:-.01em;color:var(--tinta)}
+  .opt{border-radius:20px;box-shadow:0 10px 22px -18px rgba(67,48,62,.4)}
+  .opt.on{border-color:var(--coral);background:linear-gradient(180deg,#fff,var(--blush))}
+  .opt .oic{width:44px;height:44px;border-radius:15px;flex:none;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 8px 16px -8px rgba(67,48,62,.4)}
+  .opt .oic svg{width:22px;height:22px}
+  .opt .ot{flex:1;min-width:0}
+  .opt .ot b{display:block;font-size:15px;font-weight:600;line-height:1.15}
+  .opt .ot small{display:block;font-size:11.5px;color:var(--gris);font-weight:400;margin-top:1px}
+  .opt .rad{width:23px;height:23px;border-radius:50%;border:2px solid var(--borde);flex:none}
+  .opt.on .rad{border-color:var(--coral);background:var(--coral);box-shadow:inset 0 0 0 4px #fff}
+  .dots i.on{background:var(--coral)}
+  .resN{border-bottom-color:var(--coral)}
+
+  /* BIENVENIDA */
+  #welcome{position:fixed;inset:0;z-index:110;display:none;justify-content:center;background:linear-gradient(180deg,var(--blush) 0%,#FFF0E9 30%,var(--papel) 62%)}
+  #welcome.on{display:flex}
+  .wlIn{width:100%;max-width:430px;display:flex;flex-direction:column;position:relative;min-height:100dvh;overflow:hidden}
+  .wblob{position:absolute;border-radius:50%;filter:blur(3px);opacity:.5;pointer-events:none}
+  .wblob.b1{width:180px;height:180px;background:radial-gradient(circle,var(--durazno),transparent 70%);top:50px;left:-60px}
+  .wblob.b2{width:150px;height:150px;background:radial-gradient(circle,var(--blush2),transparent 70%);top:150px;right:-45px}
+  .wtop{position:relative;display:flex;justify-content:space-between;align-items:center;padding:calc(20px + env(safe-area-inset-top)) 22px 0}
+  .wtop a{font-size:12.5px;font-weight:600;color:var(--gris);cursor:pointer}
+  .wbody{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2px 26px 0}
+  .whalo{position:relative;z-index:1;width:126px;height:126px;display:flex;align-items:center;justify-content:center}
+  .whalo::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 210deg,var(--durazno),var(--blush2),var(--oro),var(--durazno))}
+  .wsteph{position:relative;width:110px;height:110px;border-radius:50%;object-fit:cover;object-position:50% 20%;border:4px solid var(--papel);background:var(--coral)}
+  .wcred{position:relative;z-index:2;display:inline-flex;align-items:center;gap:7px;margin-top:14px;background:#fff;color:var(--coral);font-size:11px;font-weight:700;padding:7px 14px;border-radius:999px;box-shadow:0 10px 22px -10px rgba(199,125,147,.5)}
+  .wdot{width:6px;height:6px;border-radius:50%;background:var(--salvia)}
+  .wh{font-family:'Fraunces',serif;font-weight:600;font-size:33px;line-height:1.08;letter-spacing:-.015em;margin:18px 0 10px;color:var(--tinta);text-wrap:balance}
+  .wh em{font-style:italic;color:var(--coral)}
+  .wsub{font-size:13.5px;line-height:1.55;color:var(--gris);max-width:31ch;font-weight:400}
+  .wchips{width:100%;margin-top:18px;background:var(--sup);border:1px solid var(--borde);border-radius:20px;overflow:hidden;box-shadow:0 18px 40px -26px rgba(var(--sombra),.5);display:grid;grid-template-columns:1fr 1fr}
+  .wchip{display:flex;align-items:center;gap:11px;padding:15px 14px;color:var(--tinta);font-size:12.5px;font-weight:600;line-height:1.18;text-align:left;border-bottom:1px solid var(--borde);border-right:1px solid var(--borde)}
+  .wchip:nth-child(2n){border-right:0}
+  .wchip:nth-child(n+3){border-bottom:0}
+  .wchip .ci{width:32px;height:32px;flex:none;border-radius:50%;background:var(--blush);color:var(--coral);display:flex;align-items:center;justify-content:center}
+  .wchip .ci svg{width:15px;height:15px}
+  .wsocial{display:flex;align-items:center;gap:10px;margin-top:18px}
+  .wavs{display:flex}
+  .wavs span{width:29px;height:29px;border-radius:50%;border:2.5px solid var(--papel);margin-left:-10px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;font-family:'Fraunces',serif}
+  .wavs span:first-child{margin-left:0}
+  .wsocial small{font-size:11.5px;color:var(--gris);font-weight:500}
+  .wfoot{position:relative;padding:0 22px calc(22px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:11px}
+  .wcta{display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,var(--coral),#e15c48);color:#fff;font-family:'Poppins',sans-serif;font-size:15.5px;font-weight:700;padding:16px;border:none;border-radius:999px;box-shadow:0 16px 30px -10px rgba(242,112,91,.6);cursor:pointer;width:100%}
+  .wcta svg{width:18px;height:18px}
+  .walt{text-align:center;font-size:12.5px;color:var(--gris);font-weight:500}
+  .walt b{color:var(--coral);font-weight:700;cursor:pointer}
+
+  /* CHAT · Pregúntale a Stephy */
+  .chatBox{background:color-mix(in srgb,var(--blush) 45%,#fff);border:1px solid var(--borde);border-radius:18px;padding:12px;max-height:230px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+  .cmsg{max-width:82%;font-size:13px;line-height:1.45;padding:10px 13px;border-radius:16px}
+  .cmsg.s{align-self:flex-start;background:#fff;border:1px solid var(--borde);border-bottom-left-radius:5px;color:var(--tinta)}
+  .cmsg.u{align-self:flex-end;background:var(--coral);color:#fff;border-bottom-right-radius:5px}
+  .cmsg.typing{opacity:.7;font-style:italic}
+  .chatIn{display:flex;gap:8px;margin-top:10px}
+  .chatIn input{flex:1;background:#fff;border:1.5px solid var(--borde);border-radius:999px;padding:12px 16px;font-family:'Poppins',sans-serif;font-size:13px;color:var(--tinta);outline:none}
+  .chatIn input:focus{border-color:var(--coral)}
+  .chatSend{flex:none;border:none;background:var(--coral);color:#fff;border-radius:999px;padding:0 18px;font-family:'Poppins',sans-serif;font-weight:700;font-size:13px;cursor:pointer}
+
+  /* LOGROS */
+  .badges{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:9px}
+  .badge{background:#fff;border:1px solid var(--borde);border-radius:16px;padding:12px 8px;text-align:center;position:relative;box-shadow:0 8px 18px -16px rgba(67,48,62,.4)}
+  .badge .bic{width:42px;height:42px;margin:0 auto 6px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff}
+  .badge b{font-size:11px;font-weight:700;line-height:1.2;display:block;color:var(--tinta)}
+  .badge small{font-size:9px;color:var(--gris);font-weight:600}
+  .badge.lock{opacity:.55}
+  .badge.lock .bic{background:color-mix(in srgb,var(--tinta) 12%,#fff)!important;color:color-mix(in srgb,var(--tinta) 40%,#fff)}
+  .badge.lock b{color:var(--gris)}
+  /* PROGRESO extra */
+  .metaRow{display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:600;color:var(--gris);margin:2px 0 6px}
+  .metaRow b{color:var(--salvia);font-weight:800}
+  .metaRow .mdot{width:16px;height:0;border-top:2px dashed var(--salvia);flex:none}
+  .measLine{font-size:11px;font-weight:600;color:var(--gris);margin-top:6px}
+  .miBtns{display:flex;gap:9px;margin-top:11px}
+  .miBtns .btn{flex:1;font-size:12px;padding:10px 6px;display:flex;align-items:center;justify-content:center;gap:5px}
+  .miBtns .btn svg{width:15px;height:15px}
+  /* HOY — racha elevada + check-in de Stephy */
+  .topline{margin:4px 4px 0}
+  .streakChip{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,color-mix(in srgb,var(--oro) 26%,#fff),color-mix(in srgb,var(--coral) 22%,#fff));border:1px solid color-mix(in srgb,var(--oro) 42%,#fff);color:var(--terracota);font-weight:600;font-size:12.5px;padding:7px 14px;border-radius:999px}
+  .streakChip svg{width:16px;height:16px}
+  .streakChip b{font-family:'Fraunces',serif;font-size:15px;font-weight:900;color:var(--coral);line-height:1}
+  .ciCard{display:flex;gap:12px;align-items:center;background:linear-gradient(135deg,var(--blush),#fff);border:1px solid color-mix(in srgb,var(--coral) 22%,#fff);border-radius:20px;padding:13px 15px;margin-top:12px;box-shadow:0 12px 26px -20px rgba(67,48,62,.5)}
+  .ciCard .ciph{width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid var(--oro);flex:none}
+  .ciCard .cibody{flex:1;min-width:0}
+  .ciCard .cibody b{display:block;font-size:14px;font-weight:700;color:var(--tinta)}
+  .ciCard .cibody span{display:block;font-size:11.5px;color:var(--gris);margin-top:1px}
+  .ciopts{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+  .cichip{border:1.5px solid color-mix(in srgb,var(--coral) 35%,#fff);background:#fff;color:var(--coral);font-family:'Poppins',sans-serif;font-weight:600;font-size:12px;padding:7px 13px;border-radius:999px;cursor:pointer;transition:.15s}
+  .cichip:hover{background:var(--coral);color:#fff}
+  .ciCard.done{background:linear-gradient(135deg,color-mix(in srgb,var(--salvia) 20%,#fff),#fff);border-color:color-mix(in srgb,var(--salvia) 42%,#fff)}
+  .ciCard .cidone{margin-left:auto;width:30px;height:30px;border-radius:50%;background:var(--sage);color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+  .ciCard .cidone svg{width:17px;height:17px}
+  /* CICLO — tarjeta en Hoy */
+  .cycleCard{display:flex;align-items:center;gap:13px;background:linear-gradient(135deg,var(--blush2),#fff);border:1px solid color-mix(in srgb,var(--rosa) 26%,#fff);border-radius:20px;padding:14px 15px;margin-top:12px;cursor:pointer;box-shadow:0 12px 26px -20px rgba(67,48,62,.5)}
+  .cycleCard .cyMini{width:52px;height:52px;flex:none;position:relative}
+  .cycleCard .cyMini .lab{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:900;font-size:16px;color:var(--tinta)}
+  .cycleCard .cyTx{flex:1;min-width:0}
+  .cycleCard .cyTx b{display:block;font-size:14px;font-weight:700;color:var(--tinta)}
+  .cycleCard .cyTx .ph{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.03em;padding:2px 9px;border-radius:99px;margin:3px 0 2px;color:#fff}
+  .cycleCard .cyTx span{display:block;font-size:11.5px;color:var(--gris)}
+  .cycleCard.setup{background:linear-gradient(135deg,color-mix(in srgb,var(--rosa) 14%,#fff),#fff)}
+  .cycleCard .cySet{flex:none;background:var(--rosa);color:#fff;border:none;font-family:'Poppins',sans-serif;font-weight:700;font-size:12px;padding:9px 15px;border-radius:99px;cursor:pointer}
+  /* CICLO — pantalla completa */
+  #cycle{position:fixed;inset:0;background:var(--papel);z-index:105;display:none;overflow-y:auto}
+  #cycle.on{display:block}
+  #cycle .cyIn{max-width:430px;margin:0 auto;padding:16px 18px 60px;min-height:100dvh;background:linear-gradient(180deg,var(--blush2) 0,#FFF3F5 140px,var(--papel) 320px)}
+  .cyHead{display:flex;align-items:center;gap:12px;padding:4px 0 6px}
+  .cyHead .bk{width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid var(--borde);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;color:var(--tinta)}
+  .cyHead h2{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--tinta)}
+  .cyHead .edit{margin-left:auto;font-size:12px;font-weight:700;color:var(--rosa);cursor:pointer}
+  .cyRingWrap{display:flex;flex-direction:column;align-items:center;text-align:center;margin:8px 0 6px}
+  .cyRing{position:relative;width:168px;height:168px}
+  .cyRing .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+  .cyRing .ctr .d{font-family:'Fraunces',serif;font-weight:900;font-size:36px;line-height:1;color:var(--tinta)}
+  .cyRing .ctr .of{font-size:11px;font-weight:600;color:var(--gris);letter-spacing:.03em;margin-top:2px}
+  .cyRingWrap .phase{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.02em;padding:5px 14px;border-radius:99px;color:#fff;margin-top:2px}
+  .cyRingWrap .pred{font-size:13px;color:color-mix(in srgb,var(--tinta) 78%,var(--papel));margin-top:8px;font-weight:500}
+  .cyRingWrap .pred b{color:var(--rosa);font-weight:800}
+  .cyBtns{display:flex;gap:9px;margin:14px 0 4px}
+  .cyBtns .btn{flex:1;font-size:12.5px;padding:11px 6px}
+  .cyLegend{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin:14px 0 4px;font-size:10.5px;font-weight:600;color:var(--gris)}
+  .cyLegend span{display:flex;align-items:center;gap:5px}
+  .cyLegend .dt{width:10px;height:10px;border-radius:3px}
+  .cySec{font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:var(--tinta);margin:22px 0 10px}
+  .cyCalCard{background:#fff;border:1px solid var(--borde);border-radius:20px;padding:14px;box-shadow:0 12px 26px -22px rgba(67,48,62,.5)}
+  .cyMonthNav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .cyMonthNav b{font-size:14px;font-weight:700;color:var(--tinta);text-transform:capitalize}
+  .cyMonthNav button{width:30px;height:30px;border-radius:50%;border:1px solid var(--borde);background:var(--papel);cursor:pointer;color:var(--tinta);display:flex;align-items:center;justify-content:center}
+  .cyGrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+  .cyGrid .dow{font-size:9.5px;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.04em;padding-bottom:3px}
+  .cyGrid .cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--tinta);border-radius:50%;position:relative}
+  .cyGrid .cell.per{background:var(--coral);color:#fff;font-weight:700}
+  .cyGrid .cell.perF{border:1.6px dashed color-mix(in srgb,var(--coral) 60%,#fff);color:var(--coral)}
+  .cyGrid .cell.fer{background:color-mix(in srgb,var(--salvia) 30%,#fff);color:var(--sage);font-weight:700}
+  .cyGrid .cell.ov{background:var(--oro);color:#fff;font-weight:800}
+  .cyGrid .cell.today{outline:2px solid var(--tinta);outline-offset:1px}
+  .cyGrid .cell.mut{color:color-mix(in srgb,var(--gris) 55%,#fff)}
+  .cyTip{display:flex;gap:12px;align-items:flex-start;background:linear-gradient(135deg,var(--blush),#fff);border:1px solid color-mix(in srgb,var(--rosa) 22%,#fff);border-radius:18px;padding:15px;margin-top:2px}
+  .cyTip img{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid var(--oro);flex:none}
+  .cyTip .tb b{display:block;font-size:13.5px;font-weight:700;color:var(--tinta);margin-bottom:3px}
+  .cyTip .tb p{font-size:12.5px;line-height:1.5;color:color-mix(in srgb,var(--tinta) 82%,var(--papel))}
+  .cySym{display:flex;flex-wrap:wrap;gap:8px}
+  .cySymChip{border:1.5px solid var(--borde);background:#fff;color:var(--tinta);font-family:'Poppins',sans-serif;font-weight:600;font-size:12px;padding:8px 13px;border-radius:99px;cursor:pointer;transition:.15s}
+  .cySymChip.on{background:var(--rosa);border-color:var(--rosa);color:#fff}
+  .cyDisc{font-size:10.5px;color:var(--gris);line-height:1.5;margin-top:16px;text-align:center}
+</style>
+</head>
+<body>
+<div id="app">
+<main>
+  <section class="view on" id="v-hoy"></section>
+  <section class="view" id="v-plan"></section>
+  <section class="view" id="v-entrena"></section>
+  <section class="view" id="v-retos"></section>
+  <section class="view" id="v-tienda"></section>
+  <section class="view" id="v-perfil"></section>
+</main>
+
+<div class="nav" id="nav">
+  <button class="on" data-v="hoy"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg>Hoy<i></i></button>
+  <button data-v="plan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Plan<i></i></button>
+  <button data-v="entrena"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6M7 7.5v9M17 7.5v9M20 9v6M7 12h10"/></svg>Entrena<i></i></button>
+  <button data-v="retos"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 5H5.5a2.8 2.8 0 0 0 3 3.6M16 5h2.5a2.8 2.8 0 0 1-3 3.6M12 13v4M8.5 20h7M10 17h4"/></svg>Retos<i></i></button>
+  <button data-v="tienda"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1.2 12H7.2L6 8z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>Tienda<i></i></button>
+  <button data-v="perfil"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>Perfil<i></i></button>
+</div>
+
+<button class="sosBtn" data-a="sos">SOS</button>
+<div class="sheetBg" id="sheetBg"><div class="sheet" id="sheet"></div></div>
+<div id="toast"></div>
+
+<!-- ONBOARDING / QUIZ -->
+<div id="onb"><div class="onbIn">
+  <div class="onbTop">
+    <div class="lg2"><svg width="36" height="36" viewBox="0 0 512 512"><rect x="54" y="54" width="404" height="404" rx="118" fill="#43303E"/><g transform="translate(95.87,300.00)"><path d="M39.216 0V-99.76H4.128V-120.4H97.008V-99.76H61.92V0Z" fill="#FBF5EF"/><path d="M112.488 0V-120.4H155.66L179.568 -15.48H182.664V-120.4H205.024V0H161.852L137.944 -104.92H134.848V0Z" fill="#F2705B"/><path d="M227.728 0V-120.4H277.264Q288.616 -120.4 297.302 -115.842Q305.988 -111.284 310.89 -103.028Q315.792 -94.772 315.792 -83.42V-81.012Q315.792 -69.832 310.718 -61.49Q305.644 -53.148 296.958 -48.59Q288.272 -44.032 277.264 -44.032H250.432V0ZM250.432 -64.672H275.028Q283.112 -64.672 288.1 -69.144Q293.088 -73.616 293.088 -81.356V-83.076Q293.088 -90.816 288.1 -95.288Q283.112 -99.76 275.028 -99.76H250.432Z" fill="#FBF5EF"/></g><rect x="209" y="322" width="94" height="15" rx="7.5" fill="#C9A96A"/></svg><span>Tu Nuevo Plan</span></div>
+    <a data-oa="demo">Ver demo</a>
+  </div>
+  <div class="dots" id="onbDots"></div>
+  <div class="onbStep" id="onbStep"></div>
+</div></div>
+
+<!-- BIENVENIDA -->
+<div id="welcome"><div class="wlIn">
+  <div class="wblob b1"></div><div class="wblob b2"></div>
+  <div class="wtop">
+    <div class="lg2"><svg width="34" height="34" viewBox="0 0 512 512"><rect x="54" y="54" width="404" height="404" rx="118" fill="#43303E"/><g transform="translate(95.87,300.00)"><path d="M39.216 0V-99.76H4.128V-120.4H97.008V-99.76H61.92V0Z" fill="#FBF5EF"/><path d="M112.488 0V-120.4H155.66L179.568 -15.48H182.664V-120.4H205.024V0H161.852L137.944 -104.92H134.848V0Z" fill="#F2705B"/><path d="M227.728 0V-120.4H277.264Q288.616 -120.4 297.302 -115.842Q305.988 -111.284 310.89 -103.028Q315.792 -94.772 315.792 -83.42V-81.012Q315.792 -69.832 310.718 -61.49Q305.644 -53.148 296.958 -48.59Q288.272 -44.032 277.264 -44.032H250.432V0ZM250.432 -64.672H275.028Q283.112 -64.672 288.1 -69.144Q293.088 -73.616 293.088 -81.356V-83.076Q293.088 -90.816 288.1 -95.288Q283.112 -99.76 275.028 -99.76H250.432Z" fill="#FBF5EF"/></g><rect x="209" y="322" width="94" height="15" rx="7.5" fill="#C9A96A"/></svg><span>Tu Nuevo Plan</span></div>
+    <a data-a="wDemo">Entrar</a>
+  </div>
+  <div class="wbody">
+    <div class="whalo"><img class="wsteph" src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg" alt="Stephy Kantú"></div>
+    <div class="wcred" data-a="playA" data-f="bienvenida.mp3" data-t="Bienvenida de Stephy" style="cursor:pointer"><span class="wdot"></span>Con Stephy Kantú · nutrióloga · <b style="color:var(--coral)">▶ escúchala</b></div>
+    <h1 class="wh">Cuídate rico, <em>a tu ritmo</em>.</h1>
+    <p class="wsub">Comida latina real que se arma sola en 2 minutos. Recetas, lista de súper y tu nutrióloga de este lado.</p>
+    <div class="wchips">
+      <span class="wchip"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13a8 8 0 0 0 14 0H5z"/><path d="M9 9V6M13 9V5"/></svg></span>Comida real</span>
+      <span class="wchip"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span>En 2 minutos</span>
+      <span class="wchip"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7L9 18l-5-5"/></svg></span>Sin pasar hambre</span>
+      <span class="wchip"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C7 17 4 13 4 9a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 4-3 8-8 12z"/></svg></span>Con nutrióloga</span>
+    </div>
+    <div class="wsocial">
+      <div class="wavs"><span style="background:var(--coral)">M</span><span style="background:var(--rosa)">L</span><span style="background:var(--salvia)">A</span></div>
+      <small>Una comunidad de mujeres que se cuidan juntas.</small>
+    </div>
+  </div>
+  <div class="wfoot">
+    <button class="wcta" data-a="wStart">Empezar mi plan<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    <div class="walt">¿Ya tienes cuenta? <b data-a="wDemo">Inicia sesión</b></div>
+  </div>
+</div></div>
+
+<!-- MI CICLO (estilo Flo) -->
+<div id="cycle"><div class="cyIn" id="cyIn"></div></div>
+
+<script>
+/* ================== ESTADO ================== */
+const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const $=id=>document.getElementById(id);
+let S=store.get("tnp",null);
+let ui={tab:"hoy",planSeg:"semana",recFilter:null,sub:false,agua:5,emDone:[],retoSeg:"reto",woFilter:null};
+/* Foto de Stephy: si el asset no carga (p.ej. preview sin assets), usa un placeholder de marca */
+const STEPHY_PH="data:image/jpeg;base64,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";
+document.addEventListener("error",function(ev){var t=ev.target;if(t&&t.tagName==="IMG"&&/stephy\.jpg/.test(t.getAttribute("src")||"")){t.src=STEPHY_PH}},true);
+function fixStephyImgs(){document.querySelectorAll('img').forEach(function(t){if(/stephy\.jpg/.test(t.getAttribute("src")||"")){t.onerror=function(){this.src=STEPHY_PH};if(t.complete&&t.naturalWidth===0)t.src=STEPHY_PH;}})}
+fixStephyImgs();
+window.addEventListener("load",fixStephyImgs);
+document.addEventListener("DOMContentLoaded",fixStephyImgs);
+
+/* ================== CATALOGO DE PLATILLOS ================== */
+const D=(n,k,p,c,f,min,tg,al,ing,st)=>({n,k,p,c,f,min,tg:tg||[],al:al||[],ing:ing||[],st:st||[]});
+const DP={
+ avenaCr:D("Avena con fruta y crema de cacahuate",380,26,48,14,8,["prote"],[],["½ taza de avena","1 scoop proteína o leche","½ plátano","1 cda crema de cacahuate","Canela"],["Cuece la avena.","Agrega fruta y crema de cacahuate."]),
+ licuado:D("Licuado proteico con avena y plátano",350,30,42,10,5,["prote","rapida"],["lacteos"],["1 scoop de proteína","½ plátano","3 cdas avena","Leche y hielo"],["Licúa todo 60 segundos."]),
+ omelette:D("Omelette de claras con espinaca y panela",300,28,10,14,12,["prote","rapida"],["lacteos"],["3 claras + 1 huevo","Espinaca","40 g panela"],["Bate, vierte y cuaja.","Rellena y dobla."]),
+ huevAgua:D("Huevos con aguacate y jitomate",320,20,12,20,10,["rapida"],[],["2 huevos","½ aguacate","Jitomate"],["Revuelve los huevos.","Sirve con aguacate."]),
+ yogChia:D("Yogurt griego con chía y berries",320,20,30,12,3,["rapida","desinflamar"],["lacteos"],["1 taza yogurt griego","1 cda chía","Berries y nuez"],["Mezcla y sirve."]),
+ avenaAnti:D("Avena con linaza, chía y arándanos",320,12,50,10,8,["desinflamar"],[],["½ taza avena","Linaza y chía","Arándanos"],["Cuece la avena.","Corona con semillas."]),
+ licuadoSv:D("Licuado proteico suave",250,30,26,6,5,["suave","prote","rapida"],["lacteos"],["1 scoop proteína","½ plátano","Leche y avena","Hielo"],["Licúa muy bien.","Bébelo despacio."]),
+ hotcakes:D("Hot cakes de avena y proteína",430,34,44,12,12,["prote","antojo"],[],["½ taza avena","1 scoop proteína","1 huevo + 1 clara"],["Licúa y cuece en sartén."]),
+ tacosPo:D("Tacos de pollo a la plancha",480,32,44,16,20,["prote"],[],["150 g pechuga","3 tortillas de maíz","Cebolla, cilantro, salsa"],["Asa la pechuga.","Arma los tacos."]),
+ tinga:D("Tinga de pollo (2 tostadas)",450,35,40,14,20,["prote"],["picante"],["Pechuga deshebrada","Jitomate + chipotle","Tostadas horneadas"],["Guisa la tinga.","Sirve en tostadas."]),
+ salmonCam:D("Salmón al horno con camote",470,38,34,18,20,["prote","desinflamar"],["mariscos"],["1 filete de salmón","Camote y brócoli","Ajo y limón"],["Hornea todo 15 min a 200°."]),
+ bistec:D("Bistec magro con nopales",460,40,26,18,15,["prote"],[],["150 g bistec","Nopales asados","Frijol"],["Asa bistec y nopal.","Sirve con frijol."]),
+ poke:D("Poke bowl de atún",540,40,52,16,10,["prote"],["mariscos"],["Atún","Arroz","Aguacate y pepino","Soya"],["Arma el bowl por capas."]),
+ lentejas:D("Ensalada tibia de lentejas",380,18,52,10,15,["desinflamar"],[],["1 taza lentejas","Jitomate, pepino, cebolla","Aceite de oliva y limón"],["Mezcla en tibio y aliña."]),
+ polloCal:D("Pollo al horno con calabaza y quinoa",450,35,40,12,25,["prote","desinflamar"],[],["Pechuga","Calabaza","Quinoa"],["Hornea el pollo con la verdura."]),
+ fajitas:D("Fajitas de pollo con pimientos",440,34,32,16,15,["prote","rapida"],[],["Pechuga en tiras","Pimientos y cebolla"],["Saltea todo a fuego alto."]),
+ polloDesh:D("Pollo deshebrado con puré de calabaza",300,30,22,8,25,["suave","prote"],[],["Pollo deshebrado","Puré de calabaza"],["Cuece y deshebra.","Sirve con el puré."]),
+ pescadoSv:D("Pescado blanco con puré de camote",300,30,26,7,20,["suave","prote"],["mariscos"],["Filete blanco","Puré de camote"],["Cuece al vapor.","Sirve con puré."]),
+ albond:D("Albóndigas suaves en caldo",310,30,18,10,30,["suave","prote"],[],["Carne molida magra","1 huevo","Caldo y verdura"],["Forma y cuece en el caldo."]),
+ yogFresa:D("Yogurt griego con fresas",150,15,14,3,2,["rapida","prote"],["lacteos"],["¾ taza yogurt griego","Fresas"],["Sirve y listo."]),
+ jicama:D("Jícama y pepino con limón",160,8,24,6,5,["rapida","desinflamar"],[],["Jícama y pepino","Limón y cacahuate"],["Pica y exprime limón."]),
+ manzanaCr:D("Manzana con crema de cacahuate",180,7,22,9,2,["rapida","antojo"],[],["1 manzana","1 cda crema de cacahuate"],["Rebana y unta."]),
+ requeson:D("Requesón con arándanos",150,16,12,4,2,["rapida","prote"],["lacteos"],["½ taza requesón","Arándanos"],["Sirve y listo."]),
+ cafeCol:D("Café con colágeno + almendras",180,12,8,10,3,["rapida"],["lacteos"],["Café","1 scoop colágeno","10 almendras"],["Bate el colágeno en el café."]),
+ sopaVer:D("Sopa de verduras con queso panela",310,24,28,12,25,["desinflamar"],["lacteos"],["Calabaza, zanahoria, chayote","100 g panela","Caldo"],["Hierve la verdura.","Agrega panela al final."]),
+ tostAtun:D("Tostadas de atún horneadas",320,30,28,10,7,["prote","rapida"],["mariscos"],["1 lata atún en agua","2 tostadas","Jitomate y cebolla"],["Mezcla y sirve."]),
+ caldoTla:D("Caldo tlalpeño",320,30,26,9,30,["prote"],["picante"],["Pollo","Garbanzo","Chipotle y verdura"],["Hierve todo 25 min."]),
+ ensPollo:D("Ensalada grande de pollo con aguacate",350,32,14,18,12,["prote","rapida","desinflamar"],[],["Pollo","Hojas verdes","½ aguacate"],["Mezcla y aliña."]),
+ cremaCal:D("Crema de calabaza y zanahoria",240,10,30,8,20,["suave","desinflamar"],[],["Calabaza y zanahoria","Caldo"],["Cuece y licúa."]),
+ sopaCrem:D("Sopa cremosa de pollo",260,24,20,8,25,["suave","prote"],[],["Pollo deshebrado","Calabaza","Caldo"],["Cuece y licúa parte."]),
+ camarones:D("Ensalada de camarón con aguacate",320,30,14,16,12,["prote"],["mariscos"],["Camarón cocido","Aguacate","Limón"],["Mezcla todo."]),
+ salmonEsp:D("Salmón con espárragos",380,34,10,22,18,["prote","desinflamar"],["mariscos"],["1 filete salmón","Espárragos","Ajo y limón"],["Hornea 15 min a 200°."]),
+};
+/* plantillas por programa: [des[], com[], col[], cen[]] */
+const TPL={
+ PESO:      [["avenaCr","licuado","omelette","hotcakes"],["tacosPo","tinga","salmonCam","bistec"],["yogFresa","jicama","manzanaCr","requeson"],["sopaVer","tostAtun","ensPollo","fajitas"]],
+ DESINFLAMAR:[["avenaAnti","yogChia","huevAgua","licuado"],["lentejas","polloCal","salmonCam","ensPollo"],["jicama","yogFresa","manzanaCr","requeson"],["cremaCal","sopaVer","salmonEsp","caldoTla"]],
+ FUERTE:    [["hotcakes","licuado","omelette","avenaCr"],["poke","bistec","salmonCam","tinga"],["requeson","licuado","yogFresa","manzanaCr"],["fajitas","ensPollo","camarones","caldoTla"]],
+ BALANCE:   [["huevAgua","yogChia","omelette","licuado"],["polloCal","fajitas","salmonEsp","bistec"],["cafeCol","requeson","jicama","manzanaCr"],["ensPollo","sopaVer","salmonEsp","cremaCal"]],
+ GLP1:      [["licuadoSv","avenaAnti","huevAgua","yogChia"],["polloDesh","pescadoSv","albond","sopaCrem"],["yogFresa","requeson","jicama","manzanaCr"],["sopaCrem","cremaCal","albond","sopaVer"]],
+ PERSONALIZADO:[["licuado","avenaCr","huevAgua","yogChia"],["polloCal","salmonCam","bistec","poke"],["yogFresa","manzanaCr","requeson","jicama"],["ensPollo","fajitas","sopaVer","salmonEsp"]],
+ MENOPAUSIA:[["yogChia","omelette","avenaCr","licuado"],["salmonCam","polloCal","bistec","tinga"],["requeson","yogFresa","cafeCol","manzanaCr"],["salmonEsp","ensPollo","sopaVer","fajitas"]],
+};
+const PROG_META={
+ PESO:{label:"PESO",adj:-400,gkg:1.4},
+ DESINFLAMAR:{label:"DESINFLAMAR",adj:-250,gkg:1.2},
+ FUERTE:{label:"FUERTE",adj:0,gkg:1.6},
+ BALANCE:{label:"BALANCE",adj:-250,gkg:1.2},
+ GLP1:{label:"GLP-1",adj:-300,gkg:1.5},
+ PERSONALIZADO:{label:"PERSONALIZADO",adj:-300,gkg:1.5},
+ MENOPAUSIA:{label:"MENOPAUSIA",adj:-250,gkg:1.6},
+};
+const SLOTS=["Desayuno","Comida","Colación","Cena"];
+const PROG_ICON={
+ PESO:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-8-8"/><path d="M12 12l5-3"/></svg>',
+ DESINFLAMAR:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 6 6 6 10a6 6 0 0 1-12 0c0-4 3-6 6-10z"/></svg>',
+ FUERTE:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10"/></svg>',
+ BALANCE:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M4 13c2.5-3 5-3 8 0s5.5 3 8 0"/></svg>',
+ GLP1:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l7-5 7 5M5 8v8l7 5 7-5V8"/></svg>',
+ PERSONALIZADO:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z"/></svg>',
+ MENOPAUSIA:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C7 17 4 13 4 9a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 4-3 8-8 12z"/></svg>',
+};
+
+/* ================== GENERADOR v1 ================== */
+function calcGoals(q){
+ const bmr=q.sexo==="M"?10*q.peso+6.25*q.est-5*q.edad+5:10*q.peso+6.25*q.est-5*q.edad-161;
+ const act={baja:1.2,media:1.375,alta:1.55}[q.act]||1.3;
+ let kcal=Math.round((bmr*act+PROG_META[q.prog].adj)/10)*10;
+ kcal=Math.max(1200,Math.min(2400,kcal));
+ const prot=Math.round(q.peso*PROG_META[q.prog].gkg);
+ return {kcal,prot,carb:Math.round(kcal*.42/4),fat:Math.round(kcal*.3/9)};
+}
+function dishOk(d){return !d.al.some(a=>S.quiz.dislikes.includes(a))}
+function poolLen(s){const opts=TPL[S.quiz.prog][s];const ok=opts.filter(k=>dishOk(DP[k]));return (ok.length?ok:opts).length}
+function genWeek(){
+ const t=TPL[S.quiz.prog];S.week=[];
+ for(let d=0;d<7;d++){S.week.push(t.map((opts,s)=>{
+   const ok=opts.filter(k=>dishOk(DP[k]));const pool=ok.length?ok:opts;
+   return pool[(d+(S.swaps?.[d+"-"+s]||0))%pool.length];
+ }))}
+}
+function scaled(key){
+ const d=DP[key];const f=S.goals.kcal/1550;const pf=S.goals.prot/95;
+ return {...d,k:Math.round(d.k*f/10)*10,p:Math.round(d.p*pf)};
+}
+
+/* ================== ONBOARDING ================== */
+let ob={step:0,q:{prog:null,sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[]}};
+const OB_STEPS=5;
+function obDots(){$("onbDots").innerHTML=Array.from({length:OB_STEPS},(_,i)=>`<i class="${i===ob.step?'on':''}"></i>`).join("")}
+function obRender(){
+ obDots();const q=ob.q;q.unit=q.unit||"kg";q.estUnit=q.estUnit||"cm";let h="";
+ if(ob.step===0){
+  h=`<div class="withS"><img src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg">Con la nutrióloga Stephy Kantú</div><div class="k">Paso 1 · Tu meta</div><h1>¿Qué quieres lograr?</h1><div class="d">Tu programa define tu menú, tus números y tus productos.</div>
+  ${[["PESO","Bajar de peso con estructura","#E1614C"],["DESINFLAMAR","Digestión feliz, adiós hinchazón","#6F9E7B"],["FUERTE","Músculo, fuerza y tono","#B98E4C"],["BALANCE","Hormonas y azúcar estables","#A87FA8"],["GLP1","Acompañamiento GLP-1","#6D5BD0"],["PERSONALIZADO","Tu menú 100% a tu medida — con todo tu quiz","#C9A96A"],["MENOPAUSIA","Fuerza, huesos y calma en tu etapa","#B85C79"]].map(p=>
+   `<div class="opt ${q.prog===p[0]?'on':''}" data-oa="prog" data-p="${p[0]}"><span class="oic" style="background:linear-gradient(135deg,${p[2]},color-mix(in srgb,${p[2]} 60%,var(--tinta)))">${PROG_ICON[p[0]]}</span><div class="ot"><b>${PROG_META[p[0]].label}</b><small>${p[1]}</small></div><span class="rad"></span></div>`).join("")}
+  <button class="onbBtn" data-oa="next">Continuar</button>`;
+ }else if(ob.step===1){
+  h=`<div class="k">Paso 2 · Tus datos</div><h1>Para calcular tus números.</h1><div class="d">Con esto sacamos tus calorías y tu proteína diaria.</div>
+  <div class="inRow"><div class="inp"><label>Edad</label><input id="iEdad" type="number" inputmode="numeric" onfocus="const t=this;setTimeout(()=>t.select(),0)" value="${q.edad}"></div>
+  <div class="inp"><label>Sexo</label><select id="iSexo"><option value="F" ${q.sexo==="F"?"selected":""}>Femenino</option><option value="M" ${q.sexo==="M"?"selected":""}>Masculino</option></select></div></div>
+  <div class="inRow"><div class="inp"><label>Peso<span class="uSeg"><b data-oa="unit" data-p="kg" class="${q.unit==="kg"?"on":""}">kg</b><b data-oa="unit" data-p="lb" class="${q.unit==="lb"?"on":""}">lb</b></span></label><input id="iPeso" type="number" inputmode="decimal" onfocus="const t=this;setTimeout(()=>t.select(),0)" value="${q.unit==="lb"?Math.round(q.peso*2.20462):q.peso}"></div>
+  <div class="inp"><label>Estatura<span class="uSeg"><b data-oa="eunit" data-p="cm" class="${q.estUnit==="cm"?"on":""}">cm</b><b data-oa="eunit" data-p="in" class="${q.estUnit==="in"?"on":""}">in</b></span></label><input id="iEst" type="number" inputmode="decimal" onfocus="const t=this;setTimeout(()=>t.select(),0)" value="${q.estUnit==="in"?Math.round(q.est/2.54):q.est}"></div></div>
+  <button class="onbBtn" data-oa="next">Continuar</button>`;
+ }else if(ob.step===2){
+  h=`<div class="k">Paso 3 · Tu ritmo</div><h1>¿Qué tanto te mueves?</h1><div class="d">Sé honesta — el plan se ajusta a tu vida real.</div>
+  ${[["baja","Poco — trabajo sentada, casi no ejercicio"],["media","Algo — camino o entreno 2-3 veces/semana"],["alta","Mucho — entreno 4+ veces/semana"]].map(a=>
+   `<div class="opt ${q.act===a[0]?'on':''}" data-oa="act" data-p="${a[0]}"><span class="sw3" style="background:var(--salvia)"></span><div>${a[1]}</div></div>`).join("")}
+  <button class="onbBtn" data-oa="next">Continuar</button>`;
+ }else if(ob.step===3){
+  h=`<div class="k">Paso 4 · Tu caso</div><h1>¿Algo que debamos saber?</h1><div class="d">Marca lo que aplique. Esto afina tu menú (y tu médico siempre manda).</div>
+  <div class="tags">${[["glp1","Uso GLP-1"],["insulina","Resistencia a la insulina"],["sop","SOP"],["menopausia","Menopausia"]].map(c=>
+   `<span class="fchip ${q.cond.includes(c[0])?'on':''}" data-oa="cond" data-p="${c[0]}">${c[1]}</span>`).join("")}</div>
+  <div class="d" style="margin:16px 0 0">¿Qué NO te gusta o no puedes comer?</div>
+  <div class="tags">${[["mariscos","Mariscos/pescado"],["lacteos","Lácteos"],["picante","Picante"]].map(c=>
+   `<span class="fchip ${q.dislikes.includes(c[0])?'on':''}" data-oa="dis" data-p="${c[0]}">${c[1]}</span>`).join("")}</div>
+  <button class="onbBtn" data-oa="next">Calcular mi plan</button>`;
+ }else{
+  const g=calcGoals(q);
+  h=`<div class="k">Tu plan está listo</div><h1>Estos son tus números.</h1><div class="d">Programa ${PROG_META[q.prog].label} · el generador armó tu semana con comida real. Tu nutrióloga los revisa en tu registro inicial.</div>
+  <div class="resNums"><div class="resN"><b>${g.kcal.toLocaleString()}</b><span>kcal al día</span></div>
+  <div class="resN"><b>${g.prot} g</b><span>proteína al día</span></div>
+  <div class="resN"><b>20–30 g</b><span>proteína por comida</span></div>
+  <div class="resN"><b>7 días</b><span>menú generado</span></div></div>
+  <button class="onbBtn" data-oa="finish">Entrar a mi plan</button>`;
+ }
+ $("onbStep").innerHTML=h;
+}
+function startApp(fromQuiz){
+ if(fromQuiz){
+  const q=ob.q;
+  q.edad=+($("iEdad")?.value||q.edad);q.peso=+($("iPeso")?.value||q.peso);q.est=+($("iEst")?.value||q.est);
+  if(q.cond.includes("glp1"))q.prog="GLP1";
+  S={name:"Tú",nivel:"top",quiz:q,goals:calcGoals(q),day:1,streak:1,done:[true,false,false,false],swaps:{}};
+ }
+ if(!S.week)genWeek();
+ ensureExtras();
+ store.set("tnp",S);
+ $("onb").classList.remove("on");
+ renderAll();
+}
+function demoState(){
+ const q={prog:"PESO",sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[]};
+ const lp=new Date();lp.setDate(lp.getDate()-17);
+ const cyc={on:true,lastStart:lp.getFullYear()+"-"+String(lp.getMonth()+1).padStart(2,"0")+"-"+String(lp.getDate()).padStart(2,"0"),cycleLen:28,periodLen:5,logs:{}};
+ return {name:"Andrea",nivel:"top",quiz:q,goals:calcGoals(q),day:12,streak:12,done:[true,false,false,false],swaps:{},cycle:cyc};
+}
+
+/* ================== RENDER: HOY ================== */
+const ICON={
+ check:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>',
+ plate:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 0 16 0H4z"/><path d="M9 9V6M13 9V5"/></svg>',
+ moon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14A8 8 0 1 1 10 4a6.5 6.5 0 0 0 10 10z"/></svg>',
+ chev:'<span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>',
+ play:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 9.2l5.2 2.8L10 14.8z" fill="currentColor" stroke="none"/></svg>',
+ drop:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.4 6 10.3a6 6 0 1 1-12 0C6 9.4 12 3 12 3z"/></svg>',
+ star:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/></svg>',
+ flame:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 2.5-.6 4 .4 6 .6-.5 1-1.2 1.2-2.2 2.2 1.8 3.9 4.2 3.9 7A5.9 5.9 0 1 1 5.7 14c0-3.1 2.6-4.6 3.6-7.6.7 1 1 2.1 1 3.6.7-1.6.2-4.3 1.7-7z"/></svg>',
+ plus:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+ scan:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M4 12h16"/></svg>',
+};
+
+Object.assign(ICON,{
+ fork:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v7a2 2 0 0 0 2 2h0V3M9 12v9M16 3c-1.5 1-2.5 3-2.5 5.5S15 12 16 12v9M16 3v18"/></svg>',
+ chat:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg>',
+ audio:'<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 6l10 6-10 6z"/></svg>',
+ foot:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 14c-1-2-1.5-4-1.5-6.5A3.5 3.5 0 0 1 12 5c1 2 1 4 1 6M8.5 15.5c0 2 .5 3.5 2.5 3.5s2.2-1.4 2.4-3M16 10c1.6.3 2.6 1.4 2.6 3.2 0 1.6-.4 2.8-.4 4.3"/></svg>',
+ scale:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M9 8h6l-2 3a2.2 2.2 0 1 1-2 0z"/></svg>',
+ book:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z"/><path d="M18 3v18"/></svg>',
+ medal:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="14" r="6"/><path d="M12 11.5l1.3 2.6 2.7.2-2 1.8.6 2.6-2.6-1.4-2.6 1.4.6-2.6-2-1.8 2.7-.2zM8 3l2 5M16 3l-2 5"/></svg>',
+ bell:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>',
+ heart2:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C7 17 4 13 4 9a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 4-3 8-8 12z"/></svg>',
+});
+const AUDIOS=[
+ ["bienvenida.mp3","Bienvenida · Empieza aquí","40 seg"],
+ ["dia-1.mp3","Lunes · Tu plan ya está hecho","90 seg"],
+ ["dia-2.mp3","Martes · La proteína primero","90 seg"],
+ ["dia-3.mp3","Miércoles · La báscula no manda","90 seg"],
+ ["dia-4.mp3","Jueves · Antojos sin culpa","90 seg"],
+ ["dia-5.mp3","Viernes · El fin de semana no te borra","90 seg"],
+];
+const GUIONES={
+ taqueria:{n:"Taquería",pide:["3 tacos de bistec, pollo o arrachera — en tortilla de maíz, sin queso","Pídelos 'con todo': cebolla, cilantro y salsa sí cuentan como verdura","Agua natural, mineral o de jamaica sin azúcar"],evita:"Los de pastor con todo y tro. La canasta de totopos: lejos hasta que llegue tu plato.",tip:"El taco no es el enemigo — el refresco y el queso derretido sí. Tres tacos bien pedidos son una comida completa con proteína."},
+ buffet:{n:"Buffet / restaurante",pide:["Primera vuelta: pura proteína y verdura — llena medio plato de eso","Segunda vuelta SOLO si de verdad tienes hambre (espérate 10 min)","Postre: uno chico, compartido, y lo disfrutas sin culpa"],evita:"Servirte 'de todo un poquito' en la primera vuelta — así se van 1,500 kcal sin darte cuenta.",tip:"En buffet la regla es una: proteína primero. El orden en que comes importa tanto como lo que comes."},
+ fiesta:{n:"Fiesta familiar",pide:["Come ANTES un snack de proteína en casa — no llegues con hambre feroz","En la fiesta: el guisado con más carne + ensalada o nopales si hay","UN antojito estrella — el que más ames — y lo gozas completo"],evita:"Pastel + tamal + pan + refresco el mismo día. Elige TU favorito, no todos.",tip:"Una fiesta no rompe tu plan — la semana entera de 'ya quedé mal' después de la fiesta, sí. Mañana sigues normal, sin castigo."},
+ cafe:{n:"Café / pan dulce",pide:["Café americano, con leche light o capuchino chico — sin jarabes","Si el antojo es real: UNA pieza chica de pan, compartida si se puede","Antes del pan: algo de proteína (yogurt, huevo) para que no te dispare"],evita:"Frapuccinos y bebidas con crema: son postre líquido de 500 kcal.",tip:"El pan dulce con café es cultura, no pecado. El problema es el diario — hazlo tu ritual de UNA vez a la semana."},
+ mariscos:{n:"Mariscos",pide:["Ceviche, aguachile o coctel — proteína pura con limón","Pescado a la plancha o empapelado con verduras","Tostadas: máximo 2, horneadas si hay"],evita:"Lo empanizado y lo 'a la diabla' bañado en mantequilla.",tip:"Mariscos es de los mejores restaurantes para tu plan — pide fresco y con limón, y sales ganando."},
+};
+var AUDIO_SRC={};
+var IMG_SRC={};
+var ASSET="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/";
+function imgURL(f){return (IMG_SRC&&IMG_SRC[f])||(ASSET+f)}
+let _au=null,_auF=null;
+function playA(f,title){
+ const src=(AUDIO_SRC&&AUDIO_SRC[f])||(ASSET+f);
+ if(_au&&_auF===f){if(_au.paused){_au.play();toast("Reproduciendo: "+title)}else{_au.pause();toast("En pausa")}return;}
+ if(_au){try{_au.pause()}catch(e){}}
+ _au=new Audio(src);_auF=f;
+ _au.play().then(()=>toast("Reproduciendo: "+title)).catch(()=>toast("No pude reproducir el audio"));
+}
+
+function todayMeals(){return S.week[0].map((k,s)=>({key:k,slot:s,...scaled(k)}))}
+function checkinHTML(){
+ const done=S.checkin&&S.checkin.day===S.day;
+ if(done){
+  const M={hambre:"con hambre",antojo:"con antojo",ligera:"ligera"}[S.checkin.mood]||"lista";
+  return `<div class="ciCard done"><img class="ciph" src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg" alt="">
+   <div class="cibody"><b>Hoy amaneciste ${M}</b><span>Ya ajusté tu día. Nos vemos mañana 💛</span></div>
+   <span class="cidone">${ICON.check}</span></div>`;
+ }
+ return `<div class="ciCard"><img class="ciph" src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg" alt="">
+  <div class="cibody"><b>¿Cómo amaneciste hoy?</b><span>Dime cómo te sientes y ajusto tu día.</span>
+   <div class="ciopts"><button class="cichip" data-a="ci2" data-m="hambre">Con hambre</button><button class="cichip" data-a="ci2" data-m="antojo">Con antojo</button><button class="cichip" data-a="ci2" data-m="ligera">Ligera</button></div>
+  </div></div>`;
+}
+function renderHoy(){
+ const g=S.goals;const meals=todayMeals();
+ const nextMeas=S.day<7?7:S.day<14?14:S.day<21?21:28;
+ const base={k:170,p:12,c:20,f:8};
+ const eaten=meals.filter((m,i)=>S.done[i]);
+ const lg=loggedTotals();
+ const k=eaten.reduce((s,m)=>s+m.k,base.k)+lg.k,p=eaten.reduce((s,m)=>s+m.p,base.p)+lg.p,
+       c=eaten.reduce((s,m)=>s+m.c,base.c)+lg.c,f=eaten.reduce((s,m)=>s+m.f,base.f)+lg.f;
+ const rest=Math.max(0,g.kcal-k);
+ const days=["L","M","M","J","V","S","D"];
+ const weekStrip=Array.from({length:7},(_,i)=>{
+  const dn=S.day-4+i;if(dn<1)return `<div class="day"><div class="n">·</div>${days[i]}</div>`;
+  const cls=i<4?"done":(i===4?"today":"");
+  return `<div class="day ${cls}"><div class="n">${dn}</div>${days[(dn-1)%7]}</div>`;
+ }).join("");
+ const nextIdx=S.done.findIndex(x=>!x);
+ const planHTML=S.nivel==="top"
+  ?`<div class="secT" style="margin-top:18px"><h3>Tu plan de hoy</h3><a data-a="goPlan">Ver semana</a></div>
+    <div class="meals">${meals.map((m,i)=>{
+     const cls=S.done[i]?"done":(i===nextIdx?"next":"later");
+     const ic=S.done[i]?ICON.check:(i===nextIdx?ICON.plate:ICON.moon);
+     const lbl=S.done[i]?`${SLOTS[m.slot]} · listo`:(i===nextIdx?`${SLOTS[m.slot]} · sigue esta`:SLOTS[m.slot]);
+     const right=(i===nextIdx&&!S.done[i])?'<span class="cta">Ver receta</span>':ICON.chev;
+     return `<div class="meal ${cls}" data-meal="${i}"><div class="st">${ic}</div>
+      <div class="tx"><b>${lbl}</b><span>${m.n} · ${m.k} kcal · <em>${m.p} g prot</em></span></div>${right}</div>`}).join("")}</div>
+    ${loggedHTML()}`
+  :`<div class="secT" style="margin-top:18px"><h3>Recetas para ti</h3><a data-a="goRec">Ver recetario</a></div>
+    <div class="rgrid">${["ensPollo","licuado","sopaVer"].map(k=>{const d=DP[k];
+     return `<div class="rcard" data-rec="${k}"><div class="rt">${d.p} g prot · ${d.min} min</div><h4>${d.n}</h4><p>${d.k} kcal</p></div>`}).join("")}</div>
+    <div class="upCard"><h4>Tu plan personalizado te espera</h4><p>Con la membresía TOP, el generador arma tu menú de cada día — tú solo palomeas. Kit + plan vivo + app.</p><button class="upBtn" data-a="up">Conocer TOP · $129.99/mes</button></div>`;
+ $("v-hoy").innerHTML=`
+  <div class="hello"><div><h2>Hola, ${S.name}</h2>
+   <div class="sub"><b>Día ${S.day}</b> de tu plan · Programa ${PROG_META[S.quiz.prog].label}</div></div>
+   <div class="avatar">${S.name[0]}</div></div>
+  <div class="topline"><span class="streakChip">${ICON.flame} <b>${S.streak}</b> días de racha</span></div>
+  <div class="week">${weekStrip}</div>
+  ${checkinHTML()}
+  ${S.quiz.sexo!=="M"?cycleCardHTML():""}
+  ${habitsHTML()}
+  <div class="secT"><h3>Para ti hoy</h3><a data-a="videos">Ver todo</a></div>
+  <div class="insights">
+   <div class="ins a" data-a="askStephy"><div class="ic ph"><img src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg" alt=""></div><h4>Pregúntale a Stephy</h4><p>Resuelve tu duda al instante</p></div>
+   <div class="ins b" data-a="lesson"><div class="ic">${ICON.book}</div><h4>Lección de hoy</h4><p>2 min con Stephy · nuevo cada día</p></div>
+   <div class="ins a" data-a="oido"><div class="ic ph"><img src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg" alt=""></div><h4>Stephy en tu oído</h4><p>El audio de hoy · 90 segundos</p></div>
+   <div class="ins d" data-a="quepido"><div class="ic">${ICON.fork}</div><h4>¿Qué pido?</h4><p>Taquería, buffet, fiesta — tu pedido exacto</p></div>
+  </div>
+  <div class="card"><div class="hero">
+    <div class="ringbox"><svg width="148" height="148" viewBox="0 0 148 148">
+      <circle cx="74" cy="74" r="64" fill="none" stroke="#EFEAE0" stroke-width="11"/>
+      <circle cx="74" cy="74" r="64" fill="none" stroke="#F2705B" stroke-width="11" stroke-linecap="round"
+        stroke-dasharray="402.1" stroke-dashoffset="${(402.1*rest/g.kcal).toFixed(1)}" style="transition:stroke-dashoffset .5s"/></svg>
+     <div class="ringlbl"><span class="big">${rest}</span><span class="cap">kcal restantes</span></div></div>
+    <div class="macros">
+     <div class="macro"><div class="top"><span>Proteína</span><span>${p} / ${g.prot} g</span></div><div class="bar"><i style="width:${Math.min(100,p/g.prot*100)}%;background:var(--sage)"></i></div></div>
+     <div class="macro"><div class="top"><span>Carbohidratos</span><span>${c} / ${g.carb} g</span></div><div class="bar"><i style="width:${Math.min(100,c/g.carb*100)}%;background:var(--oro)"></i></div></div>
+     <div class="macro"><div class="top"><span>Grasas</span><span>${f} / ${g.fat} g</span></div><div class="bar"><i style="width:${Math.min(100,f/g.fat*100)}%;background:var(--terracota)"></i></div></div>
+    </div></div>
+   <div class="heroFoot"><span class="streak">Próxima medición · día ${nextMeas}</span>
+    <span class="meta">Meta de hoy: 20–30 g de proteína por comida</span></div></div>
+  <div class="quick">
+   <button class="btn solid" data-a="log">${ICON.plus} Registrar comida</button></div>
+  ${planHTML}`;
+}
+
+/* ================== RENDER: PLAN ================== */
+function renderPlan(){
+ const dias=["Lunes · hoy","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo · flexible"];
+ let body="";
+ if(ui.planSeg==="recetario"){
+  const all=Object.entries(DP);
+  const F=[["prote","Alta proteína"],["rapida","15 min o menos"],["desinflamar","Desinflamar"],["suave","Suave (GLP-1)"],["antojo","Antojo"]];
+  const list=all.filter(([k,d])=>!ui.recFilter||d.tg.includes(ui.recFilter));
+  body=`<div class="chips">${F.map(f=>`<span class="fchip ${ui.recFilter===f[0]?'on':''}" data-a="filter" data-p="${f[0]}">${f[1]}</span>`).join("")}</div>
+   <div class="rgrid">${list.map(([k,d])=>`<div class="rcard" data-rec="${k}"><div class="rt">${d.p} g prot · ${d.min} min</div><h4>${d.n}</h4><p>${d.k} kcal</p></div>`).join("")}</div>`;
+ } else if(S.nivel==="app"){
+  body=`<div class="upCard" style="margin-top:16px"><h4>Aún no tienes un plan activo</h4><p>Tu membresía incluye comunidad, videos y recetario. Compra el programa de tu meta ($39.99) o sube a TOP para el plan personalizado vivo.</p><button class="upBtn" data-a="up">Ver programas</button></div>
+   <div class="secT" style="margin-top:18px"><h3>Recetas para hoy</h3></div>
+   <div class="rgrid">${["avenaCr","tacosPo","ensPollo","sopaVer"].map(k=>{const d=DP[k];return `<div class="rcard" data-rec="${k}"><div class="rt">${d.p} g prot</div><h4>${d.n}</h4><p>${d.k} kcal</p></div>`}).join("")}</div>`;
+ } else {
+  const note=S.nivel==="plan"?`<div class="prow2" style="margin-top:12px"><span>Tu programa (compra única)</span><span>Se refresca cada mes con tu re-compra</span></div>`:"";
+  body=`${note}<div class="planbtns">
+   <button class="btn solid" data-a="super">${ICON.plus} Lista de súper</button>
+   <button class="btn ghost" style="border-color:color-mix(in srgb,var(--oro) 55%,#fff);color:color-mix(in srgb,var(--oro) 75%,var(--tinta))" data-a="regen">Regenerar mes</button></div><button class="btn ghost" style="width:100%;margin-top:10px;border-color:color-mix(in srgb,var(--salvia) 60%,#fff);color:var(--sage)" data-a="wa">${ICON.chat} Mi lista de súper por WhatsApp</button>
+   ${S.week.map((day,di)=>{
+    const tot=day.reduce((s,k)=>s+scaled(k).k,0);const totp=day.reduce((s,k)=>s+scaled(k).p,0);
+    return `<details class="pday" ${di===0?"open":""}><summary>${dias[di]}<span class="kc">${tot.toLocaleString()} kcal · ${totp} g prot</span></summary>
+    ${day.map((k,si)=>{const d=scaled(k);
+     return `<div class="prow"><span class="t">${SLOTS[si]}</span><span class="n">${d.n}</span><span class="m">${d.k} · ${d.p}g</span>${poolLen(si)>1?`<span class="sw" data-a="swap" data-d="${di}" data-s="${si}">Swap</span>`:""}</div>`}).join("")}
+    </details>`}).join("")}`;
+ }
+ $("v-plan").innerHTML=`<div class="vhead"><h2>Tu semana</h2>
+  <div class="sub">Programa ${PROG_META[S.quiz.prog].label} · ${S.nivel==="top"?"plan vivo — se regenera cada mes":S.nivel==="plan"?"tu plantilla del programa":"membresía app"}</div></div>
+  <div class="seg"><button class="${ui.planSeg==='semana'?'on':''}" data-a="seg" data-p="semana">Mi semana</button>
+  <button class="${ui.planSeg==='recetario'?'on':''}" data-a="seg" data-p="recetario">Recetario</button></div>${body}`;
+}
+
+/* ================== RENDER: RETOS ================== */
+function renderRetos(){
+ const seg=`<div class="seg"><button class="${ui.retoSeg==='reto'?'on':''}" data-a="retoSeg" data-p="reto">Reto activo</button>
+  <button class="${ui.retoSeg==='progreso'?'on':''}" data-a="retoSeg" data-p="progreso">Muro de progreso</button></div>`;
+ if(ui.retoSeg==="progreso"){$("v-retos").innerHTML=`<div class="vhead"><h2>Retos</h2><div class="sub">Transformaciones reales de la comunidad TNP</div></div>${seg}${muroProgresoHTML()}`;return}
+ $("v-retos").innerHTML=`<div class="vhead"><h2>Retos</h2><div class="sub">El reto activo de la comunidad · puntos por día cumplido</div></div>${seg}
+ <div class="retoHero"><span class="wk">Reto activo · Semana 2 de 4</span><h3>Fuerte es el nuevo flaca</h3>
+  <p>4 semanas de proteína + fuerza. Palomea tu día y suma puntos — las primeras 3 se llevan premio.</p>
+  <div class="prog"><i style="width:${Math.round(S.day/28*100)}%"></i></div>
+  <div class="plabel"><span>Día ${S.day} de 28</span><span>Tu puesto: #12 de 340</span></div>
+  <button class="retoBtn" data-a="checkday">Palomear mi día ✓</button></div>
+ <div class="secT" style="margin-top:18px"><h3>Ranking</h3><a data-a="na">Ver completo</a></div>
+ <div class="rrow top1"><div class="pos">1</div><div class="nm">Marta G.<span>14 días seguidos</span></div><div class="pts">720 pts</div></div>
+ <div class="rrow"><div class="pos">2</div><div class="nm">Lupita R.<span>13 días</span></div><div class="pts">690 pts</div></div>
+ <div class="rrow"><div class="pos">3</div><div class="nm">Ana P.<span>12 días</span></div><div class="pts">655 pts</div></div>
+ <div class="rrow me"><div class="pos">12</div><div class="nm">${S.name} (tú)<span>${S.streak} días · racha viva</span></div><div class="pts" id="myPts">540 pts</div></div>
+ <div class="secT" style="margin-top:18px"><h3>Muro de logros</h3><a data-a="post">Compartir logro</a></div>
+ <div id="muro">
+ <div class="logro"><div class="av2">L</div><p><b>Lupita</b> completó su semana 2 — 7 de 7 días. "Nunca había durado tanto en un plan."</p><span class="like" data-a="like">Ánimo +14</span></div>
+ <div class="logro"><div class="av2">K</div><p><b>Karla</b> subió su primera foto de progreso.</p><span class="like" data-a="like">Ánimo +9</span></div>
+ <div class="logro"><div class="av2">R</div><p><b>Rosa</b> llegó a su meta de proteína 5 días seguidos.</p><span class="like" data-a="like">Ánimo +6</span></div></div>
+ <div class="secT" style="margin-top:18px"><h3>Videos de Stephy</h3><a data-a="videos">Ver todos</a></div>
+ ${VIDEOS.slice(0,2).map(v=>`<div class="vrow" data-a="vplay"><div class="th">${ICON.play}</div><div><b>${v[0]}</b><span>${v[1]}</span></div><span class="badge">Exclusivo</span></div>`).join("")}`;
+}
+const VIDEOS=[
+ ["Antojos de dulce: 3 trucos reales","4 min · hoy"],
+ ["Cómo leer una etiqueta en 20 segundos","6 min · ayer"],
+ ["El error #1 con la proteína","5 min"],
+ ["Qué pedir en restaurante sin salirte del plan","7 min"],
+ ["Mini rutina de fuerza en casa","15 min"],
+ ["La verdad del 'detox'","5 min"],
+];
+
+/* ================== RENDER: ENTRENA ================== */
+const WO_ROUTINES=[
+ {id:"fuerza-total",t:"Fuerza total en casa",dur:"25 min",lvl:"Intermedio",focus:"Fuerza",tag:"fuerza",c:"#2F7E8B",ex:[["Sentadilla","3 x 12"],["Flexiones (o en pared)","3 x 10"],["Remo con liga","3 x 12"],["Puente de glúteo","3 x 15"],["Plancha","3 x 30 seg"]]},
+ {id:"cardio-suave",t:"Cardio suave sin brincos",dur:"20 min",lvl:"Principiante",focus:"Cardio",tag:"cardio",c:"#C0654E",ex:[["Marcha en tu lugar","3 min"],["Paso lateral","3 x 40 seg"],["Rodillas altas suaves","3 x 30 seg"],["Sentadilla a silla","3 x 12"],["Enfriamiento","2 min"]]},
+ {id:"pierna-gluteo",t:"Piernas y glúteos",dur:"30 min",lvl:"Intermedio",focus:"Fuerza",tag:"fuerza",c:"#B85C79",ex:[["Sentadilla sumo","4 x 12"],["Zancadas","3 x 10 c/lado"],["Puente con pausa","3 x 15"],["Patada de glúteo","3 x 12 c/lado"],["Sentadilla isométrica","3 x 30 seg"]]},
+ {id:"core",t:"Core y abdomen",dur:"15 min",lvl:"Todos",focus:"Core",tag:"core",c:"#5E9166",ex:[["Plancha","3 x 30 seg"],["Bicho muerto","3 x 12"],["Elevación de piernas","3 x 12"],["Plancha lateral","3 x 20 seg c/lado"]]},
+ {id:"movilidad",t:"Movilidad y estiramiento",dur:"12 min",lvl:"Todos",focus:"Movilidad",tag:"movilidad",c:"#9DB89F",ex:[["Gato-camello","2 min"],["Estiramiento de cadera","2 min c/lado"],["Rotación torácica","2 min"],["Cuello y hombros","2 min"]]},
+ {id:"express",t:"Express quema",dur:"10 min",lvl:"Todos",focus:"Express",tag:"express",c:"#C9A96A",ex:[["Sentadilla rápida","40 seg"],["Plancha","30 seg"],["Paso lateral","40 seg"],["Descanso","20 seg"],["Repite el circuito x2",""]]},
+ {id:"menopausia",t:"Fuerza para tu etapa (hueso y músculo)",dur:"25 min",lvl:"Todos",focus:"Fuerza · Menopausia",tag:"fuerza",c:"#6D5BD0",ex:[["Sentadilla a silla","3 x 12"],["Remo con liga","3 x 12"],["Puente de glúteo","3 x 15"],["Peso muerto con liga","3 x 12"],["Caminata de granjero","3 x 30 seg"]]},
+];
+const WO_VIDEOS=[
+ ["Rutina completa de fuerza en casa","25 min · con coach invitada"],
+ ["Cardio suave sin impacto","20 min"],
+ ["Glúteos con liga","18 min"],
+ ["Core sin lastimar la espalda","15 min"],
+ ["Estiramiento para empezar el día","10 min"],
+ ["Mini rutina express","8 min"],
+];
+const WO_FILTERS=[["all","Todo"],["fuerza","Fuerza"],["cardio","Cardio"],["core","Core"],["movilidad","Movilidad"],["express","Express"]];
+function renderEntrena(){
+ const f=ui.woFilter||"all";
+ const list=WO_ROUTINES.filter(r=>f==="all"||r.tag===f);
+ const hero=WO_ROUTINES[0];
+ $("v-entrena").innerHTML=`<div class="vhead"><h2>Entrena</h2><div class="sub">Rutinas cortas para hacer en casa, guiadas por video</div></div>
+ <div class="woHero" style="background:linear-gradient(135deg,${hero.c},var(--tinta))" data-wo="${hero.id}">
+  <div class="play">${ICON.play}</div>
+  <span class="tag">Rutina de la semana</span><h3>${hero.t}</h3><p>${hero.dur} · ${hero.lvl} · ${hero.focus}</p></div>
+ <div class="chips">${WO_FILTERS.map(x=>`<span class="fchip ${f===x[0]?'on':''}" data-a="woFilter" data-p="${x[0]}">${x[1]}</span>`).join("")}</div>
+ <div class="woGrid">${list.map(r=>`<div class="woCard" data-wo="${r.id}"><div class="woThumb" style="background:linear-gradient(135deg,${r.c},color-mix(in srgb,${r.c} 50%,var(--tinta)))"><div class="pl">${ICON.play}</div><span class="dur">${r.dur}</span></div><div class="woBody"><h4>${r.t}</h4><div class="m">${r.focus} · ${r.lvl}</div></div></div>`).join("")}</div>
+ <div class="secT" style="margin-top:20px"><h3>Videos de entrenamiento</h3><a data-a="na">Ver todos</a></div>
+ ${WO_VIDEOS.map(v=>`<div class="vrow" data-a="vplay"><div class="th">${ICON.play}</div><div><b>${v[0]}</b><span>${v[1]}</span></div><span class="badge">Video</span></div>`).join("")}
+ <p class="fda">El ejercicio es acompañamiento general de bienestar, no una indicación médica. Empieza suave, escucha a tu cuerpo y consulta a tu médico si tienes alguna condición.</p>`;
+}
+
+/* ================== RENDER: TIENDA ================== */
+const PRODS=[
+ ["Ignite","Energía","39.99","#F2705B",true,"prod-ignite.jpg"],
+ ["Interrupt","Control","39.99","#B85C79",true,"prod-interrupt.jpg"],
+ ["Perfect O","Omega 3-6-9","39.99","#2F7E8B",true,"prod-perfecto.jpg"],
+ ["Vita Total","Multivitamínico","19.99","#C9A96A",true,"prod-vitatotal.jpg"],
+];
+function renderTienda(){
+ $("v-tienda").innerHTML=`<div class="vhead"><h2>Tienda</h2><div class="sub">Los productos que acompañan tu plan · recompra en un toque</div></div>
+ <div class="kitCard"><span class="tag">Lo más vendido</span><h3>El Kit</h3>
+  <p>Perfect O · Ignite · Interrupt · Vita Total — los cuatro esenciales, juntos.</p>
+  <div class="pr">$129.99 <small>/mes con plan personalizado + app</small></div>
+  <button class="kitBtn" data-a="buy">${S.nivel==="top"?"Recomprar mi Kit":"Suscribirme"}</button></div>
+ <div class="savRow"><span>Suscríbete y ahorra 15% en cada producto</span><span class="tog ${ui.sub?'on':''}" data-a="sub"></span></div>
+ <div class="prods">${PRODS.map(p=>{
+  const price=ui.sub?(p[2]*0.85).toFixed(2):p[2];
+  return `<div class="prod">${p[4]?'<span class="sub">En el Kit</span>':''}
+  <div class="pimg"><img src="${imgURL(p[5])}" alt="${p[0]}" loading="lazy"></div><h4>${p[0]}</h4><p>${p[1]}</p>
+  <div class="pfoot"><span class="pp">${ui.sub?`<s>$${p[2]}</s>`:""}$${price}</span><span class="add" data-a="add" data-p="${p[0]}">Agregar +</span></div></div>`}).join("")}</div>
+ <p class="fda">* Estas afirmaciones no han sido evaluadas por la FDA. Estos productos no están destinados a diagnosticar, tratar, curar ni prevenir ninguna enfermedad. Los resultados varían de persona a persona.</p>`;
+}
+
+/* ================== RENDER: PERFIL ================== */
+function renderPerfil(){
+ const q=S.quiz,g=S.goals;
+ const NIV={top:"Membresía TOP · $129.99/mes",app:"App · Comunidad · $19.99/mes",plan:"App + Programa comprado"};
+ $("v-perfil").innerHTML=`<div class="vhead"><h2>Perfil</h2><div class="sub">Tu cuenta, tu programa y tu progreso</div></div>
+ <div class="pcard"><div class="avatar">${S.name[0]}</div><div><h3>${S.name==="Tú"?"Tu cuenta":S.name+" Martínez"}</h3><span class="lvl">${NIV[S.nivel]}</span></div></div>
+ <div class="progcard"><div class="top"><span>Progreso del programa</span><span>Día ${S.day} de 28</span></div>
+  <div class="bar"><i style="width:${Math.round(S.day/28*100)}%"></i></div>
+  <div class="pnote">Racha de ${S.streak} días · siguiente medición: día ${S.day<7?7:S.day<14?14:S.day<21?21:28}</div></div>
+ ${miProgresoHTML()}
+ ${badgesHTML()}
+ <div class="secT" style="margin-top:16px"><h3>Tu quiz</h3><a data-a="requiz">Rehacer quiz</a></div>
+ <div class="prow2"><span>Programa</span><span>${PROG_META[q.prog].label}</span></div>
+ <div class="prow2"><span>Calorías objetivo</span><span>${g.kcal.toLocaleString()} kcal</span></div>
+ <div class="prow2"><span>Meta de proteína</span><span>${g.prot} g/día · 20–30 g por comida</span></div>
+ <div class="prow2"><span>Condiciones</span><span>${q.cond.length?q.cond.join(", "):"Ninguna"}</span></div>
+ <div class="prow2"><span>Evitamos</span><span>${q.dislikes.length?q.dislikes.join(", "):"Nada"}</span></div>
+ <div class="secT" style="margin-top:16px"><h3>Cuenta</h3></div>
+ ${S.nivel==="top"?`<div class="prow2"><span>Mi Kit</span><span>Siguiente envío: 1 sep · <b style="color:var(--coral)" data-a="buy">recomprar</b></span></div>`:""}
+ ${q.sexo!=="M"?`<div class="prow2" data-a="cycle" style="cursor:pointer"><span>Mi ciclo</span><span>${S.cycle&&S.cycle.on?"Fases + tips por tu ciclo →":"Actívalo →"}</span></div>`:""}
+ <div class="prow2" data-a="reminders" style="cursor:pointer"><span>Recordatorios</span><span>Agua, comida, Live, Kit →</span></div>
+ <div class="prow2" data-a="wa" style="cursor:pointer"><span>WhatsApp</span><span>Lista de súper y recordatorios →</span></div>
+ <div class="prow2" data-a="install" style="cursor:pointer"><span>Instalar la app</span><span>Agrégala a tu pantalla de inicio →</span></div>
+ <div class="prow2"><span>Ajustes</span><span>Notificaciones, privacidad</span></div>
+ <div class="secT" style="margin-top:16px"><h3>Modo demo · cambia de nivel</h3></div>
+ <div class="demoRow">${[["top","TOP $129.99"],["app","App $19.99"],["plan","App + Plan"]].map(n=>
+  `<span class="fchip ${S.nivel===n[0]?'on':''}" data-a="nivel" data-p="${n[0]}">${n[1]}</span>`).join("")}</div>
+ <p class="fda">Tu plan es acompañamiento nutricional y no sustituye la atención médica. El acompañamiento GLP-1 apoya a quien ya está bajo cuidado médico. TNP · Tu Nuevo Plan © 2026.</p>`;
+}
+
+/* ================== NAV + RENDER ALL ================== */
+function renderAll(){renderHoy();renderPlan();renderEntrena();renderRetos();renderTienda();renderPerfil()}
+document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll("#nav button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
+ document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));
+ $("v-"+b.dataset.v).classList.add("on");ui.tab=b.dataset.v;window.scrollTo(0,0);
+});
+function toast(t){const el=$("toast");el.textContent=t;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("on"),2200)}
+function sheet(html){$("sheet").innerHTML=html;$("sheetBg").classList.add("on")}
+$("sheetBg").addEventListener("click",e=>{if(e.target.id==="sheetBg")$("sheetBg").classList.remove("on")});
+function save(){store.set("tnp",S)}
+
+/* ================== EVENTOS ================== */
+document.body.addEventListener("click",e=>{
+ const oa=e.target.closest("[data-oa]");
+ if(oa){
+  const t=oa.dataset.oa;
+  if(t==="demo"){S=demoState();genWeek();ensureExtras();save();$("onb").classList.remove("on");renderAll();return}
+  if(t==="prog"){ob.q.prog=oa.dataset.p;obRender();return}
+  if(t==="act"){ob.q.act=oa.dataset.p;obRender();return}
+  if(t==="unit"){const q=ob.q;const v=+($("iPeso")?.value||0);if(v)q.peso=q.unit==="lb"?Math.round(v*0.453592*10)/10:v;q.edad=+($("iEdad")?.value)||q.edad;const ev=+($("iEst")?.value||0);if(ev)q.est=q.estUnit==="in"?Math.round(ev*2.54):ev;q.sexo=$("iSexo")?.value||q.sexo;q.unit=oa.dataset.p;obRender();return}
+  if(t==="eunit"){const q=ob.q;const ev=+($("iEst")?.value||0);if(ev)q.est=q.estUnit==="in"?Math.round(ev*2.54):ev;const v=+($("iPeso")?.value||0);if(v)q.peso=q.unit==="lb"?Math.round(v*0.453592*10)/10:v;q.edad=+($("iEdad")?.value)||q.edad;q.sexo=$("iSexo")?.value||q.sexo;q.estUnit=oa.dataset.p;obRender();return}
+  if(t==="cond"||t==="dis"){const arr=t==="cond"?ob.q.cond:ob.q.dislikes;const v=oa.dataset.p;
+   const i=arr.indexOf(v);i>=0?arr.splice(i,1):arr.push(v);obRender();return}
+  if(t==="next"){
+   if(ob.step===0&&!ob.q.prog){toast("Elige tu meta");return}
+   if(ob.step===1){ob.q.edad=+$("iEdad").value||34;ob.q.sexo=$("iSexo").value||"F";const pv=+$("iPeso").value||0;ob.q.peso=pv?(ob.q.unit==="lb"?Math.round(pv*0.453592*10)/10:pv):70;const ev=+$("iEst").value||0;ob.q.est=ev?(ob.q.estUnit==="in"?Math.round(ev*2.54):ev):160}
+   ob.step++;obRender();return}
+  if(t==="finish"){startApp(true);return}
+ }
+ const rec=e.target.closest("[data-rec]");
+ if(rec){const d=DP[rec.dataset.rec];
+  sheet(`<h3>${d.n}</h3><div class="sm">${d.min} min · ${d.k} kcal · ${d.p} g proteína</div>
+  <ul>${d.ing.map(i=>`<li>${i}</li>`).join("")}</ul>
+  <div class="sm" style="margin-top:8px">${d.st.join(" → ")}</div>`);return}
+ const meal=e.target.closest("[data-meal]");
+ if(meal){const i=+meal.dataset.meal;const m=todayMeals()[i];
+  if(!S.done[i]){
+   sheet(`<h3>${m.n}</h3><div class="sm">${m.min} min · ${m.k} kcal · ${m.p} g proteína</div>
+   <ul>${m.ing.map(x=>`<li>${x}</li>`).join("")}</ul>
+   <div class="sm" style="margin-top:8px">${m.st.join(" → ")}</div>
+   <div class="quick" style="margin-top:14px"><button class="btn solid" data-a="done" data-i="${i}">La comí ✓</button>
+   ${poolLen(i)>1?`<button class="btn ghost" data-a="swapHoy" data-i="${i}">Cambiar platillo</button>`:""}</div>`);
+  } else toast("Ya palomeada — bien hecho");
+  return}
+ const wo=e.target.closest("[data-wo]");
+ if(wo){const r=WO_ROUTINES.find(x=>x.id===wo.dataset.wo);if(r){
+  sheet(`<h3>${r.t}</h3><div class="sm">${r.dur} · ${r.lvl} · ${r.focus}</div>
+  <div style="margin:6px 0 2px">${r.ex.map(x=>`<div class="exRow"><b>${x[0]}</b>${x[1]?`<span>${x[1]}</span>`:""}</div>`).join("")}</div>
+  <button class="btn solid" style="width:100%;margin-top:14px" data-a="vplay">${ICON.play} Reproducir rutina</button>
+  <div class="sm" style="margin-top:10px;font-size:10.5px">El video guiado paso a paso se conecta en Fase 1.</div>`);}
+  return}
+ const a=e.target.closest("[data-a]");if(!a)return;
+ const act=a.dataset.a;
+ if(act==="done"){S.done[+a.dataset.i]=true;save();$("sheetBg").classList.remove("on");renderHoy();toast("Registrada. Vas muy bien")}
+ else if(act==="swapHoy"){const i=+a.dataset.i;S.swaps["0-"+i]=(S.swaps["0-"+i]||0)+1;genWeek();save();$("sheetBg").classList.remove("on");renderHoy();renderPlan();toast("Listo — te cambiamos el platillo")}
+ else if(act==="swap"){const k=a.dataset.d+"-"+a.dataset.s;S.swaps[k]=(S.swaps[k]||0)+1;genWeek();save();renderPlan();if(a.dataset.d==="0")renderHoy();toast("Swap hecho")}
+ else if(act==="log"){openScan("comida")}
+ else if(act==="scan"){openScan("scan")}
+ else if(act==="scanMode"){openScan(a.dataset.p)}
+ else if(act==="scanDetect"){scanDetect()}
+ else if(act==="scanPick"){scanConfirm(a.dataset.p)}
+ else if(act==="scanLog"){scanCommit()}
+ else if(act==="checkin"){sheet(`<h3>¿Cómo amaneciste?</h3><div class="sm">Tu respuesta ajusta las porciones de tu día.</div>
+  <div class="quick"><button class="btn ghost" data-a="ci">Con hambre</button><button class="btn ghost" data-a="ci">Con antojo</button><button class="btn ghost" data-a="ci">Ligera</button></div>`)}
+ else if(act==="ci"){$("sheetBg").classList.remove("on");toast("Gracias — ajustamos tu día")}
+ else if(act==="ci2"){S.checkin={day:S.day,mood:a.dataset.m};save();renderHoy();toast("Listo — ajusté tu día 💛")}
+ else if(act==="askStephy"){openAsk()}
+ else if(act==="askQ"){const x=STEPHY_QA[+a.dataset.p];if(x)askPush(x.q)}
+ else if(act==="askSend"){const inp=$("askIn");const v=inp?inp.value.trim():"";if(v)askPush(v)}
+ else if(act==="lesson"){openLesson()}
+ else if(act==="lessonDone"){$("sheetBg").classList.remove("on");toast("¡Bien! Lección del día vista")}
+ else if(act==="reminders"){openReminders()}
+ else if(act==="remTog"){const k=a.dataset.k;if(!S.reminders)S.reminders={};S.reminders[k]=!S.reminders[k];save();openReminders();toast(S.reminders[k]?"Recordatorio activado":"Recordatorio apagado")}
+ else if(act==="measures"){openMeasures()}
+ else if(act==="measSave"){const c=+($("iCin")?.value||0),h=+($("iCad")?.value||0);S.measures={cintura:c||undefined,cadera:h||undefined};save();renderPerfil();$("sheetBg").classList.remove("on");toast("Medidas guardadas")}
+ else if(act==="health"){toast("Se conecta con Apple Health / Google Fit en Fase 1")}
+ else if(act==="cycle"){openCycle()}
+ else if(act==="cycleClose"){$("cycle").classList.remove("on")}
+ else if(act==="cycleSetup"){openCycleSetup()}
+ else if(act==="cycleSave"){const l=$("cyLast")?.value;if(!l){toast("Escribe la fecha de tu último periodo");return}const len=Math.max(20,Math.min(45,+($("cyLen")?.value||28))),pl=Math.max(2,Math.min(10,+($("cyPlen")?.value||5)));S.cycle=Object.assign({logs:{}},S.cycle,{on:true,lastStart:l,cycleLen:len,periodLen:pl});save();$("sheetBg").classList.remove("on");if($("cycle").classList.contains("on"))renderCycle();else{$("cycle").classList.add("on");ui.cycMonth=0;renderCycle()}renderHoy();renderPerfil();toast("Listo — tu ciclo está activo 💛")}
+ else if(act==="cyStart"){S.cycle=Object.assign({logs:{}},S.cycle,{on:true,lastStart:cyKey(new Date())});save();ui.cycMonth=0;renderCycle();renderHoy();toast("Anotado — hoy empezó tu periodo")}
+ else if(act==="cySym"){const s=a.dataset.s;if(!S.cycle.logs)S.cycle.logs={};const k=cyKey(new Date());const arr=S.cycle.logs[k]||[];const i=arr.indexOf(s);if(i>=0)arr.splice(i,1);else arr.push(s);S.cycle.logs[k]=arr;save();renderCycle()}
+ else if(act==="cyPrev"){ui.cycMonth=(ui.cycMonth||0)-1;renderCycle()}
+ else if(act==="cyNext"){ui.cycMonth=(ui.cycMonth||0)+1;renderCycle()}
+ else if(act==="hab"){openHabit(a.dataset.p)}
+ else if(act==="habWater"){habWater()}
+ else if(act==="habSet"){habSet(a.dataset.k,+a.dataset.v)}
+ else if(act==="videos"){sheet(`<h3>Videos de Stephy</h3><div class="sm">Exclusivos de tu membresía — no salen en redes.</div>
+  ${VIDEOS.map(v=>`<div class="vrow" data-a="vplay"><div class="th">${ICON.play}</div><div><b>${v[0]}</b><span>${v[1]}</span></div></div>`).join("")}`)}
+ else if(act==="vplay"){toast("El reproductor llega en Fase 1")}
+ else if(act==="goPlan"){document.querySelector('[data-v="plan"]').click()}
+ else if(act==="goRec"){ui.planSeg="recetario";renderPlan();document.querySelector('[data-v="plan"]').click()}
+ else if(act==="seg"){ui.planSeg=a.dataset.p;renderPlan()}
+ else if(act==="retoSeg"){ui.retoSeg=a.dataset.p;renderRetos()}
+ else if(act==="woFilter"){ui.woFilter=a.dataset.p==="all"?null:a.dataset.p;renderEntrena()}
+ else if(act==="filter"){ui.recFilter=ui.recFilter===a.dataset.p?null:a.dataset.p;renderPlan()}
+ else if(act==="super"){
+  const items=new Set();S.week.forEach(day=>day.forEach(k=>DP[k].ing.forEach(i=>items.add(i.replace(/^\d+[½¾\s\w]*?(de\s)?/,"").split(",")[0]))));
+  const cats=[...items].slice(0,18);
+  sheet(`<h3>Lista de súper</h3><div class="sm">Generada de tu semana · Programa ${PROG_META[S.quiz.prog].label}</div>
+  <ul>${cats.map(i=>`<li>${i}</li>`).join("")}</ul>`)}
+ else if(act==="regen"){S.swaps={};Object.keys(S.swaps).forEach(k=>delete S.swaps[k]);S.swaps["seed"]=(S.swaps["seed"]||0);for(let d=0;d<7;d++)for(let s=0;s<4;s++)S.swaps[d+"-"+s]=Math.floor((d*3+s*7)%3)+1;genWeek();save();renderPlan();renderHoy();toast("Mes regenerado — menú nuevo")}
+ else if(act==="checkday"){toast("Día palomeado · +45 pts");const el=$("myPts");if(el)el.textContent="585 pts"}
+ else if(act==="like"){a.textContent=a.textContent.replace(/\d+/,m=>+m+1);toast("Le mandaste ánimo")}
+ else if(act==="post"){toast("Compartir logros llega en Fase 1")}
+ else if(act==="addProgreso"){openAddProgreso()}
+ else if(act==="unlog"){S.logged.splice(+a.dataset.i,1);save();renderHoy();toast("Quitado")}
+ else if(act==="saveProgreso"){const inp=$("iPesoP");const val=inp?+inp.value:0;const share=$("cShare")&&$("cShare").checked;if(val){S.habits.peso=val;pushProgress(val)}save();renderHoy();renderPerfil();$("sheetBg").classList.remove("on");toast(share?"Progreso guardado y enviado al muro":"Progreso guardado")}
+ else if(act==="sub"){ui.sub=!ui.sub;renderTienda();toast(ui.sub?"Suscríbete y ahorra activado — 15% off":"Suscripción desactivada")}
+ else if(act==="add"){toast(a.dataset.p+" agregado al carrito")}
+ else if(act==="buy"){toast("Checkout se conecta con Shopify en Fase 1")}
+ else if(act==="nivel"){S.nivel=a.dataset.p;save();renderAll();toast("Viendo la app como: "+a.dataset.p.toUpperCase())}
+ else if(act==="requiz"){ob={step:0,q:{prog:null,sexo:"F",edad:S.quiz.edad,peso:S.quiz.peso,est:S.quiz.est,act:S.quiz.act,cond:[],dislikes:[]}};$("onb").classList.add("on");obRender()}
+ else if(act==="up"){toast("La compra se conecta con el checkout en Fase 1")}
+ else if(act==="sos"){sheet(`<div class="shead"><img class="sph" src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg"><div><h3>Respira. Aquí estoy.</h3><div class="sm">Un antojo dura 10 minutos. Vamos a pasarlo juntas.</div></div></div>
+  <ul><li><b>1.</b> Tómate un vaso de agua completo, despacio.</li><li><b>2.</b> Come proteína rápida: yogurt, queso panela o 10 almendras.</li><li><b>3.</b> Ponte el audio de Stephy y espera 10 minutos antes de decidir.</li></ul>
+  <div class="quick"><button class="btn solid" style="width:100%" data-a="playA" data-f="sos.mp3" data-t="SOS antojo">${ICON.audio} Escuchar a Stephy</button></div>
+  <button class="btn ghost" style="width:100%;margin-top:10px" data-a="sinculpa">Caí — registrar sin culpa</button>`)}
+ else if(act==="sinculpa"){$("sheetBg").classList.remove("on");toast("Registrado sin culpa. Un antojo no rompe tu mes.")}
+ else if(act==="playA"){playA(a.dataset.f,a.dataset.t||"audio")}
+ else if(act==="oido"){sheet(`<div class="shead"><img class="sph" src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg"><div><h3>Stephy en tu oído</h3><div class="sm">Tu audio de 90 segundos, cada mañana. Exclusivo de tu membresía.</div></div></div>
+  ${AUDIOS.map(x=>`<div class="aud"><button class="pl" data-a="playA" data-f="${x[0]}" data-t="${x[1]}">${ICON.audio}</button><div><b>${x[1]}</b><span>${x[2]}</span></div></div>`).join("")}
+  <div class="sm" style="margin-top:10px">Los audios los graba Stephy — cada mes llega una tanda nueva.</div>`)}
+ else if(act==="quepido"){sheet(`<h3>¿Dónde estás?</h3><div class="sm">Dime la situación y te doy tu pedido exacto — sin adivinar.</div>
+  <div class="sit">${Object.entries(GUIONES).map(([k,g])=>`<span class="fchip" data-a="sit" data-p="${k}">${g.n}</span>`).join("")}</div><div id="guionBox"></div>`)}
+ else if(act==="sit"){const g=GUIONES[a.dataset.p];document.querySelectorAll(".sit .fchip").forEach(c=>c.classList.toggle("on",c===a));
+  $("guionBox").innerHTML=`<div class="guion"><b>Pide esto</b><ul>${g.pide.map(x=>`<li>${x}</li>`).join("")}</ul><b>Mejor no</b><div style="margin-bottom:8px">${g.evita}</div><div class="tip">${g.tip}</div></div>`}
+ else if(act==="wa"){sheet(`<h3>Tu plan, a tu WhatsApp</h3><div class="sm">Para que no tengas que abrir nada: te mandamos lo importante a donde ya vives.</div>
+  <div class="prow2"><span>Lista de súper</span><span>Domingos 10 am</span></div>
+  <div class="prow2"><span>Recordatorio del Live</span><span>Martes y jueves 2:30 pm</span></div>
+  <div class="prow2"><span>Tu resumen semanal</span><span>Domingos 8 pm</span></div>
+  <button class="btn solid" style="width:100%;margin-top:12px" data-a="waok">Activar en mi WhatsApp</button>
+  <div class="sm" style="margin-top:8px">Se conecta con tu número en la Fase 1.</div>`)}
+ else if(act==="waok"){$("sheetBg").classList.remove("on");toast("Listo — se conecta con tu WhatsApp en Fase 1")}
+ else if(act==="install"){const ios=/iphone|ipad/i.test(navigator.userAgent);
+  sheet(`<h3>Instala TNP en tu teléfono</h3><div class="sm">Sin App Store, directo a tu pantalla de inicio.</div>
+  ${ios?`<ul><li><b>1.</b> Toca el botón de <b>Compartir</b> (el cuadrito con flecha, abajo en Safari).</li><li><b>2.</b> Baja y toca <b>"Agregar a pantalla de inicio"</b>.</li><li><b>3.</b> Toca <b>Agregar</b> — y listo: el ícono TNP queda con tus apps.</li></ul>`
+  :`<ul><li><b>1.</b> Toca los <b>tres puntitos</b> del navegador (arriba a la derecha).</li><li><b>2.</b> Toca <b>"Agregar a pantalla principal"</b> o <b>"Instalar app"</b>.</li><li><b>3.</b> Confirma — el ícono TNP queda con tus apps.</li></ul>
+  ${window.__dp?'<button class="btn solid" style="width:100%" data-a="doinstall">Instalar ahora</button>':''}`}`)}
+ else if(act==="doinstall"){if(window.__dp){window.__dp.prompt();window.__dp=null;$("sheetBg").classList.remove("on")}}
+ else if(act==="wStart"){$("welcome").classList.remove("on");$("onb").classList.add("on");ob={step:0,q:{prog:null,sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[]}};obRender()}
+ else if(act==="wDemo"){S=demoState();genWeek();ensureExtras();save();$("welcome").classList.remove("on");$("onb").classList.remove("on");renderAll()}
+ else if(act==="na"){toast("Disponible en la versión completa")}
+});
+
+/* ================== EXTRAS: estado nuevo ================== */
+function ensureExtras(){
+ if(!S)return;
+ if(!S.logged)S.logged=[];
+ if(!S.habits)S.habits={agua:0,sueno:0,pasos:0,peso:(S.quiz&&S.quiz.peso)||0};
+ if(S.habits.peso==null)S.habits.peso=(S.quiz&&S.quiz.peso)||0;
+ if(!S.progress){const p0=(S.quiz&&S.quiz.peso)||72;const dNow=Math.max(1,S.day||1);
+  S.progress=dNow>1?[{d:1,peso:p0},{d:dNow,peso:Math.round((p0-1.6)*10)/10}]:[{d:1,peso:p0}];}
+ save();
+}
+function loggedTotals(){const L=(S&&S.logged)||[];return L.reduce((a,x)=>({k:a.k+(x.k||0),p:a.p+(x.p||0),c:a.c+(x.c||0),f:a.f+(x.f||0)}),{k:0,p:0,c:0,f:0})}
+function loggedHTML(){
+ const L=(S&&S.logged)||[];if(!L.length)return "";
+ return `<div class="secT" style="margin-top:18px"><h3>Registrado hoy</h3><span style="font-size:11px;color:color-mix(in srgb,var(--tinta) 55%,#fff)">${L.length} ${L.length===1?'registro':'registros'}</span></div>
+ <div class="meals">${L.map((x,i)=>`<div class="meal done"><div class="st">${x.supp?ICON.scan:ICON.check}</div><div class="tx"><b>${x.n}</b><span>${x.k} kcal · <em>${x.p} g prot</em>${x.supp?' · suplemento':''}</span></div><span class="sw" data-a="unlog" data-i="${i}" style="color:var(--coral);font-weight:700;font-size:11px;cursor:pointer">Quitar</span></div>`).join("")}</div>`;
+}
+
+/* ================== SCANNER ================== */
+const SCAN_FOODS=[
+ {n:"Taco de pollo",k:180,p:14,c:18,f:6},
+ {n:"Huevos con jitomate",k:220,p:16,c:6,f:14},
+ {n:"Pechuga a la plancha (150 g)",k:250,p:38,c:0,f:9},
+ {n:"Yogurt griego con fruta",k:180,p:15,c:20,f:4},
+ {n:"Ensalada de pollo",k:320,p:30,c:14,f:16},
+ {n:"Aguacate (½)",k:120,p:1,c:6,f:11},
+ {n:"Arroz (1 taza)",k:205,p:4,c:45,f:0},
+ {n:"Frijoles (1 taza)",k:225,p:15,c:40,f:1},
+ {n:"Tostada de atún",k:160,p:15,c:14,f:5},
+ {n:"Plátano",k:105,p:1,c:27,f:0},
+];
+const SCAN_SUPPS=[
+ {n:"Ignite",k:5,p:0,c:1,f:0,supp:true},
+ {n:"Interrupt",k:5,p:0,c:1,f:0,supp:true},
+ {n:"Vita Total",k:5,p:0,c:0,f:0,supp:true},
+ {n:"Perfect O",k:10,p:0,c:0,f:1,supp:true},
+];
+let scanState={mode:"comida",cand:null};
+let scanStream=null;
+function startCam(){
+ const v=$("scanVid");if(!v)return;
+ if(scanStream){v.srcObject=scanStream;return}
+ if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
+  navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(st=>{scanStream=st;const vv=$("scanVid");if(vv)vv.srcObject=st}).catch(()=>{const h=$("scanHint");if(h)h.textContent="Sin cámara — elige de la lista de abajo"});
+ }else{const h=$("scanHint");if(h)h.textContent="Sin cámara — elige de la lista de abajo"}
+}
+function stopCam(){if(scanStream){scanStream.getTracks().forEach(t=>t.stop());scanStream=null}}
+function openScan(mode){scanState={mode:mode==="scan"?"comida":mode,cand:null};renderScanSheet()}
+function renderScanSheet(){
+ const isSupp=scanState.mode==="supp";
+ const list=isSupp?SCAN_SUPPS:SCAN_FOODS;
+ const cand=scanState.cand?`<div class="scanCand"><div><b>${scanState.cand.n}</b><span>${scanState.cand.k} kcal · ${scanState.cand.p} g prot</span></div><button class="btn solid" style="flex:none;padding:10px 16px" data-a="scanLog">Registrar</button></div>`:"";
+ sheet(`<h3>${isSupp?'Registrar producto':'Registrar comida'}</h3><div class="sm">${isSupp?'Elige tu producto TNP y queda registrado en tu día.':'Elige lo que comiste y se suma a tus números de hoy.'}</div>
+ <div class="seg" style="margin-bottom:12px"><button class="${!isSupp?'on':''}" data-a="scanMode" data-p="comida">Comida</button><button class="${isSupp?'on':''}" data-a="scanMode" data-p="supp">Producto TNP</button></div>
+ ${cand}
+ <div class="sm" style="margin:6px 0 8px;font-weight:700;color:var(--tinta)">Elige de la lista</div>
+ <div class="scanList">${list.map((x,i)=>`<span class="fchip" data-a="scanPick" data-p="${i}">${x.n}</span>`).join("")}</div>`);
+}
+function scanDetect(){
+ const list=scanState.mode==="supp"?SCAN_SUPPS:SCAN_FOODS;
+ scanState.cand=list[Math.floor(Math.random()*list.length)];
+ renderScanSheet();
+ const h=$("scanHint");if(h)h.textContent="Detectado: "+scanState.cand.n;
+}
+function scanConfirm(idx){const list=scanState.mode==="supp"?SCAN_SUPPS:SCAN_FOODS;scanState.cand=list[+idx];renderScanSheet()}
+function scanCommit(){
+ if(!scanState.cand){toast("Primero detecta o elige algo");return}
+ const x=scanState.cand;
+ S.logged.push({n:x.n,k:x.k,p:x.p,c:x.c,f:x.f,supp:!!x.supp});
+ save();stopCam();$("sheetBg").classList.remove("on");renderHoy();
+ toast(x.supp?(x.n+" registrado en tu día"):(x.n+" · +"+x.p+" g proteína"));
+}
+
+/* ================== HABITOS ================== */
+function habitsHTML(){
+ const h=(S&&S.habits)||{agua:0,sueno:0,pasos:0,peso:0};
+ const tile=(k,ic,lbl,val,goal,unit,col)=>`<div class="habTile" data-a="hab" data-p="${k}"><div class="habIc" style="color:${col}">${ic}</div><div class="habV">${val}${unit?`<small>${unit}</small>`:""}</div><div class="habL">${lbl}</div>${goal?`<div class="habBar"><i style="width:${Math.min(100,(parseFloat(String(val).replace(/,/g,''))||0)/goal*100)}%;background:${col}"></i></div>`:'<div class="habBar"><i style="width:0"></i></div>'}</div>`;
+ return `<div class="secT" style="margin-bottom:0"><h3>Tus hábitos hoy</h3></div>
+ <div class="habGrid">
+  ${tile("agua",ICON.drop,"Agua",(h.agua||0),8,"","var(--teal)")}
+  ${tile("sueno",ICON.moon,"Sueño",h.sueno||0,8,"h","var(--glp)")}
+  ${tile("pasos",ICON.foot,"Pasos",(h.pasos||0).toLocaleString(),10000,"","var(--sage)")}
+  ${tile("peso",ICON.scale,"Peso",h.peso||"—","","kg","var(--coral)")}
+ </div>`;
+}
+function openHabit(k){
+ const h=S.habits;
+ if(k==="agua"){sheet(`<h3>Agua de hoy</h3><div class="sm">Meta: 8 vasos. Vas ${h.agua||0}.</div>
+  <div class="quick"><button class="btn ghost" data-a="habSet" data-k="agua" data-v="${Math.max(0,(h.agua||0)-1)}">−1 vaso</button><button class="btn solid" data-a="habWater">+1 vaso</button></div>`);return}
+ if(k==="sueno"){sheet(`<h3>¿Cuánto dormiste?</h3><div class="sm">Anoche · en horas</div>
+  <div class="tags">${[4,5,6,7,8,9,10].map(v=>`<span class="fchip ${h.sueno===v?'on':''}" data-a="habSet" data-k="sueno" data-v="${v}">${v} h</span>`).join("")}</div>`);return}
+ if(k==="pasos"){sheet(`<h3>Tus pasos de hoy</h3><div class="sm">Elige lo más cercano</div>
+  <div class="tags">${[2000,4000,6000,8000,10000,12000].map(v=>`<span class="fchip ${h.pasos===v?'on':''}" data-a="habSet" data-k="pasos" data-v="${v}">${v.toLocaleString()}</span>`).join("")}</div>`);return}
+ if(k==="peso"){sheet(`<h3>Registra tu peso</h3><div class="sm">Se guarda en tu progreso.</div>
+  <div class="inRow"><div class="inp"><label>Peso (kg)</label><input id="iPesoH" type="number" value="${h.peso||''}"></div></div>
+  <button class="btn solid" style="width:100%;margin-top:12px" data-a="habSet" data-k="peso" data-v="-1">Guardar peso</button>`);return}
+}
+function habWater(){S.habits.agua=Math.min(12,(S.habits.agua||0)+1);save();renderHoy();$("sheetBg").classList.remove("on");toast(S.habits.agua>=8?"Meta de agua cumplida":"+1 vaso")}
+function habSet(k,v){
+ if(k==="peso"){const inp=$("iPesoH");const val=inp?+inp.value:0;if(!val){toast("Escribe tu peso");return}S.habits.peso=val;pushProgress(val);save();renderHoy();renderPerfil();$("sheetBg").classList.remove("on");toast("Peso guardado en tu progreso");return}
+ S.habits[k]=v;save();renderHoy();$("sheetBg").classList.remove("on");toast("Guardado");
+}
+function pushProgress(peso){if(!S.progress)S.progress=[];const d=S.day||1;const last=S.progress[S.progress.length-1];if(last&&last.d===d){last.peso=peso}else{S.progress.push({d,peso})}}
+
+/* ================== MURO DE PROGRESO ================== */
+function silhou(tone){return "data:image/svg+xml;utf8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='140' height='160'><rect width='140' height='160' fill='"+tone+"'/><circle cx='70' cy='52' r='24' fill='rgba(255,255,255,.55)'/><path d='M32 150c0-30 17-48 38-48s38 18 38 48z' fill='rgba(255,255,255,.55)'/></svg>")}
+const TRANSFORMS=[
+ {nm:"Lupita R.",wk:"8 semanas · Programa Peso",q:"\"Bajé tallas, pero sobre todo dejé de sentirme hinchada. El menú fue lo que me salvó.\"",a:"#E4B7A0",b:"#9DB89F"},
+ {nm:"Marisol T.",wk:"12 semanas · Menopausia",q:"\"Recuperé fuerza y dejé de tenerle miedo a la pesa. Stephy me cambió el chip.\"",a:"#C7A3B4",b:"#8FB0C4"},
+ {nm:"Ana P.",wk:"6 semanas · Desinflamar",q:"\"Se me desinflamó la panza en la primera semana. Ya no lo suelto.\"",a:"#D8C08A",b:"#9DB89F"},
+];
+function muroProgresoHTML(){
+ return `<div class="transHead"><div><b>Tu progreso mueve a la comunidad</b><span>Sube tu antes/después y anima a las demás</span></div><button class="btn solid" style="flex:none;padding:11px 16px" data-a="addProgreso">${ICON.plus} Subir</button></div>
+ ${TRANSFORMS.map(t=>`<div class="transCard"><div class="transPics"><figure><img src="${silhou(t.a)}" alt=""><figcaption>ANTES</figcaption></figure><figure><img src="${silhou(t.b)}" alt=""><figcaption>DESPUÉS</figcaption></figure></div>
+  <div class="transBody"><div class="transTop"><div class="av2">${t.nm[0]}</div><div><b>${t.nm}</b><span>${t.wk}</span></div><span class="like" data-a="like">Ánimo +${8+t.nm.length}</span></div><p>${t.q}</p></div></div>`).join("")}
+ <p class="fda">Fotos de ejemplo. Los resultados son individuales y varían de persona a persona; el acompañamiento nutricional no garantiza resultados. En Fase 1 se suben fotos reales con el permiso de cada persona.</p>`;
+}
+function metaPeso(){const q=S&&S.quiz;if(!q||!q.peso)return 0;const g=Math.round(q.peso*0.9);return g<40?0:g;}
+function miProgresoHTML(){
+ const pr=(S&&S.progress)||[];const first=pr[0],last=pr[pr.length-1];
+ const delta=(first&&last)?Math.round((last.peso-first.peso)*10)/10:0;
+ const meta=metaPeso();const m=(S&&S.measures)||{};
+ const medLine=(m.cintura||m.cadera)?`Cintura ${m.cintura?m.cintura+" cm":"—"} · Cadera ${m.cadera?m.cadera+" cm":"—"}`:"Suma tu cintura — es de lo que más cuenta";
+ return `<div class="secT" style="margin-top:16px"><h3>Mi progreso</h3><a data-a="hab" data-p="peso">Registrar peso</a></div>
+ <div class="progcard">
+  <div class="top"><span>Peso</span><span>${last?last.peso+" kg":"—"} ${delta?`(${delta>0?"+":""}${delta} kg)`:""}</span></div>
+  ${miSpark(pr,meta)}
+  ${meta?`<div class="metaRow"><span class="mdot"></span>Tu meta · <b>${meta} kg</b> · a tu ritmo, sin fechas ni presión</div>`:""}
+  <div class="pnote">${pr.length} ${pr.length===1?'registro':'registros'} · desde ${first?first.peso+" kg":"—"}</div>
+  <div class="measLine">${medLine}</div>
+  <div class="miBtns"><button class="btn ghost" data-a="measures">${ICON.plus} Medidas</button><button class="btn ghost" data-a="health">${ICON.heart2} Conectar salud</button></div>
+ </div>
+ <div class="miFotos">
+  <div class="fotoSlot"><img src="${silhou('#E4B7A0')}" alt=""><span>Antes · día 1</span></div>
+  <div class="fotoSlot add" data-a="addProgreso"><div class="fotoAdd">${ICON.plus}</div><span>Subir foto de hoy</span></div>
+ </div>`;
+}
+function miSpark(pr,meta){
+ if(!pr||pr.length<2)return `<div class="pnote" style="margin:2px 0 4px">Registra tu peso para ver tu tendencia.</div>`;
+ const ws=pr.map(x=>x.peso);let mn=Math.min(...ws),mx=Math.max(...ws);
+ if(meta){mn=Math.min(mn,meta);mx=Math.max(mx,meta);}
+ const rng=(mx-mn)||1;
+ const W=280,H=54;const step=W/(pr.length-1);
+ const y=v=>(H-((v-mn)/rng)*(H-8)-4).toFixed(0);
+ const pts=pr.map((x,i)=>`${(i*step).toFixed(0)},${y(x.peso)}`).join(" ");
+ const gl=meta?`<line x1="0" y1="${y(meta)}" x2="${W}" y2="${y(meta)}" stroke="var(--salvia)" stroke-width="2" stroke-dasharray="5 5" opacity="0.9"/>`:"";
+ return `<svg width="100%" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="margin:2px 0 6px;display:block">${gl}<polyline points="${pts}" fill="none" stroke="var(--coral)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+function openAddProgreso(){
+ sheet(`<h3>Sube tu progreso</h3><div class="sm">Una foto de hoy y tu peso — tú decides si la compartes al muro.</div>
+ <label class="upl" for="fFoto"><div class="fotoAdd">${ICON.plus}</div><span id="uplLbl">Tomar o elegir foto</span></label>
+ <div class="inRow" style="margin-top:10px"><div class="inp"><label>Peso de hoy (kg)</label><input id="iPesoP" type="number" value="${(S.habits&&S.habits.peso)||''}"></div></div>
+ <label class="chk"><input type="checkbox" id="cShare"> Compartir mi antes/después al muro de la comunidad</label>
+ <input id="fFoto" type="file" accept="image/*" capture="environment" style="display:none">
+ <button class="btn solid" style="width:100%;margin-top:14px" data-a="saveProgreso">Guardar</button>`);
+ const inp=$("fFoto");if(inp)inp.addEventListener("change",()=>{const l=$("uplLbl");if(l&&inp.files&&inp.files[0])l.textContent="Foto lista: "+inp.files[0].name});
+}
+
+/* ================== PREGÚNTALE A STEPHY ================== */
+const STEPHY_QA=[
+ {q:"Tengo antojo de dulce",k:["antojo","dulce","azucar","azúcar","chocolate"],a:"Primero un vaso de agua y algo de proteína (yogurt griego o 10 almendras). Espera 10 minutos — casi siempre el antojo se va. Si sigue, un cuadrito de chocolate amargo, sin culpa. Un gusto no rompe tu mes."},
+ {q:"¿Puedo comer tacos?",k:["taco","tacos","antojito"],a:"¡Claro que sí! 3 tacos de bistec, pollo o arrachera en tortilla de maíz, con todo: cebolla, cilantro y salsa. Agua o de jamaica sin azúcar. El taco no es el problema — el refresco y el queso derretido sí."},
+ {q:"¿Cuánta proteína al día?",k:["proteina","proteína","proteinas"],a:"Tu meta exacta está en tu perfil. La regla de oro: 20–30 g de proteína por comida. Es la que te quita el hambre y cuida tu músculo — cómela primero en cada plato."},
+ {q:"Salgo a cenar, ¿qué pido?",k:["cenar","cena","restaurante","fuera","pido","buffet"],a:"Proteína a la plancha o al horno + verduras o ensalada, con el aderezo aparte. Revisa la tarjeta '¿Qué pido?' aquí en Hoy y te doy el pedido exacto para el lugar donde estés."},
+ {q:"No bajé esta semana",k:["no baj","bajar","peso","bascula","báscula","estanc"],a:"La báscula no manda: mídete también por cómo te queda la ropa y tu energía. Revisa que pegaste la proteína y el agua toda la semana. Un estancamiento es normalísimo — no te bajes del barco, sigue tu ritmo."},
+ {q:"Ando muy hinchada",k:["hinch","inflam","panza","desinflam","digest"],a:"Baja sal y ultraprocesados un par de días, sube agua y verdura con fibra, y muévete tantito después de comer. Si es constante, cuéntame qué comes y lo revisamos — a veces es un alimento en particular."},
+];
+let askMsgs=[];let askBusy=false;
+const FREE_ASK_LIMIT=5;
+function askUsage(){const k=cyKey(new Date());let a=store.get("tnp_ask",{day:"",n:0});if(a.day!==k)a={day:k,n:0};return a;}
+function askLeft(){if(S&&S.nivel==="top")return Infinity;return Math.max(0,FREE_ASK_LIMIT-askUsage().n);}
+function openAsk(){askMsgs=[{who:"s",t:"¡Hola! Soy Stephy 💛 Pregúntame lo que sea de tu plan — antojos, qué comer fuera, proteína, lo que traigas."}];renderAsk()}
+function renderAsk(){
+ const top=S&&S.nivel==="top";const left=askLeft();
+ const foot=top
+   ? `Asesoría ilimitada con tu membresía TOP. Respuestas guía de nutrición; tu médico manda en lo clínico.`
+   : (left>0 ? `Te quedan <b>${left}</b> preguntas gratis hoy. Con TOP son ilimitadas.` : `Llegaste a tus preguntas gratis de hoy.`);
+ const upsell=(!top&&left<=0)?`<button class="btn solid" style="width:100%;margin-top:10px" data-a="up">Conocer la membresía TOP</button>`:"";
+ sheet(`<div class="shead"><img class="sph" src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg"><div><h3>Pregúntale a Stephy</h3><div class="sm">Respuestas al instante, con el método de la clínica.</div></div></div>
+ <div class="chatBox" id="chatBox">${askMsgs.map(m=>`<div class="cmsg ${m.who}${m.typing?' typing':''}">${m.t}</div>`).join("")}</div>
+ ${upsell}
+ <div class="sit" style="margin:10px 0 0">${STEPHY_QA.map((x,i)=>`<span class="fchip" data-a="askQ" data-p="${i}">${x.q}</span>`).join("")}</div>
+ <div class="chatIn"><input id="askIn" placeholder="Escribe tu pregunta…" autocomplete="off"><button class="chatSend" data-a="askSend">Enviar</button></div>
+ <div class="sm" style="margin-top:9px;font-size:10.5px">${foot}</div>`);
+ const cb=$("chatBox");if(cb)cb.scrollTop=cb.scrollHeight;
+ const inp=$("askIn");if(inp){inp.addEventListener("keydown",e=>{if(e.key==="Enter"){const v=inp.value.trim();if(v)askPush(v)}})}
+}
+function askAnswer(q){const s=(q||"").toLowerCase();for(const x of STEPHY_QA){if(x.k.some(k=>s.includes(k)))return x.a}return "Buena pregunta. La base siempre es la misma: proteína primero (20–30 g por comida), verdura que llene, agua, y el antojo lo agendas — no lo peleas. Cuéntame tu caso concreto y te lo aterrizo a tu día."}
+async function askAnswerAI(){
+ const hist=askMsgs.filter(m=>!m.typing).slice(1).map(m=>({role:m.who==="u"?"user":"assistant",content:m.t}));
+ const r=await fetch("/api/stephy",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({messages:hist,nivel:(S&&S.nivel)||"app",programa:(S&&S.quiz&&S.quiz.prog)||null})});
+ if(!r.ok)throw new Error("http "+r.status);
+ const d=await r.json();if(!d.reply)throw new Error("noreply");
+ return d.reply;
+}
+async function askPush(q){
+ if(askBusy)return;
+ const top=S&&S.nivel==="top";
+ if(!top){
+  const a=askUsage();
+  if(a.n>=FREE_ASK_LIMIT){askMsgs.push({who:"u",t:q});askMsgs.push({who:"s",t:"Por hoy llegaste a tus preguntas gratis 💛 Con la membresía TOP tienes asesoría ilimitada conmigo — y las respuestas van más a fondo. ¿Le echamos un ojo?"});renderAsk();return;}
+  a.n++;store.set("tnp_ask",a);
+ }
+ askBusy=true;
+ askMsgs.push({who:"u",t:q});
+ askMsgs.push({who:"s",typing:true,t:"Stephy está escribiendo…"});
+ renderAsk();
+ try{
+  const t=await askAnswerAI();
+  askMsgs=askMsgs.filter(m=>!m.typing);askMsgs.push({who:"s",t});
+ }catch(e){
+  askMsgs=askMsgs.filter(m=>!m.typing);askMsgs.push({who:"s",t:askAnswer(q)});
+ }
+ askBusy=false;renderAsk();
+}
+
+/* ================== APRENDE CON STEPHY ================== */
+const LESSONS=[
+ {t:"La proteína va primero",b:"Antes de tocar los carbohidratos, cómete la proteína de tu plato. Llena más, cuida tu músculo y hace que te dé hambre más tarde. No es comer menos — es comer en el orden correcto."},
+ {t:"El antojo dura 10 minutos",b:"Un antojo no es hambre real: es una ola que sube y baja. Agua, un poco de proteína y esperar 10 minutos casi siempre lo apaga. No te pelees con él, solo dale tiempo."},
+ {t:"La báscula no es tu jefa",b:"Tu peso sube y baja por agua, sal y hormonas — hasta 2 kg en un día. Mídete también por la ropa, la energía y las medidas. Una sola cifra no cuenta toda tu historia."},
+ {t:"Comer fuera no te borra",b:"Una comida no engorda, igual que una ensalada no adelgaza. Lo que cuenta es lo que haces la mayoría de los días. Disfruta la salida y mañana sigues normal, sin castigo."},
+ {t:"Duerme para no tener hambre",b:"Dormir poco te sube el hambre y los antojos al día siguiente — es química, no falta de fuerza de voluntad. Cuidar tu sueño es cuidar tu plan."},
+ {t:"El fin de semana cuenta",b:"De viernes a domingo caben más calorías que en toda la semana si te sueltas. No hay que privarse — solo mantener la estructura: proteína, agua y tu antojo estrella elegido."},
+ {t:"Fuerza para tu etapa",b:"Después de los 40, la masa muscular se va si no la trabajas — y con ella, tu metabolismo. Comer suficiente proteína y algo de fuerza dos veces por semana cambia todo."},
+];
+function lessonOfDay(){return LESSONS[((S&&S.day)||1)%LESSONS.length]}
+function openLesson(){const L=lessonOfDay();
+ sheet(`<div class="shead"><img class="sph" src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg"><div><h3>${L.t}</h3><div class="sm">Lección de hoy · 2 min con Stephy</div></div></div>
+ <p style="font-size:14px;line-height:1.6;color:var(--tinta)">${L.b}</p>
+ <button class="btn solid" style="width:100%;margin-top:16px" data-a="lessonDone">Ya la vi ✓</button>
+ <div class="sm" style="margin-top:9px;font-size:10.5px">Cada día una nueva. Es el contenido de Stephy que no sale en redes.</div>`);
+}
+
+/* ================== LOGROS ================== */
+const BADGES=[
+ {id:"diauno",lbl:"Día uno",sub:"Empezaste",c:"#F2705B",ic:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v4M3 5h4M6 17v4M4 19h4M13 3l2.5 6.5L22 12l-6.5 2.5L13 21l-2.5-6.5L4 12l6.5-2.5z"/></svg>',on:s=>true},
+ {id:"racha7",lbl:"Racha de 7",sub:"7 días seguidos",c:"#C0654E",ic:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 2.5-.6 4 .4 6 .6-.5 1-1.2 1.2-2.2 2.2 1.8 3.9 4.2 3.9 7A5.9 5.9 0 1 1 5.7 14c0-3.1 2.6-4.6 3.6-7.6.7 1 1 2.1 1 3.6.7-1.6.2-4.3 1.7-7z"/></svg>',on:s=>(s.streak||0)>=7},
+ {id:"semana",lbl:"Semana completa",sub:"7 días de plan",c:"#9DB89F",ic:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M8 3v4M16 3v4M4 10h16M9 15l2 2 4-4"/></svg>',on:s=>(s.day||0)>=7},
+ {id:"prote",lbl:"Proteína pro",sub:"Meta 5 días",c:"#5E9166",ic:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10"/></svg>',on:s=>(s.day||0)>=5},
+ {id:"sos",lbl:"SOS superado",sub:"Venciste un antojo",c:"#C77D93",ic:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C7 17 4 13 4 9a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 4-3 8-8 12z"/></svg>',on:s=>(s.day||0)>=3},
+ {id:"foto",lbl:"Primer avance",sub:"Subiste tu foto",c:"#C9A96A",ic:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',on:s=>(s.progress&&s.progress.length>1)},
+];
+function badgesHTML(){
+ const got=BADGES.filter(b=>{try{return b.on(S)}catch(e){return false}}).length;
+ return `<div class="secT" style="margin-top:16px"><h3>Logros</h3><span style="font-size:11px;font-weight:700;color:var(--gris)">${got} de ${BADGES.length}</span></div>
+ <div class="badges">${BADGES.map(b=>{let e=false;try{e=b.on(S)}catch(_){}
+  return `<div class="badge ${e?'':'lock'}"><div class="bic" style="background:${e?`linear-gradient(135deg,${b.c},color-mix(in srgb,${b.c} 60%,var(--tinta)))`:''}">${b.ic}</div><b>${b.lbl}</b><small>${b.sub}</small></div>`}).join("")}</div>`;
+}
+
+/* ================== RECORDATORIOS ================== */
+function openReminders(){
+ if(!S.reminders)S.reminders={agua:true,comida:true,live:true,resumen:true,kit:false};
+ const R=S.reminders;
+ const row=(k,t,sub)=>`<div class="savRow" style="margin-top:10px"><div><b style="font-weight:600">${t}</b><div style="font-size:10.5px;color:var(--gris);font-weight:500">${sub}</div></div><span class="tog ${R[k]?'on':''}" data-a="remTog" data-k="${k}"></span></div>`;
+ sheet(`<h3>Recordatorios</h3><div class="sm">Te llegan como notificación de la app y a tu WhatsApp.</div>
+ ${row("agua","Tomar agua","Cada par de horas")}
+ ${row("comida","Registrar comida","Después de cada comida")}
+ ${row("live","Live de Stephy","Martes y jueves 2:30 pm")}
+ ${row("resumen","Resumen semanal","Domingos 8 pm")}
+ ${row("kit","Tomar tu Kit","Con el desayuno")}
+ <div class="sm" style="margin-top:11px;font-size:10.5px">Las notificaciones se activan al instalar la app en tu teléfono; el WhatsApp se conecta en Fase 1.</div>`);
+}
+
+/* ================== MEDIDAS + SALUD ================== */
+function openMeasures(){
+ const m=(S&&S.measures)||{};
+ sheet(`<h3>Tus medidas</h3><div class="sm">Además del peso, la cintura es de lo que más cuenta.</div>
+ <div class="inRow"><div class="inp"><label>Cintura (cm)</label><input id="iCin" type="number" value="${m.cintura||''}"></div><div class="inp"><label>Cadera (cm)</label><input id="iCad" type="number" value="${m.cadera||''}"></div></div>
+ <button class="btn solid" style="width:100%;margin-top:14px" data-a="measSave">Guardar medidas</button>`);
+}
+
+/* ================== MI CICLO (estilo Flo) ================== */
+const CY_PH={
+ mens:{lbl:"Menstrual",c:"#F2705B",tt:"Toca cuidarte rico",tb:"Sube el hierro (lentejas, espinaca, carne magra) y come antiinflamatorio. Hidrátate más de lo normal y no te exijas de más en el gym. Un cuadrito de chocolate amargo por el magnesio, sin culpa."},
+ foli:{lbl:"Folicular",c:"#9DB89F",tt:"Tu mejor semana de energía",tb:"La energía sube — es tu momento para entrenar fuerte. Aprovéchalo con proteína en cada comida y carbohidratos buenos (avena, fruta, tubérculos) para rendir sin bajones."},
+ ovul:{lbl:"Ovulación",c:"#C9A96A",tt:"Estás en tu punto más alto",tb:"Máxima energía. Mantén la proteína y suma antioxidantes y fibra: verduras de colores y frutos rojos. Sigue tomando agua y aprovecha para tu comida más activa."},
+ lute:{lbl:"Premenstrual",c:"#C77D93",tt:"Llegan los antojos — es normal",tb:"El hambre y los antojos suben por las hormonas, no por falta de fuerza. Proteína primero para saciarte, magnesio (nueces, chocolate amargo) y baja la sal para desinflamar. No pelees el antojo: agéndalo."},
+};
+const CY_SYM=["Cólicos","Antojos","Hinchazón","Cansancio","Ánimo bajo","Con energía","Dolor de cabeza","Sensible"];
+function _d0(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
+function cyPhaseOf(day,plen,ov){if(day<=plen)return "mens";if(day>=ov-1&&day<=ov+1)return "ovul";if(day<ov-1)return "foli";return "lute"}
+function cycleInfo(){
+ const c=S&&S.cycle;if(!c||!c.on||!c.lastStart)return null;
+ const len=c.cycleLen||28,plen=c.periodLen||5,ov=Math.max(plen+2,len-14);
+ const today=_d0(new Date()),start=_d0(new Date(c.lastStart+"T00:00:00"));
+ const diff=Math.round((today-start)/86400000);
+ const day=(((diff%len)+len)%len)+1;
+ const pk=cyPhaseOf(day,plen,ov);
+ const next=day===1?0:len-day+1;
+ return {len,plen,ov,day,pk,ph:CY_PH[pk],next,fertA:ov-5,fertB:ov+1,today,start};
+}
+function cyRingSVG(day,len,color){
+ const r=70,C=2*Math.PI*r,frac=Math.min(1,day/len);
+ return `<svg width="168" height="168" viewBox="0 0 168 168">
+  <circle cx="84" cy="84" r="70" fill="none" stroke="#F0E4DC" stroke-width="12"/>
+  <circle cx="84" cy="84" r="70" fill="none" stroke="${color}" stroke-width="12" stroke-linecap="round"
+   stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C*(1-frac)).toFixed(1)}" transform="rotate(-90 84 84)" style="transition:stroke-dashoffset .5s"/></svg>`;
+}
+function cycleCardHTML(){
+ const ci=cycleInfo();
+ if(!ci) return `<div class="cycleCard setup" data-a="cycleSetup"><div class="cyTx"><b>Conoce tu ciclo</b><span>Ajusta tu alimentación a cada fase del mes, con Stephy.</span></div><button class="cySet" data-a="cycleSetup">Activar</button></div>`;
+ const pred=ci.pk==="mens"?`Estás en tu periodo`:(ci.day>=ci.fertA&&ci.day<=ci.fertB?`Ventana fértil estimada`:`Tu periodo en <b>${ci.next}</b> ${ci.next===1?'día':'días'}`);
+ return `<div class="cycleCard" data-a="cycle">
+  <div class="cyMini">${cyRingSVG(ci.day,ci.len,ci.ph.c).replace('width="168" height="168"','width="52" height="52"')}<span class="lab">${ci.day}</span></div>
+  <div class="cyTx"><b>Día ${ci.day} de tu ciclo</b><span class="ph" style="background:${ci.ph.c}">${ci.ph.lbl}</span><span>${pred}</span></div>
+  <span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8B7A80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>`;
+}
+function cyMonthGrid(){
+ const c=S.cycle,len=c.cycleLen||28,plen=c.periodLen||5,ov=Math.max(plen+2,len-14);
+ const off=(ui.cycMonth||0);
+ const base=new Date();const view=new Date(base.getFullYear(),base.getMonth()+off,1);
+ const y=view.getFullYear(),m=view.getMonth();
+ const first=new Date(y,m,1),start=_d0(new Date(c.lastStart+"T00:00:00")),today=_d0(new Date());
+ const dim=new Date(y,m+1,0).getDate();const lead=(first.getDay()+6)%7; // lunes=0
+ const mesName=view.toLocaleDateString('es-MX',{month:'long',year:'numeric'});
+ let cells="";
+ for(let i=0;i<lead;i++)cells+=`<div class="cell"></div>`;
+ for(let d=1;d<=dim;d++){
+  const cur=_d0(new Date(y,m,d));
+  const diff=Math.round((cur-start)/86400000);
+  const cday=(((diff%len)+len)%len)+1;
+  let cls="cell";
+  if(cday<=plen)cls+=" per";
+  else if(cday===ov)cls+=" ov";
+  else if(cday>=ov-5&&cday<=ov+1)cls+=" fer";
+  if(cur.getTime()===today.getTime())cls+=" today";
+  if(cur>today&&cday<=plen)cls="cell perF";
+  cells+=`<div class="${cls}">${d}</div>`;
+ }
+ return `<div class="cyMonthNav"><button data-a="cyPrev">‹</button><b>${mesName}</b><button data-a="cyNext">›</button></div>
+  <div class="cyGrid"><div class="dow">L</div><div class="dow">M</div><div class="dow">M</div><div class="dow">J</div><div class="dow">V</div><div class="dow">S</div><div class="dow">D</div>${cells}</div>`;
+}
+function renderCycle(){
+ const ci=cycleInfo();
+ if(!ci){openCycleSetup();return;}
+ const dstr=cyKey(ci.today);const logs=(S.cycle.logs&&S.cycle.logs[dstr])||[];
+ const pred=ci.pk==="mens"?`Estás en tu periodo · día ${ci.day}`:(ci.day>=ci.fertA&&ci.day<=ci.fertB?`Ventana fértil estimada`:`Tu periodo llega en <b>${ci.next}</b> ${ci.next===1?'día':'días'}`);
+ $("cyIn").innerHTML=`
+  <div class="cyHead"><div class="bk" data-a="cycleClose"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></div><h2>Mi ciclo</h2><span class="edit" data-a="cycleSetup">Editar</span></div>
+  <div class="cyRingWrap">
+   <div class="cyRing">${cyRingSVG(ci.day,ci.len,ci.ph.c)}<div class="ctr"><span class="d">Día ${ci.day}</span><span class="of">de ${ci.len}</span></div></div>
+   <span class="phase" style="background:${ci.ph.c}">${ci.ph.lbl}</span>
+   <div class="pred">${pred}</div>
+  </div>
+  <div class="cyBtns"><button class="btn solid" data-a="cyStart">${ICON.drop} Empezó mi periodo</button><button class="btn ghost" data-a="cycleSetup">Ajustar fechas</button></div>
+  <div class="cyLegend"><span><span class="dt" style="background:#F2705B"></span>Periodo</span><span><span class="dt" style="background:color-mix(in srgb,#9DB89F 45%,#fff)"></span>Fértil</span><span><span class="dt" style="background:#C9A96A"></span>Ovulación</span></div>
+  <div class="cySec">Calendario</div>
+  <div class="cyCalCard">${cyMonthGrid()}</div>
+  <div class="cySec">Tu fase, con Stephy</div>
+  <div class="cyTip"><img src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg" alt=""><div class="tb"><b>${ci.ph.tt}</b><p>${ci.ph.tb}</p></div></div>
+  <div class="cySec">¿Cómo te sientes hoy?</div>
+  <div class="cySym">${CY_SYM.map(s=>`<button class="cySymChip ${logs.includes(s)?'on':''}" data-a="cySym" data-s="${s}">${s}</button>`).join("")}</div>
+  <p class="cyDisc">Esto es acompañamiento nutricional para ajustar tu alimentación a tu ciclo. Las fechas son estimados y no sustituyen un método anticonceptivo ni la atención médica.</p>`;
+}
+function cyKey(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function openCycle(){if(!cycleInfo()){openCycleSetup();return}ui.cycMonth=0;renderCycle();$("cycle").classList.add("on")}
+function openCycleSetup(){
+ const c=(S&&S.cycle)||{};
+ sheet(`<h3>Tu ciclo</h3><div class="sm">Con esto ajustamos tus tips y tu plan a cada fase. Es privado y opcional.</div>
+ <div class="inp" style="margin-top:12px"><label>¿Cuándo empezó tu último periodo?</label><input id="cyLast" type="date" value="${c.lastStart||cyKey(new Date())}" max="${cyKey(new Date())}"></div>
+ <div class="inRow" style="margin-top:10px"><div class="inp"><label>Duración del ciclo (días)</label><input id="cyLen" type="number" value="${c.cycleLen||28}" min="20" max="45"></div><div class="inp"><label>Días de periodo</label><input id="cyPlen" type="number" value="${c.periodLen||5}" min="2" max="10"></div></div>
+ <button class="btn solid" style="width:100%;margin-top:14px" data-a="cycleSave">Guardar mi ciclo</button>
+ <div class="sm" style="margin-top:9px;font-size:10.5px">Acompañamiento nutricional, no predicción médica ni anticonceptivo.</div>`);
+}
+
+/* ================== ARRANQUE ================== */
+if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();window.__dp=e});
+if(S&&S.quiz){if(!S.week)genWeek();ensureExtras();renderAll()}
+else{
+ S=demoState();genWeek();renderAll();S=null;
+ $("welcome").classList.add("on");
+ S=store.get("tnp",null);
+}
+</script>
+</body>
+</html>
