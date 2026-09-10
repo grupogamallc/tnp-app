@@ -138,6 +138,23 @@
   .retoHero .prog{height:8px;border-radius:99px;background:rgba(255,255,255,.15);margin-top:14px;overflow:hidden}
   .retoHero .prog i{display:block;height:100%;width:57%;background:var(--oro);border-radius:99px}
   .retoHero .plabel{display:flex;justify-content:space-between;font-size:10.5px;margin-top:7px;color:rgba(255,255,255,.6)}
+  /* PLAN VIVO — hero de la pestaña Plan */
+  .planHero{position:relative;overflow:hidden;border-radius:24px;padding:22px 20px 20px;margin-top:14px;color:#fff;box-shadow:0 22px 44px -26px rgba(var(--sombra),.6)}
+  .planHero::before{content:"";position:absolute;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.16);top:-78px;right:-46px;filter:blur(4px);pointer-events:none}
+  .planHero::after{content:"";position:absolute;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.10);bottom:-56px;left:-34px;pointer-events:none}
+  .planHero .ph-top{position:relative;display:flex;align-items:center;gap:14px}
+  .planHero .ph-ic{width:52px;height:52px;flex:none;border-radius:16px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.32);display:flex;align-items:center;justify-content:center}
+  .planHero .ph-ic svg{width:26px;height:26px;color:#fff}
+  .planHero .eyebrow{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.78)}
+  .planHero h2{font-family:'Fraunces',serif;font-weight:700;font-size:27px;line-height:1;letter-spacing:-.02em;margin:4px 0 0;color:#fff}
+  .planHero .live{position:relative;display:inline-flex;align-items:center;gap:8px;margin-top:13px;background:rgba(255,255,255,.17);border:1px solid rgba(255,255,255,.34);border-radius:999px;padding:6px 14px;font-size:11px;font-weight:800;letter-spacing:.04em;color:#fff}
+  .planHero .live .dot{width:8px;height:8px;border-radius:50%;background:#fff;animation:pvivo 1.8s ease-out infinite}
+  @keyframes pvivo{0%{box-shadow:0 0 0 0 rgba(255,255,255,.55)}70%{box-shadow:0 0 0 9px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+  .planHero .ph-sub{position:relative;font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.88);margin-top:13px;max-width:36ch}
+  .planHero .ph-stats{position:relative;display:flex;gap:8px;margin-top:15px}
+  .planHero .ph-stat{flex:1;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);border-radius:13px;padding:9px 8px;text-align:center}
+  .planHero .ph-stat b{display:block;font-family:'Fraunces',serif;font-weight:700;font-size:17px;line-height:1}
+  .planHero .ph-stat span{display:block;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.72);margin-top:3px}
   .retoBtn{margin-top:14px;width:100%;background:var(--coral);border:none;color:#fff;font-weight:700;font-size:13px;border-radius:14px;padding:12px;font-family:'Poppins',sans-serif;cursor:pointer;box-shadow:0 8px 18px -8px rgba(242,112,91,.6)}
   .rrow{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--borde);border-radius:16px;padding:11px 14px;margin-top:9px}
   .rrow .pos{width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;font-size:13px;flex:none;background:color-mix(in srgb,var(--tinta) 7%,#fff)}
@@ -861,6 +878,24 @@ function renderHoy(){
 }
 
 /* ================== RENDER: PLAN ================== */
+const PROG_ACCENT={PESO:"#E1614C",DESINFLAMAR:"#6F9E7B",FUERTE:"#B98E4C",BALANCE:"#A87FA8",GLP1:"#6D5BD0",PERSONALIZADO:"#C9A96A",MENOPAUSIA:"#B85C79"};
+function planHeroHTML(){
+ const prog=S.quiz.prog;const label=PROG_META[prog].label;const acc=PROG_ACCENT[prog]||"#F2705B";
+ const sem=Math.min(4,Math.max(1,Math.ceil((S.day||1)/7)));const vivo=S.nivel==="top";
+ const sub=vivo
+  ?"Tu menú de comida real, armado para ti. Se renueva solo cada mes — sin repetir, sin aburrirte."
+  :"Tu plantilla del programa, con comida real. Se refresca cada mes con tu re-compra.";
+ return `<div class="planHero" style="background:linear-gradient(135deg,${acc},color-mix(in srgb,${acc} 45%,var(--tinta)))">
+  <div class="ph-top"><span class="ph-ic">${PROG_ICON[prog]}</span>
+   <div><span class="eyebrow">Tu programa activo</span><h2>${label}</h2></div></div>
+  <span class="live"><span class="dot"></span>${vivo?"PLAN VIVO · SE REGENERA CADA MES":"PLAN · SE REFRESCA CADA MES"}</span>
+  <p class="ph-sub">${sub}</p>
+  <div class="ph-stats">
+   <div class="ph-stat"><b>Sem ${sem}</b><span>de 4</span></div>
+   <div class="ph-stat"><b>Día ${S.day}</b><span>de tu plan</span></div>
+   <div class="ph-stat"><b>7</b><span>días listos</span></div>
+  </div></div>`;
+}
 function renderPlan(){
  const dias=["Lunes · hoy","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo · flexible"];
  let body="";
@@ -875,8 +910,7 @@ function renderPlan(){
    <div class="secT" style="margin-top:18px"><h3>Recetas para hoy</h3></div>
    <div class="rgrid">${["avenaCr","tacosPo","ensPollo","sopaVer"].map(k=>{const d=DP[k];return `<div class="rcard" data-rec="${k}"><div class="rt">${d.p} g prot</div><h4>${d.n}</h4><p>${d.k} kcal</p></div>`}).join("")}</div>`;
  } else {
-  const note=S.nivel==="plan"?`<div class="prow2" style="margin-top:12px"><span>Tu programa (compra única)</span><span>Se refresca cada mes con tu re-compra</span></div>`:"";
-  body=`${note}<div class="planbtns">
+  body=`${planHeroHTML()}<div class="planbtns">
    <button class="btn solid" data-a="super">${ICON.plus} Lista de súper</button>
    <button class="btn ghost" style="border-color:color-mix(in srgb,var(--oro) 55%,#fff);color:color-mix(in srgb,var(--oro) 75%,var(--tinta))" data-a="regen">Regenerar mes</button></div><button class="btn ghost" style="width:100%;margin-top:10px;border-color:color-mix(in srgb,var(--salvia) 60%,#fff);color:var(--sage)" data-a="wa">${ICON.chat} Mi lista de súper por WhatsApp</button>
    ${S.week.map((day,di)=>{
@@ -887,7 +921,7 @@ function renderPlan(){
     </details>`}).join("")}`;
  }
  $("v-plan").innerHTML=`<div class="vhead"><h2>Tu semana</h2>
-  <div class="sub">Programa ${PROG_META[S.quiz.prog].label} · ${S.nivel==="top"?"plan vivo — se regenera cada mes":S.nivel==="plan"?"tu plantilla del programa":"membresía app"}</div></div>
+  <div class="sub">Tu menú de la semana y el recetario, en un solo lugar.</div></div>
   <div class="seg"><button class="${ui.planSeg==='semana'?'on':''}" data-a="seg" data-p="semana">Mi semana</button>
   <button class="${ui.planSeg==='recetario'?'on':''}" data-a="seg" data-p="recetario">Recetario</button></div>${body}`;
 }
