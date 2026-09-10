@@ -382,35 +382,58 @@
   .resN{border-bottom-color:var(--coral)}
 
   /* BIENVENIDA */
-  #welcome{position:fixed;inset:0;z-index:110;display:none;justify-content:center;background:linear-gradient(180deg,var(--blush) 0%,#FFF0E9 30%,var(--papel) 62%)}
+  #welcome{position:fixed;inset:0;z-index:110;display:none;justify-content:center;background:var(--papel);overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
   #welcome.on{display:flex}
-  .wlIn{width:100%;max-width:430px;display:flex;flex-direction:column;position:relative;min-height:100dvh;overflow:hidden}
+  .wlIn{width:100%;max-width:430px;position:relative;display:flex;flex-direction:column;min-height:100dvh;background:linear-gradient(180deg,var(--blush) 0%,#FFF1EA 22%,var(--papel) 52%)}
   .wblob{position:absolute;border-radius:50%;filter:blur(3px);opacity:.5;pointer-events:none}
-  .wblob.b1{width:180px;height:180px;background:radial-gradient(circle,var(--durazno),transparent 70%);top:50px;left:-60px}
-  .wblob.b2{width:150px;height:150px;background:radial-gradient(circle,var(--blush2),transparent 70%);top:150px;right:-45px}
-  .wtop{position:relative;display:flex;justify-content:space-between;align-items:center;padding:calc(20px + env(safe-area-inset-top)) 22px 0}
+  .wblob.b1{width:190px;height:190px;background:radial-gradient(circle,var(--durazno),transparent 70%);top:40px;left:-70px}
+  .wblob.b2{width:160px;height:160px;background:radial-gradient(circle,var(--blush2),transparent 70%);top:140px;right:-55px}
+  .wtop{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:calc(18px + env(safe-area-inset-top)) 22px 0}
   .wtop a{font-size:12.5px;font-weight:600;color:var(--gris);cursor:pointer}
-  .wbody{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2px 26px 0}
-  .whalo{position:relative;z-index:1;width:126px;height:126px;display:flex;align-items:center;justify-content:center}
-  .whalo::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 210deg,var(--durazno),var(--blush2),var(--oro),var(--durazno))}
-  .wsteph{position:relative;width:110px;height:110px;border-radius:50%;object-fit:cover;object-position:50% 20%;border:4px solid var(--papel);background:var(--coral)}
-  .wcred{position:relative;z-index:2;display:inline-flex;align-items:center;gap:7px;margin-top:14px;background:#fff;color:var(--coral);font-size:11px;font-weight:700;padding:7px 14px;border-radius:999px;box-shadow:0 10px 22px -10px rgba(199,125,147,.5)}
-  .wdot{width:6px;height:6px;border-radius:50%;background:var(--salvia)}
-  .wh{font-family:'Fraunces',serif;font-weight:600;font-size:33px;line-height:1.08;letter-spacing:-.015em;margin:18px 0 10px;color:var(--tinta);text-wrap:balance}
+  .wbody{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;padding:0 22px}
+  .wEye{align-self:center;margin-top:22px;display:inline-flex;align-items:center;gap:7px;background:var(--tinta);color:var(--papel);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:6px 13px;border-radius:999px}
+  .wEye i{width:5px;height:5px;border-radius:50%;background:var(--oro);display:block}
+  .wh{font-family:'Fraunces',serif;font-weight:600;font-size:35px;line-height:1.04;letter-spacing:-.02em;margin:16px 0 12px;color:var(--tinta);text-align:center;text-wrap:balance}
   .wh em{font-style:italic;color:var(--coral)}
-  .wsub{font-size:13.5px;line-height:1.55;color:var(--gris);max-width:31ch;font-weight:400}
-  .wchips{width:100%;margin-top:18px;background:var(--sup);border:1px solid var(--borde);border-radius:20px;overflow:hidden;box-shadow:0 18px 40px -26px rgba(var(--sombra),.5);display:grid;grid-template-columns:1fr 1fr}
-  .wchip{display:flex;align-items:center;gap:11px;padding:15px 14px;color:var(--tinta);font-size:12.5px;font-weight:600;line-height:1.18;text-align:left;border-bottom:1px solid var(--borde);border-right:1px solid var(--borde)}
-  .wchip:nth-child(2n){border-right:0}
-  .wchip:nth-child(n+3){border-bottom:0}
-  .wchip .ci{width:32px;height:32px;flex:none;border-radius:50%;background:var(--blush);color:var(--coral);display:flex;align-items:center;justify-content:center}
-  .wchip .ci svg{width:15px;height:15px}
-  .wsocial{display:flex;align-items:center;gap:10px;margin-top:18px}
-  .wavs{display:flex}
-  .wavs span{width:29px;height:29px;border-radius:50%;border:2.5px solid var(--papel);margin-left:-10px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;font-family:'Fraunces',serif}
-  .wavs span:first-child{margin-left:0}
-  .wsocial small{font-size:11.5px;color:var(--gris);font-weight:500}
-  .wfoot{position:relative;padding:0 22px calc(22px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:11px}
+  .wsub{font-size:13.8px;line-height:1.55;color:var(--gris);text-align:center;max-width:33ch;margin:0 auto;font-weight:400}
+  .wno{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;margin-top:16px}
+  .wno b{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--tinta)}
+  .wno i{width:4px;height:4px;border-radius:50%;background:var(--coral);display:block}
+  .wSt{display:flex;align-items:center;gap:13px;margin-top:18px;background:#fff;border:1px solid var(--borde);border-radius:20px;padding:12px 14px;box-shadow:0 18px 38px -28px rgba(var(--sombra),.65);cursor:pointer}
+  .wSt img{width:54px;height:54px;flex:none;border-radius:50%;object-fit:cover;object-position:50% 20%;border:2.5px solid var(--papel);background:var(--coral)}
+  .wSt .stx{flex:1;min-width:0}
+  .wSt .stx b{display:block;font-size:13.5px;color:var(--tinta);font-weight:700;line-height:1.2}
+  .wSt .stx span{display:block;font-size:11.5px;color:var(--gris);line-height:1.35;margin-top:3px}
+  .wSt .stp{width:36px;height:36px;flex:none;border-radius:50%;background:var(--coral);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 16px -8px rgba(242,112,91,.9)}
+  .wSt .stp svg{width:14px;height:14px}
+  .wSec{margin-top:30px}
+  .wSec .kick{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--coral)}
+  .wSec h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;line-height:1.15;color:var(--tinta);margin:7px 0 4px;letter-spacing:-.012em}
+  .wSec .sd{font-size:12.5px;color:var(--gris);line-height:1.5}
+  .wProgs{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:14px -22px 0;padding:3px 22px 8px;scrollbar-width:none}
+  .wProgs::-webkit-scrollbar{display:none}
+  .wProg{flex:0 0 158px;scroll-snap-align:start;background:#fff;border:1px solid var(--borde);border-radius:18px;padding:15px 14px 14px;cursor:pointer;box-shadow:0 16px 34px -28px rgba(var(--sombra),.75);position:relative;overflow:hidden}
+  .wProg::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--pa)}
+  .wProg .pi{width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--pa) 14%,#fff);color:var(--pa)}
+  .wProg .pi svg{width:17px;height:17px}
+  .wProg b{display:block;font-size:12.5px;font-weight:800;letter-spacing:.045em;color:var(--tinta);margin:11px 0 4px}
+  .wProg span{display:block;font-size:11.5px;line-height:1.38;color:var(--gris)}
+  .wInc{margin-top:14px;background:#fff;border:1px solid var(--borde);border-radius:20px;overflow:hidden;box-shadow:0 18px 40px -30px rgba(var(--sombra),.65)}
+  .wIncR{display:flex;align-items:flex-start;gap:12px;padding:14px 15px;border-bottom:1px solid var(--borde)}
+  .wIncR:last-child{border-bottom:0}
+  .wIncR .ci{width:32px;height:32px;flex:none;border-radius:50%;background:var(--blush);color:var(--coral);display:flex;align-items:center;justify-content:center}
+  .wIncR .ci svg{width:15px;height:15px}
+  .wIncR b{display:block;font-size:13px;color:var(--tinta);font-weight:700;line-height:1.25}
+  .wIncR span{display:block;font-size:11.5px;color:var(--gris);line-height:1.4;margin-top:2px}
+  .wKit{display:flex;align-items:center;gap:13px;margin-top:12px;background:linear-gradient(135deg,color-mix(in srgb,var(--oro) 17%,#fff),#fff);border:1px solid color-mix(in srgb,var(--oro) 32%,#fff);border-radius:18px;padding:12px 14px}
+  .wKit .kim{display:flex;flex:none}
+  .wKit .kim img{width:36px;height:36px;border-radius:11px;object-fit:cover;background:var(--papel);border:2px solid #fff;margin-left:-13px}
+  .wKit .kim img:first-child{margin-left:0}
+  .wKit p{font-size:11.5px;line-height:1.42;color:var(--tinta);font-weight:600}
+  .wMan{margin:30px 0 0;text-align:center;font-family:'Fraunces',serif;font-style:italic;font-size:19px;line-height:1.32;color:var(--tinta)}
+  .wMan b{color:var(--coral);font-weight:600;font-style:italic}
+  .wLegal{margin:15px 0 18px;text-align:center;font-size:10.5px;line-height:1.5;color:var(--gris);opacity:.85}
+  .wfoot{position:sticky;bottom:0;z-index:4;padding:14px 22px calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:9px;background:linear-gradient(180deg,rgba(251,245,239,0),var(--papel) 36%)}
   .wcta{display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,var(--coral),#e15c48);color:#fff;font-family:'Poppins',sans-serif;font-size:15.5px;font-weight:700;padding:16px;border:none;border-radius:999px;box-shadow:0 16px 30px -10px rgba(242,112,91,.6);cursor:pointer;width:100%}
   .wcta svg{width:18px;height:18px}
   .walt{text-align:center;font-size:12.5px;color:var(--gris);font-weight:500}
@@ -556,24 +579,56 @@
     <div class="lg2"><svg width="34" height="34" viewBox="0 0 512 512"><rect x="54" y="54" width="404" height="404" rx="118" fill="#43303E"/><g transform="translate(95.87,300.00)"><path d="M39.216 0V-99.76H4.128V-120.4H97.008V-99.76H61.92V0Z" fill="#FBF5EF"/><path d="M112.488 0V-120.4H155.66L179.568 -15.48H182.664V-120.4H205.024V0H161.852L137.944 -104.92H134.848V0Z" fill="#F2705B"/><path d="M227.728 0V-120.4H277.264Q288.616 -120.4 297.302 -115.842Q305.988 -111.284 310.89 -103.028Q315.792 -94.772 315.792 -83.42V-81.012Q315.792 -69.832 310.718 -61.49Q305.644 -53.148 296.958 -48.59Q288.272 -44.032 277.264 -44.032H250.432V0ZM250.432 -64.672H275.028Q283.112 -64.672 288.1 -69.144Q293.088 -73.616 293.088 -81.356V-83.076Q293.088 -90.816 288.1 -95.288Q283.112 -99.76 275.028 -99.76H250.432Z" fill="#FBF5EF"/></g><rect x="209" y="322" width="94" height="15" rx="7.5" fill="#C9A96A"/></svg><span>Tu Nuevo Plan</span></div>
     <a data-a="wDemo">Entrar</a>
   </div>
+
   <div class="wbody">
-    <div class="whalo"><img class="wsteph" src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg" alt="Stephy Kantú"></div>
-    <div class="wcred" data-a="playA" data-f="bienvenida.mp3" data-t="Bienvenida de Stephy" style="cursor:pointer"><span class="wdot"></span>Con Stephy Kantú · nutrióloga · <b style="color:var(--coral)">▶ escúchala</b></div>
-    <h1 class="wh">Cuídate rico, <em>a tu ritmo</em>.</h1>
-    <p class="wsub">Comida latina real que se arma sola en 2 minutos. Recetas, lista de súper y tu nutrióloga de este lado.</p>
-    <div class="wchips">
-      <span class="wchip"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13a8 8 0 0 0 14 0H5z"/><path d="M9 9V6M13 9V5"/></svg></span>Comida real</span>
-      <span class="wchip"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span>En 2 minutos</span>
-      <span class="wchip"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7L9 18l-5-5"/></svg></span>Sin pasar hambre</span>
-      <span class="wchip"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C7 17 4 13 4 9a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 4-3 8-8 12z"/></svg></span>Con nutrióloga</span>
+    <span class="wEye"><i></i>Día uno</span>
+    <h1 class="wh">Tu clínica, <em>en tu celular</em>.</h1>
+    <p class="wsub">Un plan hecho a tu meta, comida latina de verdad y una nutrióloga real que te acompaña. No es una dieta: es estructura.</p>
+    <div class="wno"><b>Sin dietas</b><i></i><b>Sin contar calorías</b><i></i><b>Sin pasar hambre</b></div>
+
+    <div class="wSt" data-a="playA" data-f="bienvenida.mp3" data-t="Bienvenida de Stephy">
+      <img src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg" alt="Stephy Kantú">
+      <div class="stx"><b>Con Stephy Kantú</b><span>Nutrióloga con cédula profesional · fundadora de la clínica Skinny Sekret.</span></div>
+      <span class="stp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
     </div>
-    <div class="wsocial">
-      <div class="wavs"><span style="background:var(--coral)">M</span><span style="background:var(--rosa)">L</span><span style="background:var(--salvia)">A</span></div>
-      <small>Una comunidad de mujeres que se cuidan juntas.</small>
+
+    <div class="wSec">
+      <div class="kick">Elige por dónde empezar</div>
+      <h2>Siete programas. Uno es el tuyo.</h2>
+      <div class="sd">Cada uno arma tu comida, tus números y tu ritmo distinto. Toca el tuyo y empezamos.</div>
+      <div class="wProgs">
+        <div class="wProg" style="--pa:#E1614C" data-a="wPick" data-p="PESO"><span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-8-8"/><path d="M12 12l5-3"/></svg></span><b>PESO</b><span>Baja con estructura, no con hambre.</span></div>
+        <div class="wProg" style="--pa:#B85C79" data-a="wPick" data-p="MENOPAUSIA"><span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C7 17 4 13 4 9a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 4-3 8-8 12z"/></svg></span><b>MENOPAUSIA</b><span>Come para tu nueva etapa.</span></div>
+        <div class="wProg" style="--pa:#6D5BD0" data-a="wPick" data-p="GLP1"><span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l7-5 7 5M5 8v8l7 5 7-5V8"/></svg></span><b>GLP-1</b><span>Acompaña tu tratamiento, cuida tu músculo.</span></div>
+        <div class="wProg" style="--pa:#6F9E7B" data-a="wPick" data-p="DESINFLAMAR"><span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 6 6 6 10a6 6 0 0 1-12 0c0-4 3-6 6-10z"/></svg></span><b>DESINFLAMAR</b><span>Siéntete ligera: adiós a la hinchazón.</span></div>
+        <div class="wProg" style="--pa:#A87FA8" data-a="wPick" data-p="BALANCE"><span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M4 13c2.5-3 5-3 8 0s5.5 3 8 0"/></svg></span><b>BALANCE</b><span>Equilibrio hormonal, azúcar bajo control.</span></div>
+        <div class="wProg" style="--pa:#B98E4C" data-a="wPick" data-p="FUERTE"><span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10"/></svg></span><b>FUERTE</b><span>Tonifica y cuida tu músculo.</span></div>
+        <div class="wProg" style="--pa:#C9A96A" data-a="wPick" data-p="PERSONALIZADO"><span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z"/></svg></span><b>PERSONALIZADO</b><span>Tu plan, 100% a tu medida.</span></div>
+      </div>
     </div>
+
+    <div class="wSec">
+      <div class="kick">Tu membresía</div>
+      <h2>Mucho más que un menú.</h2>
+      <div class="wInc">
+        <div class="wIncR"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span><div><b>Tu plan, hecho a tu meta</b><span>Comida latina de verdad, del súper de siempre. Se arma solo y se renueva cada mes.</span></div></div>
+        <div class="wIncR"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7L9 18l-5-5"/></svg></span><div><b>Una nutrióloga real detrás</b><span>Con cédula y clínica propia — no un influencer, no una app de puntos.</span></div></div>
+        <div class="wIncR"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="3.5"/><path d="M22 20v-2a4 4 0 0 0-3-3.9"/></svg></span><div><b>Comunidad que no te deja sola</b><span>Mujeres como tú, en las mismas semanas que tú.</span></div></div>
+        <div class="wIncR"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M17 4H7v6a5 5 0 0 0 10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg></span><div><b>Retos con ranking</b><span>Compite, gana puntos y mantente motivada mes con mes.</span></div></div>
+        <div class="wIncR"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4M7 6v12M12 3v18M17 6v12M21 10v4"/></svg></span><div><b>Stephy en tu oído</b><span>Audios y videos exclusivos que no vas a ver en redes.</span></div></div>
+      </div>
+      <div class="wKit">
+        <span class="kim"><img src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/prod-ignite.jpg" alt=""><img src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/prod-interrupt.jpg" alt=""><img src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/prod-vitatotal.jpg" alt=""><img src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/prod-perfecto.jpg" alt=""></span>
+        <p>Y si quieres, los productos de la clínica a tu puerta — con recompra en un toque.</p>
+      </div>
+    </div>
+
+    <p class="wMan">Las metas son tuyas.<br><b>La estructura es nuestra.</b></p>
+    <p class="wLegal">Los planes de Tu Nuevo Plan son acompañamiento nutricional y no sustituyen la atención médica.</p>
   </div>
+
   <div class="wfoot">
-    <button class="wcta" data-a="wStart">Empezar mi plan<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    <button class="wcta" data-a="wStart">Encuentra tu plan<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
     <div class="walt">¿Ya tienes cuenta? <b data-a="wDemo">Inicia sesión</b></div>
   </div>
 </div></div>
@@ -1186,6 +1241,7 @@ document.body.addEventListener("click",e=>{
   :`<ul><li><b>1.</b> Toca los <b>tres puntitos</b> del navegador (arriba a la derecha).</li><li><b>2.</b> Toca <b>"Agregar a pantalla principal"</b> o <b>"Instalar app"</b>.</li><li><b>3.</b> Confirma — el ícono TNP queda con tus apps.</li></ul>
   ${window.__dp?'<button class="btn solid" style="width:100%" data-a="doinstall">Instalar ahora</button>':''}`}`)}
  else if(act==="doinstall"){if(window.__dp){window.__dp.prompt();window.__dp=null;$("sheetBg").classList.remove("on")}}
+ else if(act==="wPick"){$("welcome").classList.remove("on");$("onb").classList.add("on");ob={step:1,q:{prog:a.dataset.p,sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[]}};obRender()}
  else if(act==="wStart"){$("welcome").classList.remove("on");$("onb").classList.add("on");ob={step:0,q:{prog:null,sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[]}};obRender()}
  else if(act==="wDemo"){S=demoState();genWeek();ensureExtras();save();$("welcome").classList.remove("on");$("onb").classList.remove("on");renderAll()}
  else if(act==="na"){toast("Disponible en la versión completa")}
