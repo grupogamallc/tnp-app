@@ -399,8 +399,15 @@
   .wLogo b{font-family:'Fraunces',serif;font-weight:600;font-size:22px;letter-spacing:-.02em;color:var(--tinta)}
   .wHalo{position:relative;margin-top:20px;width:132px;height:132px;display:flex;align-items:center;justify-content:center}
   .wHalo::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 210deg,var(--durazno),var(--blush2),var(--oro),var(--durazno))}
-  .wHalo img{position:relative;width:116px;height:116px;border-radius:50%;object-fit:cover;object-position:50% 18%;border:4px solid var(--papel);background:var(--coral)}
-  .wCred{margin-top:13px;display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--borde);border-radius:999px;padding:6px 8px 6px 14px;box-shadow:0 12px 26px -16px rgba(var(--sombra),.6);cursor:pointer}
+  .wHalo img,.wHalo video{position:relative;width:116px;height:116px;border-radius:50%;object-fit:cover;object-position:50% 18%;border:4px solid var(--papel);background:var(--coral);display:block}
+  .wHalo{cursor:pointer}
+  .wSnd{position:absolute;right:2px;bottom:6px;z-index:3;width:32px;height:32px;border-radius:50%;background:var(--coral);color:#fff;display:flex;align-items:center;justify-content:center;border:3px solid var(--papel);box-shadow:0 8px 18px -8px rgba(242,112,91,.9)}
+  .wSnd svg{width:14px;height:14px}
+  .wSnd .ic2{display:none}
+  .wSnd.on .ic1{display:none}
+  .wSnd.on .ic2{display:block}
+  .wSnd.on{background:var(--tinta)}
+  .wCred{margin-top:15px;display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--borde);border-radius:999px;padding:8px 16px;box-shadow:0 12px 26px -16px rgba(var(--sombra),.6);cursor:pointer}
   .wCred .tx{display:flex;flex-direction:column;gap:2px;text-align:left}
   .wCred b{font-size:11.5px;font-weight:700;color:var(--tinta);line-height:1.2}
   .wCred i{font-style:normal;font-size:10.5px;color:var(--gris)}
@@ -642,10 +649,12 @@
   <div class="wbody">
     <div class="wOpen">
       <div class="wLogo wAnim" style="--d:60ms"><svg viewBox="0 0 512 512"><rect x="54" y="54" width="404" height="404" rx="118" fill="#43303E"/><g transform="translate(95.87,300.00)"><path d="M39.216 0V-99.76H4.128V-120.4H97.008V-99.76H61.92V0Z" fill="#FBF5EF"/><path d="M112.488 0V-120.4H155.66L179.568 -15.48H182.664V-120.4H205.024V0H161.852L137.944 -104.92H134.848V0Z" fill="#F2705B"/><path d="M227.728 0V-120.4H277.264Q288.616 -120.4 297.302 -115.842Q305.988 -111.284 310.89 -103.028Q315.792 -94.772 315.792 -83.42V-81.012Q315.792 -69.832 310.718 -61.49Q305.644 -53.148 296.958 -48.59Q288.272 -44.032 277.264 -44.032H250.432V0ZM250.432 -64.672H275.028Q283.112 -64.672 288.1 -69.144Q293.088 -73.616 293.088 -81.356V-83.076Q293.088 -90.816 288.1 -95.288Q283.112 -99.76 275.028 -99.76H250.432Z" fill="#FBF5EF"/></g><rect x="209" y="322" width="94" height="15" rx="7.5" fill="#C9A96A"/></svg><b>Tu Nuevo Plan</b></div>
-      <div class="wHalo wAnim" style="--d:170ms"><img src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg" alt="Stephy Kantú"></div>
-      <div class="wCred wAnim" style="--d:300ms" data-a="playA" data-f="bienvenida.mp3" data-t="Bienvenida de Stephy">
-        <div class="tx"><b>Stephy Kantú</b><i>Nutrióloga con cédula · escúchala</i></div>
-        <span class="pl"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+      <div class="wHalo wAnim" style="--d:170ms" data-a="wVoz">
+        <video id="wVid" poster="stephy-hola.jpg" muted loop playsinline autoplay preload="auto" disablepictureinpicture aria-label="Stephy Kantú te da la bienvenida"><source src="stephy-hola.mp4" type="video/mp4"><source src="stephy-hola.webm" type="video/webm"></video>
+        <span class="wSnd" id="wSnd" aria-hidden="true"><svg class="ic1" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg><svg class="ic2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 5v14M12 5v14M18 5v14"/></svg></span>
+      </div>
+      <div class="wCred wAnim" style="--d:300ms" data-a="wVoz">
+        <div class="tx"><b>Stephy Kantú</b><i>Nutrióloga con cédula · fundadora de Skinny Sekret</i></div>
       </div>
     </div>
 
@@ -1361,6 +1370,9 @@ document.body.addEventListener("click",e=>{
   :`<ul><li><b>1.</b> Toca los <b>tres puntitos</b> del navegador (arriba a la derecha).</li><li><b>2.</b> Toca <b>"Agregar a pantalla principal"</b> o <b>"Instalar app"</b>.</li><li><b>3.</b> Confirma — el ícono TNP queda con tus apps.</li></ul>
   ${window.__dp?'<button class="btn solid" style="width:100%" data-a="doinstall">Instalar ahora</button>':''}`}`)}
  else if(act==="doinstall"){if(window.__dp){window.__dp.prompt();window.__dp=null;$("sheetBg").classList.remove("on")}}
+ else if(act==="wVoz"){const v=$("wVid"),b=$("wSnd");if(!v)return;
+  if(v.muted){v.muted=false;v.loop=false;try{v.currentTime=0}catch(e){}v.play().catch(()=>{});b&&b.classList.add("on")}
+  else{v.muted=true;v.loop=true;v.play().catch(()=>{});b&&b.classList.remove("on")}}
  else if(act==="wVerPlanes"){const el=$("wPills");if(el)el.scrollIntoView({behavior:"smooth",block:"center"})}
  else if(act==="wPlan"){planSheet(a.dataset.p)}
  else if(act==="wPick"){$("sheetBg").classList.remove("on");$("welcome").classList.remove("on");$("onb").classList.add("on");ob={step:1,q:{prog:a.dataset.p,sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[]}};obRender()}
@@ -1742,6 +1754,12 @@ if(S&&S.quiz&&!VER_INICIO){if(!S.week)genWeek();ensureExtras();renderAll()}
 else{
  S=demoState();genWeek();renderAll();S=null;
  renderPills();
+ (function(){const v=$("wVid");if(!v)return;
+  const red=window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+  if(red){v.removeAttribute("autoplay");v.pause();return}
+  v.play().catch(()=>{});
+  v.addEventListener("ended",()=>{v.muted=true;v.loop=true;try{v.currentTime=0}catch(e){}v.play().catch(()=>{});const b=$("wSnd");b&&b.classList.remove("on")});
+ })();
  $("welcome").classList.add("on");
  S=store.get("tnp",null);
 }
