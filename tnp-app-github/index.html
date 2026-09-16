@@ -1708,7 +1708,8 @@ function openCycleSetup(){
 /* ================== ARRANQUE ================== */
 if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();window.__dp=e});
-if(S&&S.quiz){if(!S.week)genWeek();ensureExtras();renderAll()}
+const VER_INICIO=/[?&]inicio\b/i.test(location.search);
+if(S&&S.quiz&&!VER_INICIO){if(!S.week)genWeek();ensureExtras();renderAll()}
 else{
  S=demoState();genWeek();renderAll();S=null;
  renderPills();
