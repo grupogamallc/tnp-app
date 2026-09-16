@@ -422,16 +422,17 @@
   .wSec h2{font-family:'Fraunces',serif;font-weight:600;font-size:22px;line-height:1.18;color:var(--tinta);margin:7px 0 4px;letter-spacing:-.012em;text-align:center}
   .wSec .sd{font-size:12.5px;color:var(--gris);line-height:1.5;text-align:center;max-width:32ch;margin:0 auto}
 
-  /* tarjetas de planes (carrusel) */
-  .wPills{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:16px -22px 0;padding:3px 22px 8px;scrollbar-width:none}
-  .wPills::-webkit-scrollbar{display:none}
-  .wPill{flex:0 0 158px;scroll-snap-align:start;background:var(--sup);border:1px solid var(--borde);border-radius:18px;padding:15px 14px 14px;cursor:pointer;box-shadow:0 16px 34px -28px rgba(var(--sombra),.75);position:relative;overflow:hidden;text-align:left}
-  .wPill::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--pa)}
-  .wPill .pi{width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--pa) 14%,#fff);color:var(--pa)}
-  .wPill .pi svg{width:17px;height:17px}
-  .wPill b{display:block;font-size:12.5px;font-weight:800;letter-spacing:.045em;color:var(--tinta);margin:11px 0 4px}
-  .wPill span{display:block;font-size:11.5px;line-height:1.38;color:var(--gris)}
-  .wPill:active{transform:scale(.98)}
+  /* lista de planes — mismo look del Paso 1 del quiz */
+  .wPills{display:flex;flex-direction:column;gap:9px;margin-top:16px}
+  .wPill{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--borde);border-radius:20px;padding:14px 15px;cursor:pointer;box-shadow:0 10px 22px -18px rgba(var(--sombra),.5);transition:transform .12s ease,border-color .12s ease,box-shadow .12s ease}
+  .wPill .pi{width:44px;height:44px;border-radius:15px;flex:none;display:flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg,var(--pa),color-mix(in srgb,var(--pa) 58%,var(--tinta)));box-shadow:0 8px 16px -8px rgba(var(--sombra),.55)}
+  .wPill .pi svg{width:22px;height:22px}
+  .wPill .pt{flex:1;min-width:0}
+  .wPill b{display:block;font-size:15px;font-weight:700;letter-spacing:.02em;line-height:1.15;color:var(--tinta)}
+  .wPill span{display:block;font-size:11.5px;color:var(--gris);font-weight:400;line-height:1.35;margin-top:2px}
+  .wPill .ch{width:24px;height:24px;flex:none;border-radius:50%;background:color-mix(in srgb,var(--pa) 12%,#fff);color:var(--pa);display:flex;align-items:center;justify-content:center}
+  .wPill .ch svg{width:13px;height:13px}
+  .wPill:active{transform:scale(.985);border-color:var(--pa);box-shadow:0 14px 26px -18px rgba(var(--sombra),.7)}
 
   /* 3 razones */
   .wWhy{margin-top:16px;background:var(--sup);border:1px solid var(--borde);border-radius:20px;overflow:hidden;box-shadow:0 18px 40px -30px rgba(var(--sombra),.65)}
@@ -456,6 +457,8 @@
   .wMan b{color:var(--coral);font-weight:600;font-style:italic}
   .wLegal{margin:14px 0 18px;text-align:center;font-size:10.5px;line-height:1.5;color:var(--gris);opacity:.85}
 
+  .wfoot .ctaWrap{display:flex;flex-direction:column;gap:8px;transition:opacity .25s ease,transform .25s ease}
+  .wfoot.enPlanes .ctaWrap{opacity:0;transform:translateY(8px);pointer-events:none;height:0;overflow:hidden;margin:0}
   .wfoot{position:sticky;bottom:0;z-index:4;padding:14px 22px calc(14px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px;background:linear-gradient(180deg,rgba(251,245,239,0),var(--papel) 36%)}
   .wcta{display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,var(--coral),#e15c48);color:#fff;font-family:'Poppins',sans-serif;font-size:15.5px;font-weight:700;padding:16px;border:none;border-radius:999px;box-shadow:0 16px 30px -10px rgba(242,112,91,.6);cursor:pointer;width:100%}
   .wcta svg{width:18px;height:18px}
@@ -640,7 +643,7 @@
     <div class="wSec">
       <div class="kick">Paso 1</div>
       <h2>¿Cuál es el tuyo?</h2>
-      <div class="sd">Desliza y toca el tuyo — te digo exactamente qué incluye.</div>
+      <div class="sd">Toca el tuyo y te digo exactamente qué incluye.</div>
       <div class="wPills" id="wPills"></div>
     </div>
 
@@ -669,8 +672,10 @@
   </div>
 
   <div class="wfoot">
-    <button class="wcta" data-a="wStart">Elegir mi plan<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-    <div class="wRe"><i></i>2 minutos · sin tarjeta</div>
+    <div class="ctaWrap">
+      <button class="wcta" data-a="wVerPlanes">Elegir mi plan<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      <div class="wRe"><i></i>2 minutos · sin tarjeta</div>
+    </div>
     <div class="walt">¿Ya tienes cuenta? <b data-a="wDemo">Inicia sesión</b></div>
   </div>
 </div></div>
@@ -1012,7 +1017,12 @@ const PLAN_INFO={
 const PLAN_ORDER=["PESO","MENOPAUSIA","GLP1","DESINFLAMAR","BALANCE","FUERTE","PERSONALIZADO"];
 function renderPills(){
  const el=$("wPills"); if(!el) return;
- el.innerHTML=PLAN_ORDER.map(k=>`<div class="wPill" style="--pa:${PROG_ACCENT[k]}" data-a="wPlan" data-p="${k}"><span class="pi">${PROG_ICON[k]}</span><b>${PLAN_INFO[k].n.toUpperCase()}</b><span>${PLAN_INFO[k].tag}</span></div>`).join("");
+ const CH='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
+ el.innerHTML=PLAN_ORDER.map(k=>`<div class="wPill" style="--pa:${PROG_ACCENT[k]}" data-a="wPlan" data-p="${k}"><span class="pi">${PROG_ICON[k]}</span><span class="pt"><b>${PLAN_INFO[k].n.toUpperCase()}</b><span>${PLAN_INFO[k].tag}</span></span><span class="ch">${CH}</span></div>`).join("");
+ const foot=document.querySelector("#welcome .wfoot");
+ if(foot&&"IntersectionObserver" in window){
+  new IntersectionObserver(es=>{es.forEach(e=>foot.classList.toggle("enPlanes",e.isIntersecting))},{root:$("welcome"),threshold:.35}).observe(el);
+ }
 }
 function planSheet(k){
  const d=PLAN_INFO[k],c=PROG_ACCENT[k];
@@ -1333,6 +1343,7 @@ document.body.addEventListener("click",e=>{
   :`<ul><li><b>1.</b> Toca los <b>tres puntitos</b> del navegador (arriba a la derecha).</li><li><b>2.</b> Toca <b>"Agregar a pantalla principal"</b> o <b>"Instalar app"</b>.</li><li><b>3.</b> Confirma — el ícono TNP queda con tus apps.</li></ul>
   ${window.__dp?'<button class="btn solid" style="width:100%" data-a="doinstall">Instalar ahora</button>':''}`}`)}
  else if(act==="doinstall"){if(window.__dp){window.__dp.prompt();window.__dp=null;$("sheetBg").classList.remove("on")}}
+ else if(act==="wVerPlanes"){const el=$("wPills");if(el)el.scrollIntoView({behavior:"smooth",block:"center"})}
  else if(act==="wPlan"){planSheet(a.dataset.p)}
  else if(act==="wPick"){$("sheetBg").classList.remove("on");$("welcome").classList.remove("on");$("onb").classList.add("on");ob={step:1,q:{prog:a.dataset.p,sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[]}};obRender()}
  else if(act==="wStart"){$("welcome").classList.remove("on");$("onb").classList.add("on");ob={step:0,q:{prog:null,sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[]}};obRender()}
