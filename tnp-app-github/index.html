@@ -1431,6 +1431,9 @@ window.addEventListener("scroll",()=>{
 function animarVista(id){
  const v=document.getElementById(id);
  if(!v) return;
+ /* las vistas se pintan ocultas: ahi el navegador nunca dispara loading="lazy".
+    Al mostrarse, las pasamos a eager para que si carguen. */
+ v.querySelectorAll('img[loading="lazy"]').forEach(im=>{im.loading="eager";const s=im.getAttribute("src");if(s&&!im.complete){im.setAttribute("src",s)}});
  staggerIn(v); drawRings(v);
  if(id==="v-hoy"){
   const pct=v.querySelector(".hRing span");
