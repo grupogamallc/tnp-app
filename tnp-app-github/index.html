@@ -245,7 +245,7 @@
   .dots{display:flex;gap:6px;justify-content:center;margin:18px 0 8px}
   .dots i{width:7px;height:7px;border-radius:50%;background:var(--borde)}
   .dots i.on{background:var(--coral);width:20px;border-radius:99px}
-  .onbStep{flex:1;display:flex;flex-direction:column;justify-content:center}
+  .onbStep{flex:1;display:flex;flex-direction:column;justify-content:flex-start;padding-top:6px;padding-bottom:28px}
   .onbStep .k{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--coral);margin-bottom:8px}
   .onbStep h1{font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:800;font-size:clamp(26px,7vw,32px);letter-spacing:-0.035em;line-height:1.12;margin-bottom:8px}
   .onbStep .d{font-size:13.5px;color:color-mix(in srgb,var(--tinta) 62%,var(--papel));margin-bottom:18px}
@@ -295,6 +295,11 @@
   .aud .pl{width:38px;height:38px;border-radius:50%;background:color-mix(in srgb,var(--rosewood) 14%,#fff);color:var(--rosewood);display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer;border:none}
   .aud b{font-size:12.5px;display:block}
   .aud span{font-size:10.5px;color:color-mix(in srgb,var(--tinta) 55%,#fff)}
+  .obS{display:flex;align-items:center;gap:13px;background:linear-gradient(135deg,color-mix(in srgb,var(--blush) 55%,#fff),#fff);border:1px solid var(--borde);border-radius:20px;padding:13px 15px;margin-bottom:22px;box-shadow:0 18px 36px -30px rgba(var(--sombra),.7)}
+  .obS img{width:54px;height:54px;flex:none;border-radius:50%;object-fit:cover;object-position:50% 16%;border:2.5px solid #fff;box-shadow:0 8px 16px -10px rgba(var(--sombra),.8)}
+  .obS .t{flex:1;min-width:0}
+  .obS .t b{display:block;font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--coral)}
+  .obS .t span{display:block;font-size:12.5px;line-height:1.42;color:var(--tinta);font-weight:500;margin-top:4px}
   .withS{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--borde);border-radius:99px;padding:6px 14px 6px 6px;font-size:11.5px;font-weight:700;margin-bottom:14px;width:fit-content}
   .withS img{width:28px;height:28px;border-radius:50%;object-fit:cover}
 
@@ -828,27 +833,28 @@ const CM=(ft,inc)=>Math.round(((+ft||0)*12+(+inc||0))*2.54);
 let ob={step:0,q:{prog:null,sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[]}};
 const OB_STEPS=5;
 function obDots(){$("onbDots").innerHTML=Array.from({length:OB_STEPS},(_,i)=>`<i class="${i===ob.step?'on':''}"></i>`).join("")}
+const obS=t=>`<div class="obS"><img src="stephy-hola.jpg" alt="Stephy Kantú"><div class="t"><b>Stephy Kantú</b><span>${t}</span></div></div>`;
 function obRender(){
  obDots();const q=ob.q;q.unit=q.unit||"kg";q.estUnit=q.estUnit||"cm";let h="";
  if(ob.step===0){
-  h=`<div class="withS"><img src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg">Con la nutrióloga Stephy Kantú</div><div class="k">Paso 1 · Tu meta</div><h1>¿Qué quieres lograr?</h1><div class="d">Tu programa define tu menú, tus números y tus productos.</div>
+  h=obS("Elige el que va con lo que quieres lograr. Si dudas entre dos, empieza por el primero.")+`<div class="k">Paso 1 · Tu meta</div><h1>¿Qué quieres lograr?</h1><div class="d">Tu programa define tu menú, tus números y tus productos.</div>
   ${[["PESO","Bajar de peso con estructura","#E1614C"],["DESINFLAMAR","Digestión feliz, adiós hinchazón","#6F9E7B"],["FUERTE","Músculo, fuerza y tono","#B98E4C"],["BALANCE","Hormonas y azúcar estables","#A87FA8"],["GLP1","Acompañamiento GLP-1","#6D5BD0"],["PERSONALIZADO","Tu menú 100% a tu medida — con todo tu quiz","#C9A96A"],["MENOPAUSIA","Fuerza, huesos y calma en tu etapa","#B85C79"]].map(p=>
    `<div class="opt ${q.prog===p[0]?'on':''}" data-oa="prog" data-p="${p[0]}"><span class="oic" style="background:linear-gradient(135deg,${p[2]},color-mix(in srgb,${p[2]} 60%,var(--tinta)))">${PROG_ICON[p[0]]}</span><div class="ot"><b>${PROG_META[p[0]].label}</b><small>${p[1]}</small></div><span class="rad"></span></div>`).join("")}
   <button class="onbBtn" data-oa="next">Continuar</button>`;
  }else if(ob.step===1){
-  h=`<div class="k">Paso 2 · Tus datos</div><h1>Para calcular tus números.</h1><div class="d">Con esto sacamos tus calorías y tu proteína diaria.</div>
+  h=obS("Con esto saco tus calorías y tu proteína del día. Nada más.")+`<div class="k">Paso 2 · Tus datos</div><h1>Para calcular tus números.</h1><div class="d">Con esto sacamos tus calorías y tu proteína diaria.</div>
   <div class="inRow"><div class="inp"><label>Edad</label><input id="iEdad" type="number" inputmode="numeric" placeholder="34" value="${q.edadSet?q.edad:''}"></div>
   <div class="inp"><label>Sexo</label><select id="iSexo"><option value="F" ${q.sexo==="F"?"selected":""}>Femenino</option><option value="M" ${q.sexo==="M"?"selected":""}>Masculino</option></select></div></div>
   <div class="inRow"><div class="inp"><label>Peso<span class="uNote">lb</span></label><input id="iPeso" type="number" inputmode="decimal" placeholder="159" value="${q.pesoSet?LB(q.peso):''}"></div>
   <div class="inp"><label>Estatura</label><div class="ftin"><span><input id="iFt" type="number" inputmode="numeric" placeholder="5" value="${q.estSet?FTIN(q.est).ft:''}"><i>&rsquo;</i></span><span><input id="iIn" type="number" inputmode="numeric" placeholder="4" value="${q.estSet?FTIN(q.est).inc:''}"><i>&rdquo;</i></span></div></div></div>
   <button class="onbBtn" data-oa="next">Continuar</button>`;
  }else if(ob.step===2){
-  h=`<div class="k">Paso 3 · Tu ritmo</div><h1>¿Qué tanto te mueves?</h1><div class="d">Sé honesta — el plan se ajusta a tu vida real.</div>
+  h=obS("Esto cambia bastante tus números. Piénsalo tantito antes de elegir.")+`<div class="k">Paso 3 · Tu ritmo</div><h1>¿Qué tanto te mueves?</h1><div class="d">Sé honesta — el plan se ajusta a tu vida real.</div>
   ${[["baja","Poco — trabajo sentada, casi no ejercicio"],["media","Algo — camino o entreno 2-3 veces/semana"],["alta","Mucho — entreno 4+ veces/semana"]].map(a=>
    `<div class="opt ${q.act===a[0]?'on':''}" data-oa="act" data-p="${a[0]}"><span class="sw3" style="background:var(--salvia)"></span><div>${a[1]}</div></div>`).join("")}
   <button class="onbBtn" data-oa="next">Continuar</button>`;
  }else if(ob.step===3){
-  h=`<div class="k">Paso 4 · Tu caso</div><h1>¿Algo que debamos saber?</h1><div class="d">Marca lo que aplique. Esto afina tu menú (y tu médico siempre manda).</div>
+  h=obS("Esto es lo que más me ayuda a afinar tu menú.")+`<div class="k">Paso 4 · Tu caso</div><h1>¿Algo que debamos saber?</h1><div class="d">Marca lo que aplique. Esto afina tu menú (y tu médico siempre manda).</div>
   <div class="tags">${[["glp1","Uso GLP-1"],["insulina","Resistencia a la insulina"],["sop","SOP"],["menopausia","Menopausia"]].map(c=>
    `<span class="fchip ${q.cond.includes(c[0])?'on':''}" data-oa="cond" data-p="${c[0]}">${c[1]}</span>`).join("")}</div>
   <div class="d" style="margin:16px 0 0">¿Qué NO te gusta o no puedes comer?</div>
@@ -857,7 +863,7 @@ function obRender(){
   <button class="onbBtn" data-oa="next">Calcular mi plan</button>`;
  }else{
   const g=calcGoals(q);
-  h=`<div class="k">Tu plan está listo</div><h1>Estos son tus números.</h1><div class="d">Programa ${PROG_META[q.prog].label} · el generador armó tu semana con comida real. Tu nutrióloga los revisa en tu registro inicial.</div>
+  h=obS("Estos números son tu punto de partida, no una regla. Se ajustan contigo.")+`<div class="k">Tu plan está listo</div><h1>Estos son tus números.</h1><div class="d">Programa ${PROG_META[q.prog].label} · el generador armó tu semana con comida real, ajustada a lo que nos contaste.</div>
   <div class="resNums"><div class="resN"><b>${g.kcal.toLocaleString()}</b><span>kcal al día</span></div>
   <div class="resN"><b>${g.prot} g</b><span>proteína al día</span></div>
   <div class="resN"><b>20–30 g</b><span>proteína por comida</span></div>
