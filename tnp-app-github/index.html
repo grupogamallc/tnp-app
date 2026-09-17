@@ -523,7 +523,7 @@
   .pdWho{font-size:12.5px;color:var(--tinta);background:color-mix(in srgb,var(--pa) 9%,#fff);border:1px solid color-mix(in srgb,var(--pa) 24%,var(--borde));border-radius:14px;padding:11px 13px;line-height:1.45}
   .pdWho b{color:var(--pa)}
   .pdN{display:flex;gap:9px;margin-top:10px}
-  .pdN div{flex:1;background:var(--sup);border:1px solid var(--borde);border-radius:13px;padding:10px 11px}
+  .pdN>div{flex:1;background:var(--sup);border:1px solid var(--borde);border-radius:13px;padding:11px 12px}
   .pdN .k{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gris)}
   .pdN .v{font-size:11.5px;font-weight:600;color:var(--tinta);margin-top:3px;line-height:1.3}
   .pdInc{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:7px}
@@ -855,13 +855,13 @@ const TPL={
  MENOPAUSIA:[["yogChia","omelette","avenaCr","licuado"],["salmonCam","polloCal","bistec","tinga"],["requeson","yogFresa","cafeCol","manzanaCr"],["salmonEsp","ensPollo","sopaVer","fajitas"]],
 };
 const PROG_META={
- PESO:{label:"PESO",adj:-400,gkg:1.4},
- DESINFLAMAR:{label:"DESINFLAMAR",adj:-250,gkg:1.2},
- FUERTE:{label:"FUERTE",adj:0,gkg:1.6},
- BALANCE:{label:"BALANCE",adj:-250,gkg:1.2},
- GLP1:{label:"GLP-1",adj:-300,gkg:1.5},
+ PESO:{label:"SKINNY PLAN",adj:-400,gkg:1.4},
+ DESINFLAMAR:{label:"GUT RESET",adj:-250,gkg:1.2},
+ FUERTE:{label:"BODY RECOMP",adj:0,gkg:1.6},
+ BALANCE:{label:"GLUCO CONTROL",adj:-250,gkg:1.2},
+ GLP1:{label:"GLP1 PRO",adj:-300,gkg:1.5},
  PERSONALIZADO:{label:"PERSONALIZADO",adj:-300,gkg:1.5},
- MENOPAUSIA:{label:"MENOPAUSIA",adj:-250,gkg:1.6},
+ MENOPAUSIA:{label:"MENO SMART",adj:-250,gkg:1.6},
 };
 const SLOTS=["Desayuno","Comida","Colación","Cena"];
 const PROG_ICON={
@@ -911,7 +911,7 @@ function obRender(){
  obDots();const q=ob.q;q.unit=q.unit||"kg";q.estUnit=q.estUnit||"cm";let h="";
  if(ob.step===0){
   h=obS("Elige el que va con lo que quieres lograr. Si dudas entre dos, empieza por el primero.")+`<div class="k">Paso 1 · Tu meta</div><h1>¿Qué quieres lograr?</h1><div class="d">Tu programa define tu menú, tus números y tus productos.</div>
-  ${[["PESO","Bajar de peso con estructura","#1E3A8A"],["DESINFLAMAR","Digestión feliz, adiós hinchazón","#1E3A8A"],["FUERTE","Músculo, fuerza y tono","#1E3A8A"],["BALANCE","Hormonas y azúcar estables","#1E3A8A"],["GLP1","Acompañamiento GLP-1","#1E3A8A"],["PERSONALIZADO","Tu menú 100% a tu medida — con todo tu quiz","#1E3A8A"],["MENOPAUSIA","Fuerza, huesos y calma en tu etapa","#1E3A8A"]].map(p=>
+  ${[["PESO","Reseteo metabólico y pérdida de peso","#1E3A8A"],["DESINFLAMAR","Menos inflamación y mejor digestión","#1E3A8A"],["FUERTE","Menos grasa, más músculo","#1E3A8A"],["BALANCE","Glucosa estable y resistencia a la insulina","#1E3A8A"],["GLP1","Acompañamiento durante tu tratamiento GLP-1","#1E3A8A"],["PERSONALIZADO","Armado uno por uno, con todo tu cuestionario","#1E3A8A"],["MENOPAUSIA","Peri y menopausia","#1E3A8A"]].map(p=>
    `<div class="opt ${q.prog===p[0]?'on':''}" data-oa="prog" data-p="${p[0]}"><span class="oic" style="background:linear-gradient(135deg,${p[2]},color-mix(in srgb,${p[2]} 60%,var(--tinta)))">${PROG_ICON[p[0]]}</span><div class="ot"><b>${PROG_META[p[0]].label}</b><small>${p[1]}</small></div><span class="rad"></span></div>`).join("")}
   <button class="onbBtn" data-oa="next">Continuar</button>`;
  }else if(ob.step===1){
@@ -1149,36 +1149,37 @@ function renderHoy(){
 const PROG_ACCENT={PESO:"#1E3A8A",DESINFLAMAR:"#1E3A8A",FUERTE:"#1E3A8A",BALANCE:"#1E3A8A",GLP1:"#1E3A8A",PERSONALIZADO:"#1E3A8A",MENOPAUSIA:"#1E3A8A"};
 /* ---- Detalle de los 7 planes (pastillas de la bienvenida) ---- */
 const PLAN_INFO={
- PESO:{n:"Peso",tag:"Baja con estructura, no con hambre.",precio:"$39.99",
-  who:"Para ti si quieres bajar de peso y <b>mantenerlo</b>, sin dietas imposibles ni contar cada caloría.",
-  prot:"≈1.4 g por kilo al día",kcal:"Déficit moderado (unas −400 kcal)",
-  inc:["Menú de 4 semanas con comida latina real","20–30 g de proteína en cada comida","Recetas y lista de súper","2–3 alternativas por comida","Se renueva cada mes"]},
- DESINFLAMAR:{n:"Desinflamar",tag:"Siéntete ligera: adiós a la hinchazón.",precio:"$39.99",
-  who:"Para ti si vives hinchada, con la digestión pesada o te sientes inflamada aunque comas sano.",
-  prot:"≈1.2 g por kilo al día",kcal:"Déficit ligero (unas −250 kcal)",
-  inc:["Menú alto en fibra con comida real","Recetas que desinflaman","Alimentos antiinflamatorios","Recetas, lista de súper e intercambios","Se renueva cada mes"]},
- FUERTE:{n:"Fuerte",tag:"Tonifica y cuida tu músculo.",precio:"$39.99",
-  who:"Para ti si quieres tonificar, ganar fuerza y proteger tu músculo — a cualquier edad.",
-  prot:"≈1.6 g por kilo al día (20–40 g por comida)",kcal:"Mantenimiento, sin déficit",
-  inc:["Menú más alto en proteína","Guía de proteína por comida","Recetas y lista de súper","Pensado para acompañar tu entrenamiento","Se renueva cada mes"]},
- BALANCE:{n:"Balance",tag:"Equilibrio hormonal, azúcar bajo control.",precio:"$39.99",
-  who:"Para ti si manejas resistencia a la insulina, SOP, cortisol alto o el azúcar en montaña rusa.",
-  prot:"≈1.2 g por kilo al día",kcal:"Déficit ligero (unas −250 kcal)",
-  inc:["Menú de bajo índice glucémico","Proteína en cada comida","Recetas que estabilizan el azúcar","Recetas, lista de súper e intercambios","Se renueva cada mes"]},
- GLP1:{n:"GLP-1",tag:"Acompaña tu tratamiento, cuida tu músculo.",precio:"$59.99",
-  who:"Para ti si ya llevas un acompañamiento GLP-1 <b>con tu médico</b> y quieres que lo que bajes sea grasa, no músculo.",
-  prot:"≈1.5 g por kilo al día",kcal:"Porciones suaves, alto en proteína",
-  inc:["Menú fácil de tolerar con poca hambre","Porciones suaves","Enfoque en conservar tu músculo","Recetas y lista de súper","Se renueva cada mes"],
+ PESO:{n:"Skinny Plan",tag:"Reseteo metabólico. Comida real, estructura clara.",precio:"$39.99",
+  who:"Para ti si quieres bajar de peso y <b>mantenerlo</b> — con un plan armado, no a punta de fuerza de voluntad.",
+  dia:"5 comidas + 2 snacks",kit:"Skinny Kit + tus suplementos",
+  inc:["Tu menú armado desde el banco de alimentos de Stephy","Porciones definidas: nada que pesar ni contar","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Video de bienvenida y guía de arranque"]},
+ DESINFLAMAR:{n:"Gut Reset",tag:"Menos inflamación. Una digestión que no pesa.",precio:"$39.99",
+  who:"Para ti si vives hinchada, con la digestión lenta o te sientes inflamada aunque comas sano.",
+  dia:"5 comidas + 2 snacks",kit:"Skinny Kit + tus suplementos",
+  inc:["Menú enfocado en microbiota y digestión","Alimentos que desinflaman, sin cortar grupos completos","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Video de bienvenida y guía de arranque"]},
+ FUERTE:{n:"Body Recomp",tag:"Menos grasa, más músculo. Transforma tu cuerpo.",precio:"$39.99",
+  who:"Para ti si esto no se trata solo del número en la báscula: quieres bajar grasa, marcarte y construir músculo.",
+  dia:"5 comidas + 2 snacks",kit:"Skinny Kit + tus suplementos",
+  inc:["Menú construido alrededor de tu proteína del día","Pensado para acompañar tu entrenamiento","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Video de bienvenida y guía de arranque"]},
+ BALANCE:{n:"Gluco Control",tag:"Glucosa estable. Energía pareja todo el día.",precio:"$39.99",
+  who:"Para ti si vives con resistencia a la insulina o prediabetes, o tu azúcar anda en montaña rusa.",
+  dia:"5 comidas + 2 snacks",kit:"Skinny Kit + tus suplementos",
+  inc:["Menú que evita los picos de azúcar","Proteína y fibra en cada comida del día","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Video de bienvenida y guía de arranque"],
+  nota:"Acompañamiento nutricional. No es tratamiento médico ni sustituye el control, los estudios ni el medicamento que te indicó tu doctor."},
+ GLP1:{n:"GLP1 Pro",tag:"Come bien mientras dura tu tratamiento.",precio:"$59.99",
+  who:"Para ti si llevas un tratamiento GLP-1 <b>con tu médico</b> y quieres que lo que bajes sea grasa, no músculo.",
+  dia:"Porciones suaves, fáciles de tolerar",kit:"Skinny Kit + tus suplementos",
+  inc:["Menú fácil de pasar cuando el hambre casi no aparece","Enfocado en que no pierdas músculo","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Video de bienvenida y guía de arranque"],
   nota:"Acompañamiento nutricional para personas bajo cuidado médico. No sustituye ni reemplaza tu tratamiento."},
- MENOPAUSIA:{n:"Menopausia",tag:"Come para tu nueva etapa.",precio:"$59.99",
-  who:"Para ti si estás en peri o menopausia: cambios de peso, pérdida de músculo y hueso, sueño y hormonas.",
-  prot:"≈1.6 g por kilo al día",kcal:"Déficit ligero (unas −250 kcal)",
-  inc:["Menú alto en proteína","Calcio y vitamina D en comida real","Enfoque de calma, menos disparadores","Recetas, lista de súper e intercambios","Se renueva cada mes"],
+ MENOPAUSIA:{n:"Meno Smart",tag:"Peri y menopausia, con un plan que sí entiende tu etapa.",precio:"$59.99",
+  who:"Para ti si estás en perimenopausia o menopausia y tu cuerpo dejó de responder como antes.",
+  dia:"5 comidas + 2 snacks",kit:"Skinny Kit + tus suplementos",
+  inc:["Menú que protege músculo y hueso","Calcio y vitamina D desde comida real","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Video de bienvenida y guía de arranque"],
   nota:"Acompañamiento nutricional de la etapa. No es tratamiento de síntomas."},
- PERSONALIZADO:{n:"Personalizado",tag:"Tu plan, 100% a tu medida.",precio:"$79.99",
+ PERSONALIZADO:{n:"Personalizado",tag:"Tu plan, armado uno por uno.",precio:"$79.99",
   who:"Para ti si quieres un plan hecho exactamente para tu cuerpo, tus gustos y tus condiciones, con el criterio de la nutrióloga.",
-  prot:"Según el método de Stephy",kcal:"Ajustada a tu caso",
-  inc:["Construido con el método y las guías de Stephy","Menú a tu medida: meta, gustos, alergias y condiciones","Recetas, lista de súper e intercambios","Se renueva cada mes"]},
+  dia:"Definido por Stephy para tu caso",kit:"Skinny Kit + tus suplementos",
+  inc:["Construido con el método y las guías de Stephy","A tu medida: meta, gustos, alergias y condiciones","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Video de bienvenida y guía de arranque"]},
 };
 const PLAN_ORDER=["PESO","MENOPAUSIA","GLP1","DESINFLAMAR","BALANCE","FUERTE","PERSONALIZADO"];
 function renderPills(){
@@ -1195,7 +1196,7 @@ function planSheet(k){
  sheet(`<div style="--pa:${c}">
   <div class="pdH"><span class="ic">${PROG_ICON[k]}</span><div><h3>${d.n}</h3><span>${d.tag}</span></div></div>
   <div class="pdWho">${d.who}</div>
-  <div class="pdN"><div><div class="k">Proteína</div><div class="v">${d.prot}</div></div><div><div class="k">Calorías</div><div class="v">${d.kcal}</div></div></div>
+  <div class="pdN"><div><div class="k">Tu día</div><div class="v">${d.dia}</div></div><div><div class="k">Tu kit</div><div class="v">${d.kit}</div></div></div>
   <ul class="pdInc">${d.inc.map(x=>`<li>${x}</li>`).join("")}</ul>
   ${d.nota?`<div class="sm" style="margin-top:11px">${d.nota}</div>`:""}
   <button class="btn solid" style="width:100%;margin-top:14px" data-a="wPick" data-p="${k}">Empezar con ${d.n}</button>
@@ -1628,9 +1629,9 @@ function pushProgress(peso){if(!S.progress)S.progress=[];const d=S.day||1;const 
 /* ================== MURO DE PROGRESO ================== */
 function silhou(tone){return "data:image/svg+xml;utf8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='140' height='160'><rect width='140' height='160' fill='"+tone+"'/><circle cx='70' cy='52' r='24' fill='rgba(255,255,255,.55)'/><path d='M32 150c0-30 17-48 38-48s38 18 38 48z' fill='rgba(255,255,255,.55)'/></svg>")}
 const TRANSFORMS=[
- {nm:"Lupita R.",wk:"8 semanas · Programa Peso",q:"\"Bajé tallas, pero sobre todo dejé de sentirme hinchada. El menú fue lo que me salvó.\"",a:"#CBD5E1",b:"#1E3A8A"},
- {nm:"Marisol T.",wk:"12 semanas · Menopausia",q:"\"Recuperé fuerza y dejé de tenerle miedo a la pesa. Stephy me cambió el chip.\"",a:"#CBD5E1",b:"#CBD5E1"},
- {nm:"Ana P.",wk:"6 semanas · Desinflamar",q:"\"Se me desinflamó la panza en la primera semana. Ya no lo suelto.\"",a:"#1E3A8A",b:"#1E3A8A"},
+ {nm:"Lupita R.",wk:"8 semanas · Skinny Plan",q:"\"Bajé tallas, pero sobre todo dejé de sentirme hinchada. El menú fue lo que me salvó.\"",a:"#CBD5E1",b:"#1E3A8A"},
+ {nm:"Marisol T.",wk:"12 semanas · Meno Smart",q:"\"Recuperé fuerza y dejé de tenerle miedo a la pesa. Stephy me cambió el chip.\"",a:"#CBD5E1",b:"#CBD5E1"},
+ {nm:"Ana P.",wk:"6 semanas · Gut Reset",q:"\"Se me desinflamó la panza en la primera semana. Ya no lo suelto.\"",a:"#1E3A8A",b:"#1E3A8A"},
 ];
 function muroProgresoHTML(){
  return `<div class="transHead"><div><b>Tu progreso mueve a la comunidad</b><span>Sube tu antes/después y anima a las demás</span></div><button class="btn solid" style="flex:none;padding:11px 16px" data-a="addProgreso">${ICON.plus} Subir</button></div>
