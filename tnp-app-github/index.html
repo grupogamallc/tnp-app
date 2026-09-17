@@ -124,7 +124,7 @@
   .pday summary::-webkit-details-marker{display:none}
   .pday summary .kc{font-size:11px;font-weight:600;color:color-mix(in srgb,var(--tinta) 55%,#fff)}
   .pday[open] summary{border-bottom:1px solid var(--borde)}
-  .prow{display:flex;gap:11px;align-items:baseline;padding:10px 16px;border-top:1px dashed color-mix(in srgb,var(--borde) 60%,#fff)}
+  .prow{display:flex;gap:11px;align-items:center;padding:10px 14px;border-top:1px dashed color-mix(in srgb,var(--borde) 60%,#fff)}
   .prow:first-of-type{border-top:none}
   .prow .t{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--salvia);border-radius:99px;padding:3px 8px;flex:none;min-width:70px;text-align:center}
   .prow .n{font-size:12.5px;flex:1}
@@ -713,6 +713,23 @@
     .view.on{animation:none}
     .hMenu .mi img{transform:none !important}
   }
+
+  /* ===== fotos de platillos ===== */
+  .rcard{padding:0;overflow:hidden}
+  .rcard .rimg{width:100%;aspect-ratio:1.12;background:var(--papel);overflow:hidden;display:block}
+  .rcard .rimg img{width:100%;height:100%;object-fit:cover;display:block}
+  .rcard .rbody{padding:11px 12px 13px}
+  .prow .th{width:40px;height:40px;flex:none;border-radius:11px;overflow:hidden;background:var(--papel);margin-right:2px}
+  .prow .th img{width:100%;height:100%;object-fit:cover;display:block}
+  .meal .th{width:46px;height:46px;flex:none;border-radius:13px;overflow:hidden;background:var(--papel);position:relative}
+  .meal .th img{width:100%;height:100%;object-fit:cover;display:block}
+  .meal .th .mk{position:absolute;right:-3px;bottom:-3px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
+  .meal.done .th .mk{background:var(--navy);color:#fff}
+  .meal.next .th .mk{background:var(--coral);color:#fff}
+  .meal.later .th .mk{display:none}
+  .meal .th .mk svg{width:10px;height:10px}
+  .recHero{width:calc(100% + 36px);margin:-18px -18px 14px;aspect-ratio:1.5;overflow:hidden;background:var(--papel)}
+  .recHero img{width:100%;height:100%;object-fit:cover;display:block}
 </style>
 </head>
 <body>
@@ -916,6 +933,9 @@ function genWeek(){
    return pool[(d+(S.swaps?.[d+"-"+s]||0))%pool.length];
  }))}
 }
+/* cada platillo conoce su llave, y de ahi sale su foto */
+Object.keys(DP).forEach(k=>{if(DP[k]&&typeof DP[k]==="object")DP[k].key=k});
+const PLATO=d=>(d&&d.key)?("plato-"+d.key+".jpg"):"";
 function scaled(key){
  const d=DP[key];const f=S.goals.kcal/1550;const pf=S.goals.prot/95;
  return {...d,k:Math.round(d.k*f/10)*10,p:Math.round(d.p*pf)};
@@ -1088,12 +1108,12 @@ function renderHoy(){
      const ic=S.done[i]?ICON.check:(i===nextIdx?ICON.plate:ICON.moon);
      const lbl=S.done[i]?`${SLOTS[m.slot]} · listo`:(i===nextIdx?`${SLOTS[m.slot]} · sigue esta`:SLOTS[m.slot]);
      const right=(i===nextIdx&&!S.done[i])?'<span class="cta">Ver receta</span>':ICON.chev;
-     return `<div class="meal ${cls}" data-meal="${i}"><div class="st">${ic}</div>
+     return `<div class="meal ${cls}" data-meal="${i}"><div class="th"><img src="${PLATO(m)||'foto-menu.jpg'}" alt="" loading="lazy"><span class="mk">${ic}</span></div>
       <div class="tx"><b>${lbl}</b><span>${m.n} · ${m.k} kcal · <em>${m.p} g prot</em></span></div>${right}</div>`}).join("")}</div>
     ${loggedHTML()}`
   :`<div class="secT" style="margin-top:18px"><h3>Recetas para ti</h3><a data-a="goRec">Ver recetario</a></div>
     <div class="rgrid">${["ensPollo","licuado","sopaVer"].map(k=>{const d=DP[k];
-     return `<div class="rcard" data-rec="${k}"><div class="rt">${d.p} g prot · ${d.min} min</div><h4>${d.n}</h4><p>${d.k} kcal</p></div>`}).join("")}</div>
+     return `<div class="rcard" data-rec="${k}"><div class="rimg"><img src="plato-${k}.jpg" alt="${d.n}" loading="lazy"></div><div class="rbody"><div class="rt">${d.p} g prot · ${d.min} min</div><h4>${d.n}</h4><p>${d.k} kcal</p></div></div>`}).join("")}</div>
     <div class="upCard"><h4>Tu plan personalizado te espera</h4><p>Con la membresía TOP, el generador arma tu menú de cada día — tú solo palomeas. Kit + plan vivo + app.</p><button class="upBtn" data-a="up">Conocer TOP · $129.99/mes</button></div>`;
  const totalD=28, pct=Math.max(0,Math.min(100,Math.round(S.day/totalD*100)));
  const tsk=S.tasks||(S.tasks={});
@@ -1255,11 +1275,11 @@ function renderPlan(){
   const F=[["prote","Alta proteína"],["rapida","15 min o menos"],["desinflamar","Desinflamar"],["suave","Suave (GLP-1)"],["antojo","Antojo"]];
   const list=all.filter(([k,d])=>!ui.recFilter||d.tg.includes(ui.recFilter));
   body=`<div class="chips">${F.map(f=>`<span class="fchip ${ui.recFilter===f[0]?'on':''}" data-a="filter" data-p="${f[0]}">${f[1]}</span>`).join("")}</div>
-   <div class="rgrid">${list.map(([k,d])=>`<div class="rcard" data-rec="${k}"><div class="rt">${d.p} g prot · ${d.min} min</div><h4>${d.n}</h4><p>${d.k} kcal</p></div>`).join("")}</div>`;
+   <div class="rgrid">${list.map(([k,d])=>`<div class="rcard" data-rec="${k}"><div class="rimg"><img src="plato-${k}.jpg" alt="${d.n}" loading="lazy"></div><div class="rbody"><div class="rt">${d.p} g prot · ${d.min} min</div><h4>${d.n}</h4><p>${d.k} kcal</p></div></div>`).join("")}</div>`;
  } else if(S.nivel==="app"){
   body=`<div class="upCard" style="margin-top:16px"><h4>Aún no tienes un plan activo</h4><p>Tu membresía incluye comunidad, videos y recetario. Compra el programa de tu meta ($39.99) o sube a TOP para el plan personalizado vivo.</p><button class="upBtn" data-a="up">Ver programas</button></div>
    <div class="secT" style="margin-top:18px"><h3>Recetas para hoy</h3></div>
-   <div class="rgrid">${["avenaCr","tacosPo","ensPollo","sopaVer"].map(k=>{const d=DP[k];return `<div class="rcard" data-rec="${k}"><div class="rt">${d.p} g prot</div><h4>${d.n}</h4><p>${d.k} kcal</p></div>`}).join("")}</div>`;
+   <div class="rgrid">${["avenaCr","tacosPo","ensPollo","sopaVer"].map(k=>{const d=DP[k];return `<div class="rcard" data-rec="${k}"><div class="rimg"><img src="plato-${k}.jpg" alt="${d.n}" loading="lazy"></div><div class="rbody"><div class="rt">${d.p} g prot</div><h4>${d.n}</h4><p>${d.k} kcal</p></div>`}).join("")}</div>`;
  } else {
   body=`${planHeroHTML()}<div class="planbtns">
    <button class="btn solid" data-a="super">${ICON.plus} Lista de súper</button>
@@ -1268,7 +1288,7 @@ function renderPlan(){
     const tot=day.reduce((s,k)=>s+scaled(k).k,0);const totp=day.reduce((s,k)=>s+scaled(k).p,0);
     return `<details class="pday" ${di===0?"open":""}><summary>${dias[di]}<span class="kc">${tot.toLocaleString()} kcal · ${totp} g prot</span></summary>
     ${day.map((k,si)=>{const d=scaled(k);
-     return `<div class="prow"><span class="t">${SLOTS[si]}</span><span class="n">${d.n}</span><span class="m">${d.k} · ${d.p}g</span>${poolLen(si)>1?`<span class="sw" data-a="swap" data-d="${di}" data-s="${si}">Swap</span>`:""}</div>`}).join("")}
+     return `<div class="prow"><span class="th"><img src="plato-${k}.jpg" alt="" loading="lazy"></span><span class="t">${SLOTS[si]}</span><span class="n">${d.n}</span><span class="m">${d.k} · ${d.p}g</span>${poolLen(si)>1?`<span class="sw" data-a="swap" data-d="${di}" data-s="${si}">Swap</span>`:""}</div>`}).join("")}
     </details>`}).join("")}`;
  }
  $("v-plan").innerHTML=`<div class="vhead"><h2>Tu semana</h2>
@@ -1506,13 +1526,13 @@ document.body.addEventListener("click",e=>{
  }
  const rec=e.target.closest("[data-rec]");
  if(rec){const d=DP[rec.dataset.rec];
-  sheet(`<h3>${d.n}</h3><div class="sm">${d.min} min · ${d.k} kcal · ${d.p} g proteína</div>
+  sheet(`<div class="recHero"><img src="plato-${rec.dataset.rec}.jpg" alt="${d.n}"></div><h3>${d.n}</h3><div class="sm">${d.min} min · ${d.k} kcal · ${d.p} g proteína</div>
   <ul>${d.ing.map(i=>`<li>${i}</li>`).join("")}</ul>
   <div class="sm" style="margin-top:8px">${d.st.join(" → ")}</div>`);return}
  const meal=e.target.closest("[data-meal]");
  if(meal){const i=+meal.dataset.meal;const m=todayMeals()[i];
   if(!S.done[i]){
-   sheet(`<h3>${m.n}</h3><div class="sm">${m.min} min · ${m.k} kcal · ${m.p} g proteína</div>
+   sheet(`${PLATO(m)?`<div class="recHero"><img src="${PLATO(m)}" alt="${m.n}"></div>`:""}<h3>${m.n}</h3><div class="sm">${m.min} min · ${m.k} kcal · ${m.p} g proteína</div>
    <ul>${m.ing.map(x=>`<li>${x}</li>`).join("")}</ul>
    <div class="sm" style="margin-top:8px">${m.st.join(" → ")}</div>
    <div class="quick" style="margin-top:14px"><button class="btn solid" data-a="done" data-i="${i}">La comí ✓</button>
