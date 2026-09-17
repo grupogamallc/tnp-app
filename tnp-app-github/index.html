@@ -1008,7 +1008,8 @@ const GUIONES={
 var AUDIO_SRC={};
 var IMG_SRC={};
 var ASSET="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/";
-function imgURL(f){return (IMG_SRC&&IMG_SRC[f])||(ASSET+f)}
+const IMG_LOCAL={"prod-ignite.jpg":1,"prod-interrupt.jpg":1,"prod-perfecto.jpg":1,"prod-vitatotal.jpg":1,"stephy.jpg":1};
+function imgURL(f){return (IMG_SRC&&IMG_SRC[f])||(IMG_LOCAL[f]?f:ASSET+f)}
 let _au=null,_auF=null;
 function playA(f,title){
  const src=(AUDIO_SRC&&AUDIO_SRC[f])||(ASSET+f);
@@ -1023,11 +1024,11 @@ function checkinHTML(){
  const done=S.checkin&&S.checkin.day===S.day;
  if(done){
   const M={hambre:"con hambre",antojo:"con antojo",ligera:"ligera"}[S.checkin.mood]||"lista";
-  return `<div class="ciCard done"><img class="ciph" src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg" alt="">
+  return `<div class="ciCard done"><img class="ciph" src="stephy.jpg" alt="">
    <div class="cibody"><b>Hoy amaneciste ${M}</b><span>Ya ajusté tu día. Nos vemos mañana 💛</span></div>
    <span class="cidone">${ICON.check}</span></div>`;
  }
- return `<div class="ciCard"><img class="ciph" src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg" alt="">
+ return `<div class="ciCard"><img class="ciph" src="stephy.jpg" alt="">
   <div class="cibody"><b>¿Cómo amaneciste hoy?</b><span>Dime cómo te sientes y ajusto tu día.</span>
    <div class="ciopts"><button class="cichip" data-a="ci2" data-m="hambre">Con hambre</button><button class="cichip" data-a="ci2" data-m="antojo">Con antojo</button><button class="cichip" data-a="ci2" data-m="ligera">Ligera</button></div>
   </div></div>`;
@@ -1120,9 +1121,9 @@ function renderHoy(){
 
   <div class="hSec"><h3>Para ti hoy</h3><a data-a="videos">Ver todo ${ICON.chev}</a></div>
   <div class="insights">
-   <div class="ins a" data-a="askStephy"><div class="ic ph"><img src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg" alt=""></div><h4>Pregúntale a Stephy</h4><p>Resuelve tu duda al instante</p></div>
+   <div class="ins a" data-a="askStephy"><div class="ic ph"><img src="stephy.jpg" alt=""></div><h4>Pregúntale a Stephy</h4><p>Resuelve tu duda al instante</p></div>
    <div class="ins b" data-a="lesson"><div class="ic">${ICON.book}</div><h4>Lección de hoy</h4><p>2 min con Stephy · nuevo cada día</p></div>
-   <div class="ins a" data-a="oido"><div class="ic ph"><img src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg" alt=""></div><h4>Stephy en tu oído</h4><p>El audio de hoy · 90 segundos</p></div>
+   <div class="ins a" data-a="oido"><div class="ic ph"><img src="stephy.jpg" alt=""></div><h4>Stephy en tu oído</h4><p>El audio de hoy · 90 segundos</p></div>
    <div class="ins d" data-a="quepido"><div class="ic">${ICON.fork}</div><h4>¿Qué pido?</h4><p>Taquería, buffet, fiesta — tu pedido exacto</p></div>
   </div>
 
@@ -1334,7 +1335,7 @@ function renderTienda(){
  <div class="prods">${PRODS.map(p=>{
   const price=ui.sub?(p[2]*0.85).toFixed(2):p[2];
   return `<div class="prod">${p[4]?'<span class="sub">En el Kit</span>':''}
-  <div class="pimg"><img src="${imgURL(p[5])}" alt="${p[0]}" loading="lazy"></div><h4>${p[0]}</h4><p>${p[1]}</p>
+  <div class="pimg"><img src="${imgURL(p[5])}" alt="${p[0]}" decoding="async"></div><h4>${p[0]}</h4><p>${p[1]}</p>
   <div class="pfoot"><span class="pp">${ui.sub?`<s>$${p[2]}</s>`:""}$${price}</span><span class="add" data-a="add" data-p="${p[0]}">Agregar +</span></div></div>`}).join("")}</div>
  <p class="fda">* Estas afirmaciones no han sido evaluadas por la FDA. Estos productos no están destinados a diagnosticar, tratar, curar ni prevenir ninguna enfermedad. Los resultados varían de persona a persona.</p>`;
 }
@@ -1486,13 +1487,13 @@ document.body.addEventListener("click",e=>{
  else if(act==="nivel"){S.nivel=a.dataset.p;save();renderAll();toast("Viendo la app como: "+a.dataset.p.toUpperCase())}
  else if(act==="requiz"){ob={step:0,q:{prog:null,sexo:"F",edad:S.quiz.edad,peso:S.quiz.peso,est:S.quiz.est,act:S.quiz.act,cond:[],dislikes:[]}};$("onb").classList.add("on");obRender()}
  else if(act==="up"){toast("La compra se conecta con el checkout en Fase 1")}
- else if(act==="sos"){sheet(`<div class="shead"><img class="sph" src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg"><div><h3>Respira. Aquí estoy.</h3><div class="sm">Un antojo dura 10 minutos. Vamos a pasarlo juntas.</div></div></div>
+ else if(act==="sos"){sheet(`<div class="shead"><img class="sph" src="stephy.jpg"><div><h3>Respira. Aquí estoy.</h3><div class="sm">Un antojo dura 10 minutos. Vamos a pasarlo juntas.</div></div></div>
   <ul><li><b>1.</b> Tómate un vaso de agua completo, despacio.</li><li><b>2.</b> Come proteína rápida: yogurt, queso panela o 10 almendras.</li><li><b>3.</b> Ponte el audio de Stephy y espera 10 minutos antes de decidir.</li></ul>
   <div class="quick"><button class="btn solid" style="width:100%" data-a="playA" data-f="sos.mp3" data-t="SOS antojo">${ICON.audio} Escuchar a Stephy</button></div>
   <button class="btn ghost" style="width:100%;margin-top:10px" data-a="sinculpa">Caí — registrar sin culpa</button>`)}
  else if(act==="sinculpa"){$("sheetBg").classList.remove("on");toast("Registrado sin culpa. Un antojo no rompe tu mes.")}
  else if(act==="playA"){playA(a.dataset.f,a.dataset.t||"audio")}
- else if(act==="oido"){sheet(`<div class="shead"><img class="sph" src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg"><div><h3>Stephy en tu oído</h3><div class="sm">Tu audio de 90 segundos, cada mañana. Exclusivo de tu membresía.</div></div></div>
+ else if(act==="oido"){sheet(`<div class="shead"><img class="sph" src="stephy.jpg"><div><h3>Stephy en tu oído</h3><div class="sm">Tu audio de 90 segundos, cada mañana. Exclusivo de tu membresía.</div></div></div>
   ${AUDIOS.map(x=>`<div class="aud"><button class="pl" data-a="playA" data-f="${x[0]}" data-t="${x[1]}">${ICON.audio}</button><div><b>${x[1]}</b><span>${x[2]}</span></div></div>`).join("")}
   <div class="sm" style="margin-top:10px">Los audios los graba Stephy — cada mes llega una tanda nueva.</div>`)}
  else if(act==="quepido"){sheet(`<h3>¿Dónde estás?</h3><div class="sm">Dime la situación y te doy tu pedido exacto — sin adivinar.</div>
@@ -1700,7 +1701,7 @@ function renderAsk(){
    ? `Asesoría ilimitada con tu membresía TOP. Respuestas guía de nutrición; tu médico manda en lo clínico.`
    : (left>0 ? `Te quedan <b>${left}</b> preguntas gratis hoy. Con TOP son ilimitadas.` : `Llegaste a tus preguntas gratis de hoy.`);
  const upsell=(!top&&left<=0)?`<button class="btn solid" style="width:100%;margin-top:10px" data-a="up">Conocer la membresía TOP</button>`:"";
- sheet(`<div class="shead"><img class="sph" src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg"><div><h3>Pregúntale a Stephy</h3><div class="sm">Respuestas al instante, con el método de la clínica.</div></div></div>
+ sheet(`<div class="shead"><img class="sph" src="stephy.jpg"><div><h3>Pregúntale a Stephy</h3><div class="sm">Respuestas al instante, con el método de la clínica.</div></div></div>
  <div class="chatBox" id="chatBox">${askMsgs.map(m=>`<div class="cmsg ${m.who}${m.typing?' typing':''}">${m.t}</div>`).join("")}</div>
  ${upsell}
  <div class="sit" style="margin:10px 0 0">${STEPHY_QA.map((x,i)=>`<span class="fchip" data-a="askQ" data-p="${i}">${x.q}</span>`).join("")}</div>
@@ -1750,7 +1751,7 @@ const LESSONS=[
 ];
 function lessonOfDay(){return LESSONS[((S&&S.day)||1)%LESSONS.length]}
 function openLesson(){const L=lessonOfDay();
- sheet(`<div class="shead"><img class="sph" src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg"><div><h3>${L.t}</h3><div class="sm">Lección de hoy · 2 min con Stephy</div></div></div>
+ sheet(`<div class="shead"><img class="sph" src="stephy.jpg"><div><h3>${L.t}</h3><div class="sm">Lección de hoy · 2 min con Stephy</div></div></div>
  <p style="font-size:14px;line-height:1.6;color:var(--tinta)">${L.b}</p>
  <button class="btn solid" style="width:100%;margin-top:16px" data-a="lessonDone">Ya la vi ✓</button>
  <div class="sm" style="margin-top:9px;font-size:10.5px">Cada día una nueva. Es el contenido de Stephy que no sale en redes.</div>`);
@@ -1872,7 +1873,7 @@ function renderCycle(){
   <div class="cySec">Calendario</div>
   <div class="cyCalCard">${cyMonthGrid()}</div>
   <div class="cySec">Tu fase, con Stephy</div>
-  <div class="cyTip"><img src="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/stephy.jpg" alt=""><div class="tb"><b>${ci.ph.tt}</b><p>${ci.ph.tb}</p></div></div>
+  <div class="cyTip"><img src="stephy.jpg" alt=""><div class="tb"><b>${ci.ph.tt}</b><p>${ci.ph.tb}</p></div></div>
   <div class="cySec">¿Cómo te sientes hoy?</div>
   <div class="cySym">${CY_SYM.map(s=>`<button class="cySymChip ${logs.includes(s)?'on':''}" data-a="cySym" data-s="${s}">${s}</button>`).join("")}</div>
   <p class="cyDisc">Esto es acompañamiento nutricional para ajustar tu alimentación a tu ciclo. Las fechas son estimados y no sustituyen un método anticonceptivo ni la atención médica.</p>`;
