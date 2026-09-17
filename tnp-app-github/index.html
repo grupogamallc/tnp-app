@@ -657,8 +657,8 @@
   .hMenu .mb{align-self:flex-start;display:inline-flex;align-items:center;gap:10px;background:var(--coral);color:#fff;border:none;border-radius:999px;padding:13px 19px;font-family:'Manrope',system-ui,sans-serif;font-weight:700;font-size:12.5px;letter-spacing:.06em;cursor:pointer}
   .hMenu .mb svg{width:15px;height:15px}
   .hMenu .mb:active{transform:scale(.97)}
-  .hMenu .mi{width:126px;flex:none;background:var(--papel);display:flex;align-items:center;justify-content:center;color:var(--navy);border-left:1px solid var(--borde)}
-  .hMenu .mi svg{width:52px;height:52px;opacity:.75}
+  .hMenu .mi{width:134px;flex:none;position:relative;background:var(--papel);overflow:hidden}
+  .hMenu .mi img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:52% 50%}
 
   .hTiles{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:12px}
   .hTile{background:#fff;border:1px solid var(--borde);border-radius:18px;padding:14px 5px 11px;display:flex;flex-direction:column;align-items:center;gap:9px;cursor:pointer;font-family:'Manrope',system-ui,sans-serif}
@@ -684,11 +684,13 @@
   .hTask .ch svg{width:15px;height:15px}
   .hTask:active{background:var(--papel)}
 
-  .hBan{display:flex;align-items:center;gap:14px;background:#E8EDF6;border-radius:20px;padding:19px 18px;margin-top:14px}
-  .hBan .bt{flex:1;min-width:0}
+  .hBan{display:flex;align-items:stretch;background:#E8EDF6;border-radius:20px;margin-top:14px;overflow:hidden;min-height:138px}
+  .hBan .bt{flex:1;min-width:0;padding:20px 8px 20px 18px;display:flex;flex-direction:column;justify-content:center}
   .hBan .bt b{display:block;font-size:16.5px;font-weight:700;letter-spacing:-.025em;line-height:1.25;color:var(--tinta)}
   .hBan .bt i{display:block;width:30px;height:2.5px;border-radius:2px;background:var(--coral);margin-top:11px}
-  .hBan .bc{width:74px;height:74px;flex:none;border-radius:50%;background:rgba(255,255,255,.75);border:1px solid #fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;letter-spacing:.09em;color:var(--navy);line-height:1.5;text-align:center}
+  .hBan .bi{width:152px;flex:none;position:relative;overflow:visible}
+  .hBan .bi img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 22%}
+  .hBan .bc{position:absolute;right:12px;bottom:14px;width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.68);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;letter-spacing:.09em;color:var(--navy);line-height:1.5;text-align:center;z-index:2}
 </style>
 </head>
 <body>
@@ -1008,6 +1010,8 @@ const GUIONES={
 var AUDIO_SRC={};
 var IMG_SRC={};
 var ASSET="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/";
+/* fotos del inicio — hoy apuntan al CDN de generacion; se cambian aqui cuando vivan en el repo */
+const FOTO={menu:"https://d8j0ntlcm91z4.cloudfront.net/user_35TnfJOGIlc2RDBRMs6jWPNT9JI/hf_20260917_203543_771192dc-0599-4866-bee7-1b9bdf82f91b.png",habitos:"https://d8j0ntlcm91z4.cloudfront.net/user_35TnfJOGIlc2RDBRMs6jWPNT9JI/hf_20260917_203543_5e542758-d32f-4bd4-8448-a3d2a2bd37f7.png"};
 const IMG_LOCAL={"prod-ignite.jpg":1,"prod-interrupt.jpg":1,"prod-perfecto.jpg":1,"prod-vitatotal.jpg":1,"stephy.jpg":1};
 function imgURL(f){return (IMG_SRC&&IMG_SRC[f])||(IMG_LOCAL[f]?f:ASSET+f)}
 let _au=null,_auF=null;
@@ -1097,7 +1101,7 @@ function renderHoy(){
     <div class="ms">Comida real.<br>Resultados reales.</div>
     <button class="mb" data-a="goPlan">VER MI MENÚ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
    </div>
-   <div class="mi">${ICON.plate}</div>
+   <div class="mi"><img src="${FOTO.menu}" alt="Un plato de tu menú" decoding="async"></div>
   </div>
 
   <div class="hTiles">
@@ -1112,7 +1116,7 @@ function renderHoy(){
 
   <div class="hBan">
    <div class="bt"><b>Pequeños hábitos.<br>Grandes cambios.</b><i></i></div>
-   <div class="bc">TÚ<br>PUEDES</div>
+   <div class="bi"><img src="${FOTO.habitos}" alt="" decoding="async"><span class="bc">TÚ<br>PUEDES</span></div>
   </div>
 
   ${checkinHTML()}
