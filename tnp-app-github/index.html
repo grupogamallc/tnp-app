@@ -1069,6 +1069,8 @@ const GUIONES={
  mariscos:{n:"Mariscos",pide:["Ceviche, aguachile o coctel — proteína pura con limón","Pescado a la plancha o empapelado con verduras","Tostadas: máximo 2, horneadas si hay"],evita:"Lo empanizado y lo 'a la diabla' bañado en mantequilla.",tip:"Mariscos es de los mejores restaurantes para tu plan — pide fresco y con limón, y sales ganando."},
 };
 var AUDIO_SRC={};
+/* los audios ahora viven junto a la app, no en el proyecto de assets */
+const AUD_LOCAL={"bienvenida.mp3":1,"dia-1.mp3":1,"dia-2.mp3":1,"dia-3.mp3":1,"dia-4.mp3":1,"dia-5.mp3":1,"sos.mp3":1};
 var IMG_SRC={};
 var ASSET="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/";
 /* fotos del inicio — hoy apuntan al CDN de generacion; se cambian aqui cuando vivan en el repo */
@@ -1077,7 +1079,7 @@ const IMG_LOCAL={"prod-ignite.jpg":1,"prod-interrupt.jpg":1,"prod-perfecto.jpg":
 function imgURL(f){return (IMG_SRC&&IMG_SRC[f])||(IMG_LOCAL[f]?f:ASSET+f)}
 let _au=null,_auF=null;
 function playA(f,title){
- const src=(AUDIO_SRC&&AUDIO_SRC[f])||(ASSET+f);
+ const src=(AUDIO_SRC&&AUDIO_SRC[f])||(AUD_LOCAL[f]?f:ASSET+f);
  if(_au&&_auF===f){if(_au.paused){_au.play();toast("Reproduciendo: "+title)}else{_au.pause();toast("En pausa")}return;}
  if(_au){try{_au.pause()}catch(e){}}
  _au=new Audio(src);_auF=f;

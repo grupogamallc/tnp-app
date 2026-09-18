@@ -1,5 +1,5 @@
 /* TNP · service worker — cache-first del app shell para instalación/offline básico */
-const CACHE = "tnp-v37";
+const CACHE = "tnp-v38";
 const ASSETS = ["/", "/index.html", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png"];
 
 self.addEventListener("install", e => {
@@ -22,6 +22,9 @@ self.addEventListener("fetch", e => {
   // las pida directo. Antes el SW devolvia index.html cuando algo fallaba y la
   // imagen quedaba rota.
   if (url.origin !== self.location.origin) return;
+  // audio y video se piden por rangos (Safari): si el SW responde desde cache
+  // con una respuesta completa, el reproductor se queda girando. Mejor no tocarlos.
+  if (/\.(mp3|mp4|webm|m4a|wav)$/i.test(url.pathname)) return;
   e.respondWith(
     caches.match(req).then(hit => hit || fetch(req).then(resp => {
       if (resp && resp.ok && resp.type === "basic") {
