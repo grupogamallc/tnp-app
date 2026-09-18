@@ -730,6 +730,13 @@
   .meal .th .mk svg{width:10px;height:10px}
   .recHero{width:calc(100% + 36px);margin:-18px -18px 14px;aspect-ratio:1.5;overflow:hidden;background:var(--papel)}
   .recHero img{width:100%;height:100%;object-fit:cover;display:block}
+
+  /* foto de perfil dentro de los circulos */
+  .hAv{overflow:hidden;padding:0}
+  .hAv img{width:100%;height:100%;object-fit:cover;object-position:50% 34%;display:block}
+  .avatar{overflow:hidden}
+  .avatar img{width:100%;height:100%;object-fit:cover;object-position:50% 34%;display:block;border-radius:50%}
+  .pcard .avatar{background:var(--papel)}
 </style>
 </head>
 <body>
@@ -1053,7 +1060,7 @@ var AUDIO_SRC={};
 var IMG_SRC={};
 var ASSET="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/";
 /* fotos del inicio — hoy apuntan al CDN de generacion; se cambian aqui cuando vivan en el repo */
-const FOTO={menu:"foto-menu.jpg",habitos:"foto-habitos.jpg"};
+const FOTO={menu:"foto-menu.jpg",habitos:"foto-habitos.jpg",perfil:"perfil-andrea.jpg"};
 const IMG_LOCAL={"prod-ignite.jpg":1,"prod-interrupt.jpg":1,"prod-perfecto.jpg":1,"prod-vitatotal.jpg":1,"stephy.jpg":1};
 function imgURL(f){return (IMG_SRC&&IMG_SRC[f])||(IMG_LOCAL[f]?f:ASSET+f)}
 let _au=null,_auF=null;
@@ -1123,7 +1130,7 @@ function renderHoy(){
   <div class="hHead">
    <div><h2>Hola, ${S.name}</h2><p>Este es tu plan para hoy.</p></div>
    <div class="hr"><span class="hBell" data-a="videos">${ICON.bell}<i></i></span>
-    <div class="hAv" data-a="goTab" data-p="perfil">${S.name[0]}</div></div>
+    <div class="hAv" data-a="goTab" data-p="perfil">${FOTO.perfil?`<img src="${FOTO.perfil}" alt="${S.name}">`:S.name[0]}</div></div>
   </div>
 
   <div class="hCard hProg">
@@ -1471,7 +1478,7 @@ function renderPerfil(){
  const q=S.quiz,g=S.goals;
  const NIV={top:"Membresía TOP · $129.99/mes",app:"App · Comunidad · $19.99/mes",plan:"App + Programa comprado"};
  $("v-perfil").innerHTML=`<div class="vhead"><h2>Tú</h2><div class="sub">Tu cuenta, tu programa y tu progreso</div></div>
- <div class="pcard"><div class="avatar">${S.name[0]}</div><div><h3>${S.name==="Tú"?"Tu cuenta":S.name+" Martínez"}</h3><span class="lvl">${NIV[S.nivel]}</span></div></div>
+ <div class="pcard"><div class="avatar">${FOTO.perfil?`<img src="${FOTO.perfil}" alt="${S.name}">`:S.name[0]}</div><div><h3>${S.name==="Tú"?"Tu cuenta":S.name+" Martínez"}</h3><span class="lvl">${NIV[S.nivel]}</span></div></div>
  <div class="progcard"><div class="top"><span>Progreso del programa</span><span>Día ${S.day} de 28</span></div>
   <div class="bar"><i style="width:${Math.round(S.day/28*100)}%"></i></div>
   <div class="pnote">Racha de ${S.streak} días · siguiente medición: día ${S.day<7?7:S.day<14?14:S.day<21?21:28}</div></div>
