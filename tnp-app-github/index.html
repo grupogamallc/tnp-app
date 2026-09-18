@@ -737,6 +737,16 @@
   .avatar{overflow:hidden}
   .avatar img{width:100%;height:100%;object-fit:cover;object-position:50% 34%;display:block;border-radius:50%}
   .pcard .avatar{background:var(--papel)}
+
+  /* reproductor de YouTube dentro de la hoja */
+  .ytBox{position:relative;width:calc(100% + 36px);margin:-18px -18px 14px;aspect-ratio:16/9;background:#111827;overflow:hidden}
+  .ytBox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .vrow .th{position:relative;overflow:hidden}
+  .vrow .th .plmini{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;background:rgba(17,24,39,.32)}
+  .vrow .th .plmini svg{width:14px;height:14px}
+  .woThumb,.woHero{position:relative}
+  .woThumb::after,.woHero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(17,24,39,.15),rgba(17,24,39,.62));pointer-events:none}
+  .woThumb .pl,.woThumb .dur,.woHero .play,.woHero .tag,.woHero h3,.woHero p{position:relative;z-index:2}
 </style>
 </head>
 <body>
@@ -1341,35 +1351,42 @@ const VIDEOS=[
 
 /* ================== RENDER: ENTRENA ================== */
 const WO_ROUTINES=[
- {id:"fuerza-total",t:"Fuerza total en casa",dur:"25 min",lvl:"Intermedio",focus:"Fuerza",tag:"fuerza",c:"#1E3A8A",ex:[["Sentadilla","3 x 12"],["Flexiones (o en pared)","3 x 10"],["Remo con liga","3 x 12"],["Puente de glúteo","3 x 15"],["Plancha","3 x 30 seg"]]},
- {id:"cardio-suave",t:"Cardio suave sin brincos",dur:"20 min",lvl:"Principiante",focus:"Cardio",tag:"cardio",c:"#E94B3C",ex:[["Marcha en tu lugar","3 min"],["Paso lateral","3 x 40 seg"],["Rodillas altas suaves","3 x 30 seg"],["Sentadilla a silla","3 x 12"],["Enfriamiento","2 min"]]},
- {id:"pierna-gluteo",t:"Piernas y glúteos",dur:"30 min",lvl:"Intermedio",focus:"Fuerza",tag:"fuerza",c:"#1E3A8A",ex:[["Sentadilla sumo","4 x 12"],["Zancadas","3 x 10 c/lado"],["Puente con pausa","3 x 15"],["Patada de glúteo","3 x 12 c/lado"],["Sentadilla isométrica","3 x 30 seg"]]},
- {id:"core",t:"Core y abdomen",dur:"15 min",lvl:"Todos",focus:"Core",tag:"core",c:"#1E3A8A",ex:[["Plancha","3 x 30 seg"],["Bicho muerto","3 x 12"],["Elevación de piernas","3 x 12"],["Plancha lateral","3 x 20 seg c/lado"]]},
- {id:"movilidad",t:"Movilidad y estiramiento",dur:"12 min",lvl:"Todos",focus:"Movilidad",tag:"movilidad",c:"#1E3A8A",ex:[["Gato-camello","2 min"],["Estiramiento de cadera","2 min c/lado"],["Rotación torácica","2 min"],["Cuello y hombros","2 min"]]},
- {id:"express",t:"Express quema",dur:"10 min",lvl:"Todos",focus:"Express",tag:"express",c:"#1E3A8A",ex:[["Sentadilla rápida","40 seg"],["Plancha","30 seg"],["Paso lateral","40 seg"],["Descanso","20 seg"],["Repite el circuito x2",""]]},
- {id:"menopausia",t:"Fuerza para tu etapa (hueso y músculo)",dur:"25 min",lvl:"Todos",focus:"Fuerza · Menopausia",tag:"fuerza",c:"#1E3A8A",ex:[["Sentadilla a silla","3 x 12"],["Remo con liga","3 x 12"],["Puente de glúteo","3 x 15"],["Peso muerto con liga","3 x 12"],["Caminata de granjero","3 x 30 seg"]]},
+ {id:"fuerza-total",yt:"B1iht4HDZ6o",t:"Fuerza total en casa",dur:"25 min",lvl:"Intermedio",focus:"Fuerza",tag:"fuerza",c:"#1E3A8A",ex:[["Sentadilla","3 x 12"],["Flexiones (o en pared)","3 x 10"],["Remo con liga","3 x 12"],["Puente de glúteo","3 x 15"],["Plancha","3 x 30 seg"]]},
+ {id:"cardio-suave",yt:"WNz9C_vyIB0",t:"Cardio suave sin brincos",dur:"20 min",lvl:"Principiante",focus:"Cardio",tag:"cardio",c:"#E94B3C",ex:[["Marcha en tu lugar","3 min"],["Paso lateral","3 x 40 seg"],["Rodillas altas suaves","3 x 30 seg"],["Sentadilla a silla","3 x 12"],["Enfriamiento","2 min"]]},
+ {id:"pierna-gluteo",yt:"ET_zhWpRt30",t:"Piernas y glúteos",dur:"30 min",lvl:"Intermedio",focus:"Fuerza",tag:"fuerza",c:"#1E3A8A",ex:[["Sentadilla sumo","4 x 12"],["Zancadas","3 x 10 c/lado"],["Puente con pausa","3 x 15"],["Patada de glúteo","3 x 12 c/lado"],["Sentadilla isométrica","3 x 30 seg"]]},
+ {id:"core",yt:"aGXajT13IC0",t:"Core y abdomen",dur:"15 min",lvl:"Todos",focus:"Core",tag:"core",c:"#1E3A8A",ex:[["Plancha","3 x 30 seg"],["Bicho muerto","3 x 12"],["Elevación de piernas","3 x 12"],["Plancha lateral","3 x 20 seg c/lado"]]},
+ {id:"movilidad",yt:"k73qaCghWP8",t:"Movilidad y estiramiento",dur:"12 min",lvl:"Todos",focus:"Movilidad",tag:"movilidad",c:"#1E3A8A",ex:[["Gato-camello","2 min"],["Estiramiento de cadera","2 min c/lado"],["Rotación torácica","2 min"],["Cuello y hombros","2 min"]]},
+ {id:"express",yt:"kwEx3l998Ps",t:"Express quema",dur:"10 min",lvl:"Todos",focus:"Express",tag:"express",c:"#1E3A8A",ex:[["Sentadilla rápida","40 seg"],["Plancha","30 seg"],["Paso lateral","40 seg"],["Descanso","20 seg"],["Repite el circuito x2",""]]},
+ {id:"menopausia",yt:"d8OJpBcLN_Y",t:"Fuerza para tu etapa (hueso y músculo)",dur:"25 min",lvl:"Todos",focus:"Fuerza · Menopausia",tag:"fuerza",c:"#1E3A8A",ex:[["Sentadilla a silla","3 x 12"],["Remo con liga","3 x 12"],["Puente de glúteo","3 x 15"],["Peso muerto con liga","3 x 12"],["Caminata de granjero","3 x 30 seg"]]},
 ];
 const WO_VIDEOS=[
- ["Rutina completa de fuerza en casa","25 min · con coach invitada"],
- ["Cardio suave sin impacto","20 min"],
- ["Glúteos con liga","18 min"],
- ["Core sin lastimar la espalda","15 min"],
- ["Estiramiento para empezar el día","10 min"],
- ["Mini rutina express","8 min"],
+ ["Rutina completa de fuerza en casa","25 min · con coach invitada","w5onVaah7dM"],
+ ["Cardio suave sin impacto","20 min","7oWFL8pfxTQ"],
+ ["Glúteos con liga","18 min","pTpltPFeMQU"],
+ ["Core sin lastimar la espalda","15 min","gglryB_YORQ"],
+ ["Estiramiento para empezar el día","10 min","ZUa-FT1SQrg"],
+ ["Mini rutina express","8 min","i7TEN7HKGQo"],
 ];
+/* miniatura y reproductor de YouTube (contenido de demostración) */
+const YTTH=id=>id?("https://i.ytimg.com/vi/"+id+"/hqdefault.jpg"):"";
+function ytSheet(id,titulo,sub){
+ if(!id){toast("Video pendiente");return}
+ sheet(`<div class="ytBox"><iframe src="https://www.youtube-nocookie.com/embed/${id}?rel=0&playsinline=1" title="${titulo}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+  <h3>${titulo}</h3><div class="sm">${sub||""}</div>`);
+}
 const WO_FILTERS=[["all","Todo"],["fuerza","Fuerza"],["cardio","Cardio"],["core","Core"],["movilidad","Movilidad"],["express","Express"]];
 function renderEntrena(){
  const f=ui.woFilter||"all";
  const list=WO_ROUTINES.filter(r=>f==="all"||r.tag===f);
  const hero=WO_ROUTINES[0];
  $("v-entrena").innerHTML=`<div class="vhead"><h2>Entrena</h2><div class="sub">Rutinas cortas para hacer en casa, guiadas por video</div></div>
- <div class="woHero" style="background:linear-gradient(135deg,${hero.c},var(--tinta))" data-wo="${hero.id}">
+ <div class="woHero" style="background:#111827 url('${YTTH(hero.yt)}') center/cover" data-wo="${hero.id}">
   <div class="play">${ICON.play}</div>
   <span class="tag">Rutina de la semana</span><h3>${hero.t}</h3><p>${hero.dur} · ${hero.lvl} · ${hero.focus}</p></div>
  <div class="chips">${WO_FILTERS.map(x=>`<span class="fchip ${f===x[0]?'on':''}" data-a="woFilter" data-p="${x[0]}">${x[1]}</span>`).join("")}</div>
- <div class="woGrid">${list.map(r=>`<div class="woCard" data-wo="${r.id}"><div class="woThumb" style="background:linear-gradient(135deg,${r.c},color-mix(in srgb,${r.c} 50%,var(--tinta)))"><div class="pl">${ICON.play}</div><span class="dur">${r.dur}</span></div><div class="woBody"><h4>${r.t}</h4><div class="m">${r.focus} · ${r.lvl}</div></div></div>`).join("")}</div>
+ <div class="woGrid">${list.map(r=>`<div class="woCard" data-wo="${r.id}"><div class="woThumb" style="background:#E2E8F0 url('${YTTH(r.yt)}') center/cover"><div class="pl">${ICON.play}</div><span class="dur">${r.dur}</span></div><div class="woBody"><h4>${r.t}</h4><div class="m">${r.focus} · ${r.lvl}</div></div></div>`).join("")}</div>
  <div class="secT" style="margin-top:20px"><h3>Videos de entrenamiento</h3><a data-a="na">Ver todos</a></div>
- ${WO_VIDEOS.map(v=>`<div class="vrow" data-a="vplay"><div class="th">${ICON.play}</div><div><b>${v[0]}</b><span>${v[1]}</span></div><span class="badge">Video</span></div>`).join("")}
+ ${WO_VIDEOS.map((v,i)=>`<div class="vrow" data-a="vplayYT" data-p="${i}"><div class="th" style="background:#E2E8F0 url('${YTTH(v[2])}') center/cover"><span class="plmini">${ICON.play}</span></div><div><b>${v[0]}</b><span>${v[1]}</span></div><span class="badge">Video</span></div>`).join("")}
  <p class="fda">El ejercicio es acompañamiento general de bienestar, no una indicación médica. Empieza suave, escucha a tu cuerpo y consulta a tu médico si tienes alguna condición.</p>`;
 }
 
@@ -1555,8 +1572,7 @@ document.body.addEventListener("click",e=>{
  if(wo){const r=WO_ROUTINES.find(x=>x.id===wo.dataset.wo);if(r){
   sheet(`<h3>${r.t}</h3><div class="sm">${r.dur} · ${r.lvl} · ${r.focus}</div>
   <div style="margin:6px 0 2px">${r.ex.map(x=>`<div class="exRow"><b>${x[0]}</b>${x[1]?`<span>${x[1]}</span>`:""}</div>`).join("")}</div>
-  <button class="btn solid" style="width:100%;margin-top:14px" data-a="vplay">${ICON.play} Reproducir rutina</button>
-  <div class="sm" style="margin-top:10px;font-size:10.5px">El video guiado paso a paso se conecta en Fase 1.</div>`);}
+  <button class="btn solid" style="width:100%;margin-top:14px" data-a="vplayWO" data-p="${r.id}">${ICON.play} Reproducir rutina</button>`);}
   return}
  const a=e.target.closest("[data-a]");if(!a)return;
  const act=a.dataset.a;
@@ -1597,6 +1613,8 @@ document.body.addEventListener("click",e=>{
  else if(act==="videos"){sheet(`<h3>Videos de Stephy</h3><div class="sm">Exclusivos de tu membresía — no salen en redes.</div>
   ${VIDEOS.map(v=>`<div class="vrow" data-a="vplay"><div class="th">${ICON.play}</div><div><b>${v[0]}</b><span>${v[1]}</span></div></div>`).join("")}`)}
  else if(act==="vplay"){toast("El reproductor llega en Fase 1")}
+ else if(act==="vplayYT"){const v=WO_VIDEOS[+a.dataset.p];if(v)ytSheet(v[2],v[0],v[1]);}
+ else if(act==="vplayWO"){const r=WO_ROUTINES.find(x=>x.id===a.dataset.p);if(r)ytSheet(r.yt,r.t,r.dur+" · "+r.lvl+" · "+r.focus);}
  else if(act==="goPlan"){document.querySelector('.nav [data-v="plan"]').click()}
  else if(act==="goTab"){const b=document.querySelector('[data-v="'+a.dataset.p+'"]');if(b)b.click()}
  else if(act==="task"){const k=a.dataset.p;S.tasks=S.tasks||{};S.tasks[k]=!S.tasks[k];save();a.classList.toggle("on",!!S.tasks[k])}
