@@ -1341,7 +1341,7 @@ const PLAN_INFO={
                     o     {yt:"ID_DE_YOUTUBE"}   (Short vertical)
    Vacio {} = todavia no hay video: se ve el poster y avisa que esta en grabacion. */
 const VID_POSTER="stephy.jpg";
-const PLAN_VID={PESO:{poster:"pv-peso.jpg"},MENOPAUSIA:{poster:"pv-menopausia.jpg"},GLP1:{poster:"pv-glp1.jpg"},DESINFLAMAR:{poster:"pv-desinflamar.jpg"},BALANCE:{poster:"pv-balance.jpg"},FUERTE:{poster:"pv-fuerte.jpg"},PERSONALIZADO:{poster:"pv-personalizado.jpg"}};
+const PLAN_VID={PESO:{poster:"pv-peso.jpg",mp4:"vid-peso.mp4"},MENOPAUSIA:{poster:"pv-menopausia.jpg"},GLP1:{poster:"pv-glp1.jpg"},DESINFLAMAR:{poster:"pv-desinflamar.jpg"},BALANCE:{poster:"pv-balance.jpg"},FUERTE:{poster:"pv-fuerte.jpg"},PERSONALIZADO:{poster:"pv-personalizado.jpg"}};
 function planVidHTML(k){
  const v=PLAN_VID[k]||{},p=v.poster||VID_POSTER;
  const PL='<svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>';
