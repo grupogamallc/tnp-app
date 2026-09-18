@@ -535,6 +535,12 @@
   .pdPlay::before{content:"";position:absolute;inset:-7px;border-radius:50%;border:2px solid rgba(255,255,255,.55);animation:pulsoVid 2.4s ease-out infinite}
   .pdCap{position:absolute;left:9px;right:9px;bottom:9px;z-index:2;color:#fff;font-size:9.5px;font-weight:800;letter-spacing:.04em;line-height:1.25;text-transform:uppercase}
   .pdCap span{display:block;font-weight:600;letter-spacing:0;text-transform:none;opacity:.82;font-size:9px;margin-top:2px}
+  .pdVid video{background:#111827}
+  .pdMini{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:40px;height:40px;border-radius:50%;background:rgba(17,24,39,.55);display:flex;align-items:center;justify-content:center;z-index:3;opacity:0;transition:opacity .18s;pointer-events:none}
+  .pdMini svg{width:14px;height:14px;fill:#fff;margin-left:2px}
+  .pdVid.pausa .pdMini{opacity:1}
+  .pdBar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.22);z-index:3;pointer-events:none}
+  .pdBar i{display:block;height:100%;width:0;background:var(--coral);transition:width .2s linear}
   @keyframes vidZoom{from{transform:scale(1)}to{transform:scale(1.13)}}
   @keyframes pulsoVid{0%{transform:scale(.9);opacity:.9}70%{transform:scale(1.4);opacity:0}100%{opacity:0}}
   @media (prefers-reduced-motion:reduce){.pdVid img{animation:none}.pdPlay::before{animation:none}}
@@ -1342,10 +1348,13 @@ const PLAN_INFO={
    Vacio {} = todavia no hay video: se ve el poster y avisa que esta en grabacion. */
 const VID_POSTER="stephy.jpg";
 const PLAN_VID={PESO:{poster:"pv-peso.jpg",mp4:"vid-peso.mp4"},MENOPAUSIA:{poster:"pv-menopausia.jpg"},GLP1:{poster:"pv-glp1.jpg"},DESINFLAMAR:{poster:"pv-desinflamar.jpg"},BALANCE:{poster:"pv-balance.jpg"},FUERTE:{poster:"pv-fuerte.jpg"},PERSONALIZADO:{poster:"pv-personalizado.jpg"}};
-function planVidHTML(k){
+const PL_SVG='<svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>';
+function planVidInner(k){
  const v=PLAN_VID[k]||{},p=v.poster||VID_POSTER;
- const PL='<svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>';
- return `<div class="pdVid" data-a="pdPlay" data-p="${k}"><img src="${p}" alt=""><span class="pdPlay">${PL}</span><div class="pdCap">15 seg con Stephy<span>Qué incluye</span></div></div>`;
+ return `<img src="${p}" alt=""><span class="pdPlay">${PL_SVG}</span><div class="pdCap">15 seg con Stephy<span>Qué incluye</span></div>`;
+}
+function planVidHTML(k){
+ return `<div class="pdVid" data-a="pdPlay" data-p="${k}">${planVidInner(k)}</div>`;
 }
 const PLAN_ORDER=["PESO","MENOPAUSIA","GLP1","DESINFLAMAR","BALANCE","FUERTE","PERSONALIZADO"];
 function renderPills(){
@@ -1790,7 +1799,20 @@ document.body.addEventListener("click",e=>{
  else if(act==="wPlan"){planSheet(a.dataset.p)}
  else if(act==="pdPlay"){
   const k=a.dataset.p,v=PLAN_VID[k]||{},box=a.closest(".pdVid")||a;
-  if(v.mp4){box.classList.add("playing");box.innerHTML='<video src="'+v.mp4+'" poster="'+(v.poster||VID_POSTER)+'" playsinline autoplay controls></video>'}
+  const yav=box.querySelector("video");
+  if(yav){ /* ya corre: el tap pausa o reanuda */
+   if(yav.paused){yav.play().catch(()=>{});box.classList.remove("pausa")}
+   else{yav.pause();box.classList.add("pausa")}
+   return}
+  if(v.mp4){
+   box.classList.add("playing");
+   box.innerHTML='<video src="'+v.mp4+'" poster="'+(v.poster||VID_POSTER)+'" playsinline webkit-playsinline preload="auto"></video><span class="pdMini">'+PL_SVG+'</span><span class="pdBar"><i></i></span>';
+   const vid=box.querySelector("video"),bar=box.querySelector(".pdBar i");
+   vid.addEventListener("timeupdate",()=>{if(vid.duration)bar.style.width=(vid.currentTime/vid.duration*100)+"%"});
+   vid.addEventListener("ended",()=>{box.classList.remove("playing","pausa");box.innerHTML=planVidInner(k)});
+   vid.addEventListener("error",()=>{box.classList.remove("playing","pausa");box.innerHTML=planVidInner(k);toast("No se pudo reproducir el video")});
+   vid.play().catch(()=>{box.classList.add("pausa")});
+  }
   else if(v.yt){box.classList.add("playing");box.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+v.yt+'?rel=0&playsinline=1&autoplay=1&modestbranding=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>'}
   else{toast("Ese video todavía se está grabando")}
  }
