@@ -1132,7 +1132,7 @@ const GUIONES={
 };
 var AUDIO_SRC={};
 /* los audios ahora viven junto a la app, no en el proyecto de assets */
-const AUD_LOCAL={"bienvenida.mp3":1,"dia-1.mp3":1,"dia-2.mp3":1,"dia-3.mp3":1,"dia-4.mp3":1,"dia-5.mp3":1,"sos.mp3":1};
+const AUD_LOCAL={"app-intro.mp3":1,"bienvenida.mp3":1,"dia-1.mp3":1,"dia-2.mp3":1,"dia-3.mp3":1,"dia-4.mp3":1,"dia-5.mp3":1,"sos.mp3":1};
 var IMG_SRC={};
 var ASSET="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/";
 /* fotos del inicio — hoy apuntan al CDN de generacion; se cambian aqui cuando vivan en el repo */
@@ -1741,9 +1741,24 @@ document.body.addEventListener("click",e=>{
   :`<ul><li><b>1.</b> Toca los <b>tres puntitos</b> del navegador (arriba a la derecha).</li><li><b>2.</b> Toca <b>"Agregar a pantalla principal"</b> o <b>"Instalar app"</b>.</li><li><b>3.</b> Confirma — el ícono TNP queda con tus apps.</li></ul>
   ${window.__dp?'<button class="btn solid" style="width:100%" data-a="doinstall">Instalar ahora</button>':''}`}`)}
  else if(act==="doinstall"){if(window.__dp){window.__dp.prompt();window.__dp=null;$("sheetBg").classList.remove("on")}}
- else if(act==="wVoz"){const v=$("wVid"),b=$("wSnd");if(!v)return;
-  if(v.muted){v.muted=false;v.loop=false;try{v.currentTime=0}catch(e){}v.play().catch(()=>{});b&&b.classList.add("on")}
-  else{v.muted=true;v.loop=true;v.play().catch(()=>{});b&&b.classList.remove("on")}}
+ else if(act==="wVoz"){
+  const v=$("wVid"),b=$("wSnd");
+  /* el video siempre corre mudo en loop; la voz va por aparte (app-intro.mp3) */
+  if(!window._intro){
+   window._intro=new Audio("app-intro.mp3");
+   window._intro.preload="auto";
+   window._intro.addEventListener("ended",()=>{b&&b.classList.remove("on")});
+   window._intro.addEventListener("error",()=>{b&&b.classList.remove("on");toast("No se pudo cargar el audio")});
+  }
+  const au=window._intro;
+  if(au.paused){
+   try{au.currentTime=0}catch(e){}
+   au.play().then(()=>{b&&b.classList.add("on");if(v){v.muted=true;v.loop=true;v.play().catch(()=>{})}})
+            .catch(()=>{b&&b.classList.remove("on");toast("Toca otra vez para escuchar")});
+  }else{
+   au.pause();b&&b.classList.remove("on");
+  }
+ }
  else if(act==="wVerPlanes"){const el=$("wPills");if(el)el.scrollIntoView({behavior:"smooth",block:"center"})}
  else if(act==="wPlan"){planSheet(a.dataset.p)}
  else if(act==="wPick"){$("sheetBg").classList.remove("on");$("welcome").classList.remove("on");$("onb").classList.add("on");ob={step:1,q:{prog:a.dataset.p,sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[]}};obRender()}
