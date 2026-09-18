@@ -357,7 +357,7 @@
   .transBody p{font-size:12.5px;line-height:1.45;color:color-mix(in srgb,var(--tinta) 78%,#fff);margin-top:9px;font-style:italic}
 
   /* MI PROGRESO */
-  .miFotos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:9px}
+  .miFotos{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}
   .fotoSlot{background:#fff;border:1px solid var(--borde);border-radius:16px;overflow:hidden;position:relative;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center}
   .fotoSlot img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
   .fotoSlot span{position:absolute;bottom:0;left:0;right:0;font-size:10px;font-weight:700;color:#fff;background:linear-gradient(transparent,rgba(17,24,39,.7));padding:14px 8px 6px;text-align:center}
@@ -1060,7 +1060,7 @@ var AUDIO_SRC={};
 var IMG_SRC={};
 var ASSET="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/";
 /* fotos del inicio — hoy apuntan al CDN de generacion; se cambian aqui cuando vivan en el repo */
-const FOTO={menu:"foto-menu.jpg",habitos:"foto-habitos.jpg",perfil:"perfil-andrea.jpg"};
+const FOTO={menu:"foto-menu.jpg",habitos:"foto-habitos.jpg",perfil:"perfil-andrea.jpg",prog1:"progreso-dia1.jpg",prog2:"progreso-hoy.jpg"};
 const IMG_LOCAL={"prod-ignite.jpg":1,"prod-interrupt.jpg":1,"prod-perfecto.jpg":1,"prod-vitatotal.jpg":1,"stephy.jpg":1};
 function imgURL(f){return (IMG_SRC&&IMG_SRC[f])||(IMG_LOCAL[f]?f:ASSET+f)}
 let _au=null,_auF=null;
@@ -1791,8 +1791,9 @@ function miProgresoHTML(){
   <div class="miBtns"><button class="btn ghost" data-a="measures">${ICON.plus} Medidas</button><button class="btn ghost" data-a="health">${ICON.heart2} Conectar salud</button></div>
  </div>
  <div class="miFotos">
-  <div class="fotoSlot"><img src="${silhou('#CBD5E1')}" alt=""><span>Antes · día 1</span></div>
-  <div class="fotoSlot add" data-a="addProgreso"><div class="fotoAdd">${ICON.plus}</div><span>Subir foto de hoy</span></div>
+  <div class="fotoSlot"><img src="${FOTO.prog1||silhou('#CBD5E1')}" alt="" loading="lazy"><span>Día 1</span></div>
+  <div class="fotoSlot"><img src="${FOTO.prog2||silhou('#CBD5E1')}" alt="" loading="lazy"><span>Hoy · día ${S.day}</span></div>
+  <div class="fotoSlot add" data-a="addProgreso"><div class="fotoAdd">${ICON.plus}</div><span>Subir foto</span></div>
  </div>`;
 }
 function miSpark(pr,meta){
