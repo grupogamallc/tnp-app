@@ -1083,7 +1083,16 @@ function playA(f,title){
  if(_au&&_auF===f){if(_au.paused){_au.play();toast("Reproduciendo: "+title)}else{_au.pause();toast("En pausa")}return;}
  if(_au){try{_au.pause()}catch(e){}}
  _au=new Audio(src);_auF=f;
- _au.play().then(()=>toast("Reproduciendo: "+title)).catch(()=>toast("No pude reproducir el audio"));
+ _au.addEventListener("error",()=>{
+  const c=(_au.error&&_au.error.code)||0;
+  const M={1:"se canceló la descarga",2:"se cayó la conexión",3:"el archivo no se pudo decodificar",4:"no se encontró el audio"};
+  toast("Audio: "+(M[c]||"error "+c));
+ });
+ _au.play().then(()=>toast("Reproduciendo: "+title)).catch(err=>{
+  const n=(err&&err.name)||"";
+  if(n==="NotAllowedError"){toast("Toca otra vez para reproducir")}
+  else{toast("No se pudo reproducir"+(n?" ("+n+")":""))}
+ });
 }
 
 function todayMeals(){return S.week[0].map((k,s)=>({key:k,slot:s,...scaled(k)}))}
