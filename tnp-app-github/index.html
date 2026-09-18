@@ -747,6 +747,53 @@
   .woThumb,.woHero{position:relative}
   .woThumb::after,.woHero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(17,24,39,.15),rgba(17,24,39,.62));pointer-events:none}
   .woThumb .pl,.woThumb .dur,.woHero .play,.woHero .tag,.woHero h3,.woHero p{position:relative;z-index:2}
+
+  /* ============ PORTADA v2 ============ */
+  .wtop{justify-content:space-between !important}
+  .wMark{display:inline-flex;align-items:center;gap:9px}
+  .wMark svg{width:30px;height:30px;flex:none}
+  .wMark b{font-family:'Manrope',system-ui,sans-serif;font-weight:800;font-size:15px;letter-spacing:-.03em;color:var(--tinta)}
+  .wOpen{margin-top:14px !important}
+
+  /* halo mas grande, con el aro girando */
+  .wHalo{width:172px !important;height:172px !important;margin-top:16px !important}
+  .wHalo::before{animation:haloGira 14s linear infinite;
+    background:conic-gradient(from 0deg,#1E3A8A,#93A8D4,#E94B3C,#CBD5E1,#1E3A8A) !important}
+  .wHalo img,.wHalo video{width:152px !important;height:152px !important;border-width:5px !important}
+  @keyframes haloGira{to{transform:rotate(360deg)}}
+  .wSnd{right:6px !important;bottom:10px !important;width:38px !important;height:38px !important}
+  .wSnd svg{width:16px !important;height:16px !important}
+
+  /* el titular que faltaba */
+  .wH1{font-family:'Manrope',system-ui,sans-serif;font-weight:800;font-size:clamp(30px,8.6vw,37px);line-height:1.08;letter-spacing:-.04em;color:var(--tinta);margin:26px 0 0;text-wrap:balance}
+  .wH1 em{font-style:normal;color:var(--navy);position:relative;white-space:nowrap}
+  .wH1 em::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:4px;border-radius:3px;background:var(--coral);
+    transform:scaleX(0);transform-origin:left;animation:subrayar .7s cubic-bezier(.22,.9,.3,1) 1.15s forwards}
+  @keyframes subrayar{to{transform:scaleX(1)}}
+  .wSub{font-size:14px;line-height:1.5;color:var(--gris);margin:22px 0 0;max-width:30ch}
+
+  /* prueba social arriba, no hasta el final */
+  .wProof{display:flex;align-items:center;justify-content:center;gap:13px;margin-top:22px}
+  .wProof span{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:9.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--gris);line-height:1}
+  .wProof span b{font-family:'Manrope',system-ui,sans-serif;font-size:19px;font-weight:800;letter-spacing:-.03em;color:var(--navy);line-height:1}
+  .wProof i{width:1px;height:26px;background:var(--borde);flex:none}
+
+  .wScroll{display:flex;align-items:center;justify-content:center;width:30px;height:30px;margin:20px auto 0;color:var(--gris-l);animation:bajaSuave 1.9s ease-in-out infinite}
+  .wScroll svg{width:20px;height:20px}
+  @keyframes bajaSuave{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(6px);opacity:1}}
+
+  /* fondo con profundidad, sin degradados pesados */
+  .wblob.b1{width:340px !important;height:340px !important;top:-40px !important;left:-130px !important;opacity:.5 !important;
+    background:radial-gradient(circle,rgba(30,58,138,.16),transparent 68%) !important}
+  .wblob.b2{width:300px !important;height:300px !important;top:150px !important;right:-120px !important;opacity:.45 !important;
+    background:radial-gradient(circle,rgba(233,75,60,.13),transparent 70%) !important}
+  .wlIn{background:linear-gradient(180deg,#EDF1F8 0%,#F7F9FC 30%,var(--papel) 52%) !important}
+
+  @media (prefers-reduced-motion: reduce){
+    .wHalo::before{animation:none}
+    .wScroll{animation:none}
+    .wH1 em::after{animation:none;transform:scaleX(1)}
+  }
 </style>
 </head>
 <body>
@@ -786,11 +833,13 @@
 <!-- BIENVENIDA -->
 <div id="welcome"><div class="wlIn">
   <div class="wblob b1"></div><div class="wblob b2"></div>
-  <div class="wtop"><a data-a="wDemo">Entrar</a></div>
+  <div class="wtop">
+    <span class="wMark wAnim" style="--d:40ms"><svg viewBox="0 0 512 512"><rect x="54" y="54" width="404" height="404" rx="118" fill="#111827"/><g transform="translate(95.87,300.00)"><path d="M39.216 0V-99.76H4.128V-120.4H97.008V-99.76H61.92V0Z" fill="#F2F4F8"/><path d="M112.488 0V-120.4H155.66L179.568 -15.48H182.664V-120.4H205.024V0H161.852L137.944 -104.92H134.848V0Z" fill="#E94B3C"/><path d="M227.728 0V-120.4H277.264Q288.616 -120.4 297.302 -115.842Q305.988 -111.284 310.89 -103.028Q315.792 -94.772 315.792 -83.42V-81.012Q315.792 -69.832 310.718 -61.49Q305.644 -53.148 296.958 -48.59Q288.272 -44.032 277.264 -44.032H250.432V0ZM250.432 -64.672H275.028Q283.112 -64.672 288.1 -69.144Q293.088 -73.616 293.088 -81.356V-83.076Q293.088 -90.816 288.1 -95.288Q283.112 -99.76 275.028 -99.76H250.432Z" fill="#F2F4F8"/></g><rect x="209" y="322" width="94" height="15" rx="7.5" fill="#1E3A8A"/></svg><b>Tu Nuevo Plan</b></span>
+    <a data-a="wDemo">Entrar</a>
+  </div>
 
   <div class="wbody">
     <div class="wOpen">
-      <div class="wLogo wAnim" style="--d:60ms"><svg viewBox="0 0 512 512"><rect x="54" y="54" width="404" height="404" rx="118" fill="#111827"/><g transform="translate(95.87,300.00)"><path d="M39.216 0V-99.76H4.128V-120.4H97.008V-99.76H61.92V0Z" fill="#F2F4F8"/><path d="M112.488 0V-120.4H155.66L179.568 -15.48H182.664V-120.4H205.024V0H161.852L137.944 -104.92H134.848V0Z" fill="#E94B3C"/><path d="M227.728 0V-120.4H277.264Q288.616 -120.4 297.302 -115.842Q305.988 -111.284 310.89 -103.028Q315.792 -94.772 315.792 -83.42V-81.012Q315.792 -69.832 310.718 -61.49Q305.644 -53.148 296.958 -48.59Q288.272 -44.032 277.264 -44.032H250.432V0ZM250.432 -64.672H275.028Q283.112 -64.672 288.1 -69.144Q293.088 -73.616 293.088 -81.356V-83.076Q293.088 -90.816 288.1 -95.288Q283.112 -99.76 275.028 -99.76H250.432Z" fill="#F2F4F8"/></g><rect x="209" y="322" width="94" height="15" rx="7.5" fill="#1E3A8A"/></svg><b>Tu Nuevo Plan</b></div>
       <div class="wHalo wAnim" style="--d:170ms" data-a="wVoz">
         <video id="wVid" poster="stephy-hola.jpg" muted loop playsinline autoplay preload="auto" disablepictureinpicture aria-label="Stephy Kantú te da la bienvenida"><source src="stephy-hola.mp4" type="video/mp4"><source src="stephy-hola.webm" type="video/webm"></video>
         <span class="wSnd" id="wSnd" aria-hidden="true"><svg class="ic1" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg><svg class="ic2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 5v14M12 5v14M18 5v14"/></svg></span>
@@ -798,6 +847,14 @@
       <div class="wCred wAnim" style="--d:300ms" data-a="wVoz">
         <div class="tx"><b>Stephanie Kantú</b><i>Nutrióloga certificada</i></div>
       </div>
+
+      <h1 class="wH1 wAnim" style="--d:380ms">Comida real.<br>Un plan claro.<br><em>Tu nueva versión.</em></h1>
+      <p class="wSub wAnim" style="--d:470ms">El método de la clínica, ahora en tu celular.</p>
+
+      <div class="wProof wAnim" style="--d:560ms">
+        <span><b>8</b>años</span><i></i><span><b>+60,000</b>clientas</span><i></i><span><b>Dallas</b>clínica física</span>
+      </div>
+      <span class="wScroll wAnim" style="--d:700ms" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
     </div>
 
     <div class="wEasy">
