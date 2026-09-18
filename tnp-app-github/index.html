@@ -510,8 +510,14 @@
     .wPill{transition:none}
   }
   /* etiqueta del plan mas elegido */
-  .wPill .tag{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--pa);background:color-mix(in srgb,var(--pa) 13%,#fff);border:1px solid color-mix(in srgb,var(--pa) 26%,#fff);border-radius:999px;padding:2px 7px;margin-left:7px;vertical-align:2px}
+  .wPill .tag{display:inline-block;font-size:8px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--pa);background:color-mix(in srgb,var(--pa) 13%,#fff);border:1px solid color-mix(in srgb,var(--pa) 26%,#fff);border-radius:999px;padding:2px 6px;margin-left:6px;vertical-align:2px;white-space:nowrap}
   .wPill .pi{position:relative;overflow:hidden}
+  /* Opcion E: foto del programa + etiqueta "para quien es" + precio */
+  .wPill .pf{width:52px;height:52px;border-radius:16px;flex:none;position:relative;overflow:hidden;background:var(--blush);box-shadow:0 8px 16px -9px rgba(var(--sombra),.5)}
+  .wPill .pf img{position:absolute;width:202%;left:-51%;top:50%;transform:translateY(-50%);display:block}
+  .wPill .lbl{display:block;font-size:8.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--coral);line-height:1.25;margin-bottom:3px}
+  .wPill .rt{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none}
+  .wPill .pr{font-size:12px;font-weight:800;color:var(--navy);letter-spacing:-.01em;white-space:nowrap}
   .wPill .pi::after{content:"";position:absolute;inset:0;background:linear-gradient(145deg,rgba(255,255,255,.38),transparent 52%);pointer-events:none}
 
   /* hoja de detalle de plan */
@@ -1356,11 +1362,27 @@ function planVidInner(k){
 function planVidHTML(k){
  return `<div class="pdVid" data-a="pdPlay" data-p="${k}">${planVidInner(k)}</div>`;
 }
+/* Etiqueta "para quien es" — se lee antes que el nombre del plan */
+const PLAN_LBL={
+ PESO:"Si ya lo intentaste antes",
+ MENOPAUSIA:"Si estás en menopausia",
+ GLP1:"Si llevas tratamiento GLP-1",
+ DESINFLAMAR:"Si vives inflamada",
+ BALANCE:"Si tu azúcar anda inestable",
+ FUERTE:"Si quieres marcarte",
+ PERSONALIZADO:"Si quieres algo hecho para ti",
+};
+/* Foto vertical de cada programa en la pastilla */
+const PLAN_FOTO={
+ PESO:"pv-peso.jpg",MENOPAUSIA:"pv-menopausia.jpg",GLP1:"pv-glp1.jpg",
+ DESINFLAMAR:"pv-desinflamar.jpg",BALANCE:"pv-balance.jpg",
+ FUERTE:"pv-fuerte.jpg",PERSONALIZADO:"pv-personalizado.jpg",
+};
 const PLAN_ORDER=["PESO","MENOPAUSIA","GLP1","DESINFLAMAR","BALANCE","FUERTE","PERSONALIZADO"];
 function renderPills(){
  const el=$("wPills"); if(!el) return;
  const CH='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
- el.innerHTML=PLAN_ORDER.map((k,i)=>`<div class="wPill wAnim" style="--pa:${PROG_ACCENT[k]};--d:${860+i*70}ms" data-a="wPlan" data-p="${k}"><span class="pi">${PROG_ICON[k]}</span><span class="pt"><b>${PLAN_INFO[k].n.toUpperCase()}${k==="PESO"?'<span class="tag">El más elegido</span>':''}</b><span>${PLAN_INFO[k].tag}</span></span><span class="ch">${CH}</span></div>`).join("");
+ el.innerHTML=PLAN_ORDER.map((k,i)=>`<div class="wPill wAnim" style="--pa:${PROG_ACCENT[k]};--d:${860+i*70}ms" data-a="wPlan" data-p="${k}"><span class="pf"><img src="${PLAN_FOTO[k]}" alt="" loading="lazy"></span><span class="pt"><span class="lbl">${PLAN_LBL[k]}</span><b>${PLAN_INFO[k].n.toUpperCase()}${k==="PESO"?'<span class="tag">El más elegido</span>':''}</b><span>${PLAN_INFO[k].tag}</span></span><span class="rt"><span class="pr">${PLAN_INFO[k].precio}</span><span class="ch">${CH}</span></span></div>`).join("");
  const foot=document.querySelector("#welcome .wfoot");
  if(foot&&"IntersectionObserver" in window){
   new IntersectionObserver(es=>{es.forEach(e=>foot.classList.toggle("enPlanes",e.isIntersecting))},{root:$("welcome"),threshold:.35}).observe(el);
