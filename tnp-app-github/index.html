@@ -846,6 +846,8 @@
 /* ================== ESTADO ================== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const $=id=>document.getElementById(id);
+/* ?nuevo = arrancar de cero, como una clienta que entra por primera vez */
+if(/[?&]nuevo\b/i.test(location.search)){try{localStorage.removeItem("tnp")}catch(e){}}
 let S=store.get("tnp",null);
 let ui={tab:"hoy",planSeg:"semana",recFilter:null,sub:false,agua:5,emDone:[],retoSeg:"reto",woFilter:null};
 /* Foto de Stephy: si el asset no carga (p.ej. preview sin assets), usa un placeholder de marca */
@@ -2028,7 +2030,7 @@ function openCycleSetup(){
 /* ================== ARRANQUE ================== */
 if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();window.__dp=e});
-const VER_INICIO=/[?&]inicio\b/i.test(location.search);
+const VER_INICIO=/[?&](inicio|nuevo)\b/i.test(location.search);
 if(S&&S.quiz&&!VER_INICIO){if(!S.week)genWeek();ensureExtras();renderAll()}
 else{
  S=demoState();genWeek();renderAll();S=null;
