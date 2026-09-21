@@ -652,6 +652,15 @@
   .confeti i{position:absolute;top:-14px;width:7px;height:11px;border-radius:2px;animation:caer 2.4s ease-in forwards}
   @keyframes medalIn{from{transform:scale(.3) rotate(-25deg);opacity:0}to{transform:none;opacity:1}}
   @keyframes caer{to{transform:translateY(560px) rotate(560deg);opacity:0}}
+  /* ===== Cuenta (Supabase) ===== */
+  .acct{background:#fff;border:1px solid var(--borde);border-radius:18px;padding:13px 15px;margin-top:10px}
+  .acct b{display:block;font-size:14px;font-weight:800;color:var(--tinta)}
+  .acct>span{display:block;font-size:11.5px;color:var(--gris);margin-top:2px;line-height:1.4}
+  .acct.on{border-color:color-mix(in srgb,var(--navy) 30%,var(--borde));background:color-mix(in srgb,var(--navy) 5%,#fff)}
+  .acctRow{display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:10px}
+  .acctRow small{font-size:11px;color:var(--gris);font-weight:600}
+  .acctRow a{font-size:11.5px;font-weight:700;color:var(--coral);cursor:pointer;white-space:nowrap}
+  .acctOk{margin-top:9px;font-size:12px;color:var(--tinta);background:color-mix(in srgb,var(--navy) 7%,#fff);border-radius:11px;padding:9px 11px;line-height:1.4}
   /* ===== Gratitud ===== */
   .gratBox{margin-top:9px;display:flex;gap:7px}
   .gratBox input{flex:1;min-width:0;border:1.5px solid var(--borde);border-radius:12px;padding:10px 12px;font-family:inherit;font-size:13px;color:var(--tinta);background:#fff}
@@ -1721,6 +1730,7 @@ function renderPerfil(){
  <div class="progcard"><div class="top"><span>Progreso del programa</span><span>Día ${S.day} de 28</span></div>
   <div class="bar"><i style="width:${Math.round(S.day/28*100)}%"></i></div>
   <div class="pnote">Racha de ${S.streak} días · siguiente medición: día ${S.day<7?7:S.day<14?14:S.day<21?21:28}</div></div>
+ ${cuentaHTML()}
  ${miProgresoHTML()}
  ${premiosHTML()}
  ${badgesHTML()}
@@ -1757,7 +1767,8 @@ document.querySelectorAll("#nav button,.navHidden").forEach(b=>b.onclick=()=>{
 function toast(t){const el=$("toast");el.textContent=t;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("on"),2200)}
 function sheet(html){$("sheet").innerHTML=html;$("sheetBg").classList.add("on")}
 $("sheetBg").addEventListener("click",e=>{if(e.target.id==="sheetBg")$("sheetBg").classList.remove("on")});
-function save(){store.set("tnp",S)}
+let _enSync=false;
+function save(){store.set("tnp",S);if(!_enSync&&typeof syncLuego==="function")syncLuego()}
 
 /* ================== EVENTOS ================== */
 document.body.addEventListener("click",e=>{
@@ -1911,6 +1922,8 @@ document.body.addEventListener("click",e=>{
  else if(act==="wVerPlanes"){const el=$("wPills");if(el)el.scrollIntoView({behavior:"smooth",block:"center"})}
  else if(act==="wPlan"){planSheet(a.dataset.p)}
  else if(act==="cvSeg"){ui.progSeg=a.dataset.p;renderPerfil()}
+ else if(act==="mailLink"){mandarLink()}
+ else if(act==="salirCuenta"){salirCuenta()}
  else if(act==="gratSave"){gratGuardar()}
  else if(act==="gratAll"){gratitudTodo()}
  else if(act==="premioVer"){const m=premiosLista().find(x=>x.id===a.dataset.p);if(m)celebrar(m)}
@@ -2377,6 +2390,82 @@ function gratGuardar(){
 }
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target&&e.target.id==="iGrat"){e.preventDefault();gratGuardar()}});
 
+
+/* ================== CUENTA · Supabase ==================
+   OCULTA hasta que llegue la respuesta legal (HIPAA): solo aparece con ?cuenta en la URL.
+   La llave de abajo es la PUBLICA (publishable): esta hecha para ir dentro de la app.
+   Lo que protege los datos son las reglas RLS de la base: cada quien solo ve lo suyo. */
+const SB_URL="https://juahjgeewcwqjovnlril.supabase.co";
+const SB_KEY="sb_publishable_F8Com7KmemJ7kyCe83eahg_LpHGoLIU";
+const CUENTA_ON=(()=>{try{
+ if(/[?&]cuenta\b/i.test(location.search)||/access_token=/.test(location.hash))localStorage.setItem("tnp_cuenta","1");
+ return localStorage.getItem("tnp_cuenta")==="1"}catch(e){return false}})();
+let sb=null,sbUser=null,sbEstado="",_syncT=null;
+function sbCargar(){return new Promise((ok,no)=>{if(window.supabase&&window.supabase.createClient)return ok();const x=document.createElement("script");x.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";x.onload=ok;x.onerror=no;document.head.appendChild(x)})}
+function perfilOtraVez(){try{if(S&&$("v-perfil"))renderPerfil()}catch(e){}}
+async function cuentaIniciar(){
+ if(!CUENTA_ON)return;
+ try{await sbCargar()}catch(e){sbEstado="No se pudo conectar. Revisa tu internet.";perfilOtraVez();return}
+ sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"implicit"}});
+ const {data}=await sb.auth.getSession();sbUser=data&&data.session?data.session.user:null;
+ sb.auth.onAuthStateChange((ev,ses)=>{const antes=sbUser;sbUser=ses?ses.user:null;
+  if(sbUser&&!antes){ui.linkEnviado=null;syncNube(true);toast("Tu cuenta quedó conectada")}
+  perfilOtraVez()});
+ if(/access_token=/.test(location.hash)){try{history.replaceState(null,"",location.pathname+"?cuenta")}catch(e){}}
+ if(sbUser)syncNube(false);
+ perfilOtraVez();
+}
+function cuentaHTML(){
+ if(!CUENTA_ON)return "";
+ if(!sb)return `<div class="acct"><b>Tu cuenta</b><span>${sbEstado||"Conectando…"}</span></div>`;
+ if(!sbUser)return `<div class="acct"><b>Guarda tu progreso en tu cuenta</b>
+  <span>Te mandamos un link a tu correo. Sin contraseña. Lo que ya registraste en este celular se sube solo.</span>
+  ${ui.linkEnviado?`<div class="acctOk">Listo — revisa tu correo <b style="display:inline;font-size:12px">${esc(ui.linkEnviado)}</b> y toca el link. Si no llega en 2 minutos, busca en spam.</div>`
+   :`<div class="gratBox"><input id="iMail" type="email" inputmode="email" autocomplete="email" placeholder="tu@correo.com" enterkeyhint="send"><button data-a="mailLink">Enviar link</button></div>`}</div>`;
+ const hace=S&&S.syncT?Math.round((Date.now()-S.syncT)/60000):null;
+ const est=sbEstado||(hace==null?"Todavía sin sincronizar":hace<1?"Sincronizado hace un momento":"Sincronizado hace "+hace+" min");
+ return `<div class="acct on"><b>Tu cuenta está conectada</b><span>${esc(sbUser.email||"")}</span>
+  <div class="acctRow"><small>${est}</small><a data-a="salirCuenta">Cerrar sesión</a></div></div>`;
+}
+async function mandarLink(){
+ const i=$("iMail");const mail=i?i.value.trim():"";
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)){toast("Escribe un correo válido");i&&i.focus();return}
+ if(!sb){toast("Conectando… intenta en un momento");return}
+ const b=document.querySelector('[data-a="mailLink"]');if(b){b.disabled=true;b.textContent="Enviando…"}
+ const {error}=await sb.auth.signInWithOtp({email:mail,options:{emailRedirectTo:location.origin+"/?cuenta",shouldCreateUser:true}});
+ if(error){if(b){b.disabled=false;b.textContent="Enviar link"}
+  toast(/rate|limit|seconds/i.test(error.message)?"Demasiados intentos. Espera unos minutos.":"No se pudo enviar. Intenta otra vez.");console.warn(error);return}
+ ui.linkEnviado=mail;perfilOtraVez();
+}
+async function salirCuenta(){if(!sb)return;await sb.auth.signOut();sbUser=null;perfilOtraVez();toast("Sesión cerrada. Tus datos siguen en este celular.")}
+function syncLuego(){if(!sb||!sbUser)return;clearTimeout(_syncT);_syncT=setTimeout(()=>syncNube(false),1500)}
+/* Sube lo que falta. Solo empuja datos del celular a la cuenta; nunca borra nada del celular. */
+async function syncNube(primera){
+ if(!sb||!sbUser||!S)return;
+ const uid=sbUser.id;
+ try{
+  const hoyISO=new Date().toISOString().slice(0,10);
+  if(primera){
+   const ini=new Date(Date.now()-((S.day||1)-1)*864e5).toISOString().slice(0,10);
+   const nom=(S.name&&S.name!=="Tú")?S.name.slice(0,60):null;
+   const {error}=await sb.from("perfiles").update({nombre:nom,programa:(S.quiz&&S.quiz.prog)||null,fecha_inicio:ini}).eq("id",uid);
+   if(error)throw error;
+  }
+  const P=(S.progress||[]).filter(x=>x.t&&!x.sy);
+  if(P.length){const {error}=await sb.from("pesos").insert(P.map(x=>({perfil_id:uid,peso_kg:x.peso,dia_programa:x.d,fecha:new Date(x.t).toISOString()})));if(error)throw error;P.forEach(x=>x.sy=1)}
+  const G=(S.gratitud||[]).filter(x=>!x.sy);
+  if(G.length){const {error}=await sb.from("gratitud").insert(G.map(x=>({perfil_id:uid,texto:x.txt,dia_programa:x.d,fecha:new Date(x.t).toISOString()})));if(error)throw error;G.forEach(x=>x.sy=1)}
+  const PR=Object.entries(S.premios||{});
+  if(PR.length){const {error}=await sb.from("premios").upsert(PR.map(([id,t])=>({perfil_id:uid,premio_id:id,fecha:new Date(t).toISOString()})),{onConflict:"perfil_id,premio_id",ignoreDuplicates:true});if(error)throw error}
+  const it=hoyItems();const com=(S.done||[]).filter(Boolean).length;
+  const pts=(it[0].ok?10:0)+(it[1].ok?10:0)+(it[2].ok?5:0)+(it[3].ok?10:0)+Math.min(20,com*5);
+  {const {error}=await sb.from("dias_cumplidos").upsert({perfil_id:uid,fecha:hoyISO,puntos:pts,detalle:{peso:it[0].ok,checkin:it[1].ok,gratitud:it[2].ok,agua:it[3].ok,comidas:com}},{onConflict:"perfil_id,fecha"});if(error)throw error}
+  S.syncT=Date.now();sbEstado="";
+  _enSync=true;save();_enSync=false;
+ }catch(e){sbEstado="No se pudo sincronizar. Lo intento de nuevo al rato.";console.warn("sync",e)}
+ perfilOtraVez();
+}
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target&&e.target.id==="iMail"){e.preventDefault();mandarLink()}});
 function badgesHTML(){
  const got=BADGES.filter(b=>{try{return b.on(S)}catch(e){return false}}).length;
  return `<div class="secT" style="margin-top:16px"><h3>Logros</h3><span style="font-size:11px;font-weight:700;color:var(--gris)">${got} de ${BADGES.length}</span></div>
@@ -2517,6 +2606,7 @@ else{
  $("welcome").classList.add("on");
  S=store.get("tnp",null);
 }
+cuentaIniciar();
 </script>
 </body>
 </html>
