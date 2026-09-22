@@ -1,5 +1,5 @@
 /* TNP · service worker — cache-first del app shell para instalación/offline básico */
-const CACHE = "tnp-v52";
+const CACHE = "tnp-v53";
 const ASSETS = ["/", "/index.html", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png"];
 
 self.addEventListener("install", e => {

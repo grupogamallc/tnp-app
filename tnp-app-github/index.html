@@ -1258,7 +1258,7 @@ var IMG_SRC={};
 var ASSET="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/";
 /* fotos del inicio — hoy apuntan al CDN de generacion; se cambian aqui cuando vivan en el repo */
 const FOTO={menu:"foto-menu.jpg",habitos:"foto-habitos.jpg",perfil:"perfil-andrea.jpg",prog1:"progreso-dia1.jpg",prog2:"progreso-hoy.jpg"};
-const IMG_LOCAL={"prod-ignite.jpg":1,"prod-interrupt.jpg":1,"prod-perfecto.jpg":1,"prod-vitatotal.jpg":1,"stephy.jpg":1};
+const IMG_LOCAL={"prod-skinnykit.jpg":1,"prod-ignite.jpg":1,"prod-interrupt.jpg":1,"prod-perfecto.jpg":1,"prod-vitatotal.jpg":1,"prod-hydra.jpg":1,"prod-skinnytea.jpg":1,"stephy.jpg":1};
 function imgURL(f){return (IMG_SRC&&IMG_SRC[f])||(IMG_LOCAL[f]?f:ASSET+f)}
 let _au=null,_auF=null;
 function playA(f,title){
@@ -1701,15 +1701,18 @@ function animarVista(id){
 
 /* ================== RENDER: TIENDA ================== */
 const PRODS=[
- ["Ignite","Energía","39.99","#E94B3C",true,"prod-ignite.jpg"],
- ["Interrupt","Control","39.99","#1E3A8A",true,"prod-interrupt.jpg"],
- ["Perfect O","Omega 3-6-9","39.99","#1E3A8A",true,"prod-perfecto.jpg"],
- ["Vita Total","Multivitamínico","19.99","#1E3A8A",true,"prod-vitatotal.jpg"],
+ ["Skinny Kit","Los 4 esenciales, juntos","129.99","#1E3A8A",false,"prod-skinnykit.jpg"],
+ ["Ignite","Energía · metabolismo · enfoque","39.99","#E94B3C",true,"prod-ignite.jpg"],
+ ["Interrupt","Apoyo al apetito · control","39.99","#1E3A8A",true,"prod-interrupt.jpg"],
+ ["Perfect O","Omega 3-6-9 · salud cardiovascular","39.99","#1E3A8A",true,"prod-perfecto.jpg"],
+ ["Vita Total","Nutrición completa · inmunidad","19.99","#1E3A8A",true,"prod-vitatotal.jpg"],
+ ["Hydra","Equilibrio · hidratación","39.99","#1E3A8A",false,"prod-hydra.jpg"],
+ ["Skinny Tea","Ritual diario · 15 sobres","19.99","#1E3A8A",false,"prod-skinnytea.jpg"],
 ];
 function renderTienda(){
  $("v-tienda").innerHTML=`<div class="vhead"><h2>Productos</h2><div class="sub">Los productos que acompañan tu plan · recompra en un toque</div></div>
  <div class="kitCard"><span class="tag">Lo más vendido</span><h3>El Kit</h3>
-  <p>Perfect O · Ignite · Interrupt · Vita Total — los cuatro esenciales, juntos.</p>
+  <p>Skinny Kit + tu plan personalizado + la app, todo en una sola suscripción.</p>
   <div class="pr">$129.99 <small>/mes con plan personalizado + app</small></div>
   <button class="kitBtn" data-a="buy">${S.nivel==="top"?"Recomprar mi Kit":"Suscribirme"}</button></div>
  <div class="savRow"><span>Suscríbete y ahorra 15% en cada producto</span><span class="tog ${ui.sub?'on':''}" data-a="sub"></span></div>
