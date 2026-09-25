@@ -978,7 +978,7 @@
       <p class="wSub wAnim" style="--d:470ms">El método de la clínica, ahora en tu celular.</p>
 
       <div class="wProof wAnim" style="--d:560ms">
-        <span><b>+70,000</b>clientas atendidas</span>
+        <span><b>+70,000</b>clientes atendidos</span>
       </div>
       <span class="wScroll wAnim" style="--d:700ms" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
     </div>
@@ -1003,7 +1003,7 @@
       <h2>Lo que viene contigo.</h2>
       <div class="wWhy">
         <div class="wWhyR"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span><div><b>Un plan diseñado a tu meta</b><span>Comida latina de verdad, con tus números. Se renueva cada mes.</span></div></div>
-        <div class="wWhyR"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="3.5"/><path d="M22 20v-2a4 4 0 0 0-3-3.9"/></svg></span><div><b>Comunidad</b><span>Mujeres como tú, en las mismas semanas que tú.</span></div></div>
+        <div class="wWhyR"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="3.5"/><path d="M22 20v-2a4 4 0 0 0-3-3.9"/></svg></span><div><b>Comunidad</b><span>Gente como tú, en las mismas semanas que tú.</span></div></div>
         <div class="wWhyR"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4M7 6v12M12 3v18M17 6v12M21 10v4"/></svg></span><div><b>Stephy en tu oído</b><span>Sus audios y videos, solo para quien está adentro.</span></div></div>
       </div>
     </div>
@@ -1014,7 +1014,7 @@
       <div class="st">
         <div class="s"><b>Dallas</b><span>clínica física</span></div>
         <div class="s"><b>8 años</b><span>atendiendo</span></div>
-        <div class="s"><b>+70,000</b><span>clientas</span></div>
+        <div class="s"><b>+70,000</b><span>clientes</span></div>
       </div>
       <p>Skinny Sekret, la clínica que fundó Stephy Kantú. TNP es ese mismo método, ahora en tu celular.</p>
     </div>
@@ -1039,7 +1039,7 @@
 /* ================== ESTADO ================== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const $=id=>document.getElementById(id);
-/* ?nuevo = arrancar de cero, como una clienta que entra por primera vez */
+/* ?nuevo = arrancar de cero, como alguien que entra por primera vez */
 if(/[?&]nuevo\b/i.test(location.search)){try{localStorage.removeItem("tnp")}catch(e){}}
 let S=store.get("tnp",null);
 let ui={tab:"hoy",planSeg:"semana",recFilter:null,sub:false,agua:5,emDone:[],retoSeg:"reto",woFilter:null,progSeg:"semana"};
@@ -1143,16 +1143,48 @@ function scaled(key){
  return {...d,k:Math.round(d.k*f/10)*10,p:Math.round(d.p*pf)};
 }
 
+/* ================== EL DÍA AVANZA ================== */
+function hoyISO(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function diasEntre(a,b){return Math.round((new Date(b+"T00:00:00")-new Date(a+"T00:00:00"))/864e5)}
+/* El programa corre en ciclos de 28 días: al día 29 vuelve a Día 1, como un mini reto nuevo. */
+function actualizarDia(){
+ if(!S)return;
+ const h=hoyISO();
+ if(!S.inicio)S.inicio=h;
+ const t=Math.max(0,diasEntre(S.inicio,h));
+ S.day=(t%28)+1; S.vuelta=Math.floor(t/28)+1;
+ if(S.diaVisto!==h){            /* día nuevo: se limpia lo de ayer */
+  S.diaVisto=h;
+  S.done=[false,false,false,false];
+  S.tasks={}; S.logged=[];
+  if(S.habits)S.habits.agua=0;
+ }
+ save();
+}
+/* La racha solo sube con algo que la persona realmente hizo */
+function marcarActividad(){
+ if(!S)return;const h=hoyISO();
+ if(S.ultimoDia===h)return;
+ S.streak=(S.ultimoDia&&diasEntre(S.ultimoDia,h)===1)?(S.streak||0)+1:1;
+ S.ultimoDia=h;save();
+}
+
 /* ================== ONBOARDING ================== */
 /* unidades: guardamos kg/cm por dentro, mostramos lb y pies/pulgadas */
 const LB=k=>Math.round((+k||0)*2.20462);
 const KG=l=>Math.round((+l||0)*0.453592*10)/10;
 const FTIN=cm=>{const t=Math.round((+cm||0)/2.54);return{ft:Math.floor(t/12),inc:t%12}};
 const CM=(ft,inc)=>Math.round(((+ft||0)*12+(+inc||0))*2.54);
-let ob={step:0,q:{prog:null,sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[]}};
-const OB_STEPS=5;
+const SALUD0=()=>({emb:false,lact:false,diab:"no",marca:[],alerg:[],tca:false});
+let ob={step:0,q:{prog:null,sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[],salud:SALUD0()}};
+const OB_STEPS=6;
 function obDots(){$("onbDots").innerHTML=Array.from({length:OB_STEPS},(_,i)=>`<i class="${i===ob.step?'on':''}"></i>`).join("")}
 const obS=t=>`<div class="obS"><img src="stephy-hola.jpg" alt="Stephy Kantú"><div class="t"><b>Stephy Kantú</b><span>${t}</span></div></div>`;
+function obAlto(titulo,cuerpo,cta){
+ $("onbDots").innerHTML="";
+ $("onbStep").innerHTML=`<div class="k">Un momento</div><h1>${titulo}</h1><div class="d" style="margin-bottom:20px">${cuerpo}</div>
+  ${cta||''}<button class="onbBtn" style="background:#fff;color:var(--tinta);border:1.5px solid var(--borde);box-shadow:none" data-oa="volver">Regresar</button>`;
+}
 function obRender(){
  obDots();const q=ob.q;q.unit=q.unit||"kg";q.estUnit=q.estUnit||"cm";let h="";
  if(ob.step===0){
@@ -1168,12 +1200,29 @@ function obRender(){
   <div class="inp"><label>Estatura</label><div class="ftin"><span><input id="iFt" type="number" inputmode="numeric" placeholder="5" value="${q.estSet?FTIN(q.est).ft:''}"><i>&rsquo;</i></span><span><input id="iIn" type="number" inputmode="numeric" placeholder="4" value="${q.estSet?FTIN(q.est).inc:''}"><i>&rdquo;</i></span></div></div></div>
   <button class="onbBtn" data-oa="next">Continuar</button>`;
  }else if(ob.step===2){
-  h=obS("Esto cambia bastante tus números. Piénsalo tantito antes de elegir.")+`<div class="k">Paso 3 · Tu ritmo</div><h1>¿Qué tanto te mueves?</h1><div class="d">Sé honesta — el plan se ajusta a tu vida real.</div>
+  const sa=q.salud||(q.salud=SALUD0());
+  const chip=(grupo,val,txt)=>`<span class="fchip ${(grupo==="marca"?sa.marca:sa.alerg).includes(val)?'on':''}" data-oa="${grupo}" data-p="${val}">${txt}</span>`;
+  h=obS("Esto es por tu seguridad. Con estas respuestas sé qué plan sí te toca y qué no.")+`<div class="k">Paso 3 · Tu salud</div><h1>Antes de armar tu plan.</h1><div class="d">Contesta con calma. Nada de esto se comparte con nadie.</div>
+  ${q.sexo!=="M"?`<div class="d" style="margin:4px 0 0;font-weight:700;color:var(--tinta)">¿Estás embarazada o dando pecho?</div>
+  <div class="tags"><span class="fchip ${sa.emb?'on':''}" data-oa="emb">Embarazada</span><span class="fchip ${sa.lact?'on':''}" data-oa="lact">Dando pecho</span></div>`:""}
+  <div class="d" style="margin:16px 0 0;font-weight:700;color:var(--tinta)">¿Tienes diabetes?</div>
+  <div class="tags">${[["no","No"],["sin","Sí, sin medicamento"],["oral","Con pastillas"],["ins","Con insulina"]].map(x=>
+   `<span class="fchip ${sa.diab===x[0]?'on':''}" data-oa="diab" data-p="${x[0]}">${x[1]}</span>`).join("")}</div>
+  <div class="d" style="margin:16px 0 0;font-weight:700;color:var(--tinta)">¿Algo de esto te lo ha diagnosticado un médico?</div>
+  <div class="tags">${chip("marca","hipo","Hipoglucemia")}${chip("marca","corazon","Problema del corazón")}${chip("marca","rinon","Problema del riñón")}${chip("marca","presion","Presión alta")}</div>
+  <div class="d" style="margin:16px 0 0;font-weight:700;color:var(--tinta)">¿Eres alérgico a alguno de estos?</div>
+  <div class="tags">${chip("alerg","mariscos","Mariscos")}${chip("alerg","cacahuate","Cacahuate")}${chip("alerg","nueces","Nueces")}${chip("alerg","lacteos","Lácteos")}${chip("alerg","gluten","Gluten")}</div>
+  <div class="d" style="margin:16px 0 0;font-weight:700;color:var(--tinta)">¿Vives o has vivido con un trastorno de la conducta alimentaria?</div>
+  <div class="tags"><span class="fchip ${sa.tca?'on':''}" data-oa="tca">Sí</span><span class="fchip ${!sa.tca?'on':''}" data-oa="tcaNo">No</span></div>
+  <div class="d" style="margin:10px 0 0;font-size:11.5px">Si contestas que sí, tu plan no lleva meta de peso ni premios por libras. El acompañamiento sigue igual.</div>
+  <button class="onbBtn" data-oa="next">Continuar</button>`;
+ }else if(ob.step===3){
+  h=obS("Esto cambia bastante tus números. Piénsalo tantito antes de elegir.")+`<div class="k">Paso 4 · Tu ritmo</div><h1>¿Qué tanto te mueves?</h1><div class="d">Contéstalo tal cual es — el plan se ajusta a tu vida real.</div>
   ${[["baja","Poco — trabajo sentada, casi no ejercicio"],["media","Algo — camino o entreno 2-3 veces/semana"],["alta","Mucho — entreno 4+ veces/semana"]].map(a=>
    `<div class="opt ${q.act===a[0]?'on':''}" data-oa="act" data-p="${a[0]}"><span class="sw3" style="background:var(--salvia)"></span><div>${a[1]}</div></div>`).join("")}
   <button class="onbBtn" data-oa="next">Continuar</button>`;
- }else if(ob.step===3){
-  h=obS("Esto es lo que más me ayuda a afinar tu menú.")+`<div class="k">Paso 4 · Tu caso</div><h1>¿Algo que debamos saber?</h1><div class="d">Marca lo que aplique. Esto afina tu menú (y tu médico siempre manda).</div>
+ }else if(ob.step===4){
+  h=obS("Esto es lo que más me ayuda a afinar tu menú.")+`<div class="k">Paso 5 · Tu caso</div><h1>¿Algo que debamos saber?</h1><div class="d">Marca lo que aplique. Esto afina tu menú (y tu médico siempre manda).</div>
   <div class="tags">${[["glp1","Uso GLP-1"],["insulina","Resistencia a la insulina"],["sop","SOP"],["menopausia","Menopausia"]].map(c=>
    `<span class="fchip ${q.cond.includes(c[0])?'on':''}" data-oa="cond" data-p="${c[0]}">${c[1]}</span>`).join("")}</div>
   <div class="d" style="margin:16px 0 0">¿Qué NO te gusta o no puedes comer?</div>
@@ -1194,9 +1243,10 @@ function obRender(){
 function startApp(fromQuiz){
  if(fromQuiz){
   const q=ob.q;
-  q.edad=+($("iEdad")?.value||q.edad);q.peso=+($("iPeso")?.value||q.peso);q.est=+($("iEst")?.value||q.est);
+  if(q.cond.includes("glp1")&&q.prog!=="GLP1")toast("Te pusimos en GLP1 Pro por tu tratamiento");
   if(q.cond.includes("glp1"))q.prog="GLP1";
-  S={name:"Tú",nivel:"top",quiz:q,goals:calcGoals(q),day:1,streak:1,done:[true,false,false,false],swaps:{}};
+  q.dislikes=Array.from(new Set((q.dislikes||[]).concat((q.salud&&q.salud.alerg)||[])));
+  S={name:"Tú",nivel:"top",quiz:q,goals:calcGoals(q),day:1,streak:0,inicio:hoyISO(),done:[false,false,false,false],swaps:{}};
  }
  if(!S.week)genWeek();
  ensureExtras();
@@ -1205,10 +1255,10 @@ function startApp(fromQuiz){
  renderAll();
 }
 function demoState(){
- const q={prog:"PESO",sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[]};
+ const q={prog:"PESO",sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[],salud:SALUD0()};
  const lp=new Date();lp.setDate(lp.getDate()-17);
  const cyc={on:true,lastStart:lp.getFullYear()+"-"+String(lp.getMonth()+1).padStart(2,"0")+"-"+String(lp.getDate()).padStart(2,"0"),cycleLen:28,periodLen:5,logs:{}};
- return {name:"Andrea",nivel:"top",quiz:q,goals:calcGoals(q),day:12,streak:12,done:[true,false,false,false],swaps:{},cycle:cyc};
+ return {name:"Andrea",nivel:"top",quiz:q,goals:calcGoals(q),day:12,streak:12,inicio:hoyISO(),diaVisto:hoyISO(),done:[true,false,false,false],swaps:{},cycle:cyc};
 }
 
 /* ================== RENDER: HOY ================== */
@@ -1257,7 +1307,7 @@ const AUD_LOCAL={"app-intro.mp3":1,"bienvenida.mp3":1,"dia-1.mp3":1,"dia-2.mp3":
 var IMG_SRC={};
 var ASSET="https://tnp-assets-grupogamallc-5505s-projects.vercel.app/";
 /* fotos del inicio — hoy apuntan al CDN de generacion; se cambian aqui cuando vivan en el repo */
-const FOTO={menu:"foto-menu.jpg",habitos:"foto-habitos.jpg",perfil:"perfil-andrea.jpg",prog1:"progreso-dia1.jpg",prog2:"progreso-hoy.jpg"};
+const FOTO={menu:"foto-menu.jpg",habitos:"foto-habitos.jpg",perfil:"",prog1:"",prog2:""};
 const IMG_LOCAL={"prod-skinnykit.jpg":1,"prod-ignite.jpg":1,"prod-interrupt.jpg":1,"prod-perfecto.jpg":1,"prod-vitatotal.jpg":1,"prod-hydra.jpg":1,"prod-skinnytea.jpg":1,"stephy.jpg":1};
 function imgURL(f){return (IMG_SRC&&IMG_SRC[f])||(IMG_LOCAL[f]?f:ASSET+f)}
 let _au=null,_auF=null;
@@ -1279,22 +1329,34 @@ function playA(f,title){
 }
 
 function todayMeals(){return S.week[0].map((k,s)=>({key:k,slot:s,...scaled(k)}))}
+function avisoSaludHTML(){
+ const sa=(S&&S.quiz&&S.quiz.salud)||{};
+ const avisos=[];
+ if(sa.diab==="ins"||sa.diab==="oral"||sa.marca&&sa.marca.includes("hipo"))
+  avisos.push("Cambiar tu alimentación puede mover tus niveles de azúcar. Avísale a tu médico que empezaste este plan para que ajuste lo que necesite.");
+ if(sa.lact) avisos.push("Estás dando pecho: necesitas más calorías de lo normal. Coméntale a tu médico antes de bajar porciones.");
+ if(sa.marca&&(sa.marca.includes("corazon")||sa.marca.includes("rinon")))
+  avisos.push("Con una condición del corazón o del riñón, tu médico debe revisar este plan antes de que lo sigas.");
+ if(!avisos.length)return "";
+ return `<div class="card" style="border-left:3px solid var(--coral);margin-top:14px"><b style="font-size:13px">Importante para tu caso</b>
+  ${avisos.map(x=>`<p style="font-size:12.5px;line-height:1.5;color:var(--gris);margin-top:7px">${x}</p>`).join("")}</div>`;
+}
 function checkinHTML(){
  const done=S.checkin&&S.checkin.day===S.day;
  if(done){
-  const M={hambre:"con hambre",antojo:"con antojo",ligera:"ligera"}[S.checkin.mood]||"lista";
+  const M={hambre:"con hambre",antojo:"con antojo",ligera:"con energía"}[S.checkin.mood]||"bien";
   const g=gratHoy();
   if(!g) return `<div class="ciCard done grat"><img class="ciph" src="stephy.jpg" alt="">
-   <div class="cibody"><b>Hoy amaneciste ${M}</b><span>Ya ajusté tu día. Una cosa más: ¿qué agradeces hoy?</span>
+   <div class="cibody"><b>Hoy amaneciste ${M}</b><span>Quedó anotado. Una cosa más: ¿qué agradeces hoy?</span>
     <div class="gratBox"><input id="iGrat" maxlength="140" placeholder="Hoy agradezco…" autocomplete="off" enterkeyhint="done"><button data-a="gratSave">Guardar</button></div></div></div>`;
   return `<div class="ciCard done"><img class="ciph" src="stephy.jpg" alt="">
-   <div class="cibody"><b>Hoy amaneciste ${M}</b><span>Ya ajusté tu día. Nos vemos mañana 💛</span>
+   <div class="cibody"><b>Hoy amaneciste ${M}</b><span>Quedó anotado. Nos vemos mañana 💛</span>
     <div class="gratDone">Hoy agradeces: <em>“${esc(g.txt)}”</em></div></div>
    <span class="cidone">${ICON.check}</span></div>`;
  }
  return `<div class="ciCard"><img class="ciph" src="stephy.jpg" alt="">
-  <div class="cibody"><b>¿Cómo amaneciste hoy?</b><span>Dime cómo te sientes y ajusto tu día.</span>
-   <div class="ciopts"><button class="cichip" data-a="ci2" data-m="hambre">Con hambre</button><button class="cichip" data-a="ci2" data-m="antojo">Con antojo</button><button class="cichip" data-a="ci2" data-m="ligera">Ligera</button></div>
+  <div class="cibody"><b>¿Cómo amaneciste hoy?</b><span>Queda en tu registro del día.</span>
+   <div class="ciopts"><button class="cichip" data-a="ci2" data-m="hambre">Con hambre</button><button class="cichip" data-a="ci2" data-m="antojo">Con antojo</button><button class="cichip" data-a="ci2" data-m="ligera">Con energía</button></div>
   </div></div>`;
 }
 const TAREAS=[
@@ -1306,7 +1368,7 @@ const TAREAS=[
 function renderHoy(){
  const g=S.goals;const meals=todayMeals();
  const nextMeas=S.day<7?7:S.day<14?14:S.day<21?21:28;
- const base={k:170,p:12,c:20,f:8};
+ const base={k:0,p:0,c:0,f:0};
  const eaten=meals.filter((m,i)=>S.done[i]);
  const lg=loggedTotals();
  const k=eaten.reduce((s,m)=>s+m.k,base.k)+lg.k,p=eaten.reduce((s,m)=>s+m.p,base.p)+lg.p,
@@ -1340,7 +1402,7 @@ function renderHoy(){
  $("v-hoy").innerHTML=`
   <div class="hHead">
    <div><h2>Hola, ${S.name}</h2><p>Este es tu plan para hoy.</p></div>
-   <div class="hr"><span class="hBell" data-a="videos">${ICON.bell}<i></i></span>
+   <div class="hr"><span class="hBell" data-a="videos">${ICON.bell}</span>
     <div class="hAv" data-a="goTab" data-p="perfil">${FOTO.perfil?`<img src="${FOTO.perfil}" alt="${S.name}">`:S.name[0]}</div></div>
   </div>
 
@@ -1379,6 +1441,7 @@ function renderHoy(){
    <div class="bi"><img src="${FOTO.habitos}" alt="" decoding="async"><span class="bc">TÚ<br>PUEDES</span></div>
   </div>
 
+  ${avisoSaludHTML()}
   ${checkinHTML()}
   ${habitsHTML()}
   ${S.quiz.sexo!=="M"?cycleCardHTML():""}
@@ -1416,35 +1479,35 @@ const PROG_ACCENT={PESO:"#1E3A8A",DESINFLAMAR:"#1E3A8A",FUERTE:"#1E3A8A",BALANCE
 const PLAN_INFO={
  PESO:{n:"Skinny Plan",tag:"Reseteo metabólico. Comida real, estructura clara.",precio:"$39.99",
   who:"Para ti si quieres bajar de peso y <b>mantenerlo</b> — con un plan armado, no a punta de fuerza de voluntad.",
-  dia:"5 comidas + 2 snacks",kit:"Skinny Kit + tus suplementos",
-  inc:["Tu menú armado desde el banco de alimentos de Stephy","Porciones definidas: nada que pesar ni contar","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Video de bienvenida y guía de arranque"]},
+  dia:"4 tiempos al día",kit:"Skinny Kit + tus suplementos",
+  inc:["Tu menú armado desde el banco de alimentos de Stephy","Porciones definidas: nada que pesar ni contar","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Guía de arranque del programa"]},
  DESINFLAMAR:{n:"Gut Reset",tag:"Menos inflamación. Una digestión que no pesa.",precio:"$39.99",
-  who:"Para ti si vives hinchada, con la digestión lenta o te sientes inflamada aunque comas sano.",
-  dia:"5 comidas + 2 snacks",kit:"Skinny Kit + tus suplementos",
-  inc:["Menú enfocado en microbiota y digestión","Alimentos que desinflaman, sin cortar grupos completos","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Video de bienvenida y guía de arranque"]},
+  who:"Para ti si vives con inflamación, digestión lenta o te sientes pesado aunque comas sano.",
+  dia:"4 tiempos al día",kit:"Skinny Kit + tus suplementos",
+  inc:["Menú enfocado en microbiota y digestión","Alimentos que desinflaman, sin cortar grupos completos","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Guía de arranque del programa"]},
  FUERTE:{n:"Body Recomp",tag:"Menos grasa, más músculo. Transforma tu cuerpo.",precio:"$39.99",
   who:"Para ti si esto no se trata solo del número en la báscula: quieres bajar grasa, marcarte y construir músculo.",
-  dia:"5 comidas + 2 snacks",kit:"Skinny Kit + tus suplementos",
-  inc:["Menú construido alrededor de tu proteína del día","Pensado para acompañar tu entrenamiento","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Video de bienvenida y guía de arranque"]},
+  dia:"4 tiempos al día",kit:"Skinny Kit + tus suplementos",
+  inc:["Menú construido alrededor de tu proteína del día","Pensado para acompañar tu entrenamiento","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Guía de arranque del programa"]},
  BALANCE:{n:"Gluco Control",tag:"Glucosa estable. Energía pareja todo el día.",precio:"$39.99",
   who:"Para ti si vives con resistencia a la insulina o prediabetes, o tu azúcar anda en montaña rusa.",
-  dia:"5 comidas + 2 snacks",kit:"Skinny Kit + tus suplementos",
-  inc:["Menú que evita los picos de azúcar","Proteína y fibra en cada comida del día","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Video de bienvenida y guía de arranque"],
+  dia:"4 tiempos al día",kit:"Skinny Kit + tus suplementos",
+  inc:["Menú que evita los picos de azúcar","Proteína y fibra en cada comida del día","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Guía de arranque del programa"],
   nota:"Acompañamiento nutricional. No es tratamiento médico ni sustituye el control, los estudios ni el medicamento que te indicó tu doctor."},
  GLP1:{n:"GLP1 Pro",tag:"Come bien mientras dura tu tratamiento.",precio:"$59.99",
   who:"Para ti si llevas un tratamiento GLP-1 <b>con tu médico</b> y quieres que lo que bajes sea grasa, no músculo.",
   dia:"Porciones suaves, fáciles de tolerar",kit:"Skinny Kit + tus suplementos",
-  inc:["Menú fácil de pasar cuando el hambre casi no aparece","Enfocado en que no pierdas músculo","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Video de bienvenida y guía de arranque"],
+  inc:["Menú fácil de pasar cuando el hambre casi no aparece","Enfocado en que no pierdas músculo","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Guía de arranque del programa"],
   nota:"Acompañamiento nutricional para personas bajo cuidado médico. No sustituye ni reemplaza tu tratamiento."},
  MENOPAUSIA:{n:"Meno Smart",tag:"Peri y menopausia, con un plan que sí entiende tu etapa.",precio:"$59.99",
   who:"Para ti si estás en perimenopausia o menopausia y tu cuerpo dejó de responder como antes.",
-  dia:"5 comidas + 2 snacks",kit:"Skinny Kit + tus suplementos",
-  inc:["Menú que protege músculo y hueso","Calcio y vitamina D desde comida real","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Video de bienvenida y guía de arranque"],
+  dia:"4 tiempos al día",kit:"Skinny Kit + tus suplementos",
+  inc:["Menú que protege músculo y hueso","Calcio y vitamina D desde comida real","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Guía de arranque del programa"],
   nota:"Acompañamiento nutricional de la etapa. No es tratamiento de síntomas."},
  PERSONALIZADO:{n:"Personalizado",tag:"Tu plan, armado uno por uno.",precio:"$79.99",
-  who:"Para ti si quieres un plan hecho exactamente para tu cuerpo, tus gustos y tus condiciones, con el criterio de la nutrióloga.",
-  dia:"Definido por Stephy para tu caso",kit:"Skinny Kit + tus suplementos",
-  inc:["Construido con el método y las guías de Stephy","A tu medida: meta, gustos, alergias y condiciones","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Video de bienvenida y guía de arranque"]},
+  who:"Para ti si quieres el plan más afinado a tu cuerpo, tus gustos y tus condiciones, armado con el método de Stephy.",
+  dia:"4 tiempos al día",kit:"Skinny Kit + tus suplementos",
+  inc:["Armado con el método y las guías de Stephy","A tu medida: meta, gustos, alergias y condiciones","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Guía de arranque del programa"]},
 };
 /* ---- Video vertical de 15 seg dentro de la ficha de cada programa ----
    Cada programa acepta:  {mp4:"vid-peso.mp4"}   (archivo en el repo)
@@ -1547,54 +1610,25 @@ function renderPlan(){
 
 /* ================== RENDER: RETOS ================== */
 function renderRetos(){
- const seg=`<div class="seg"><button class="${ui.retoSeg==='reto'?'on':''}" data-a="retoSeg" data-p="reto">Reto activo</button>
-  <button class="${ui.retoSeg==='progreso'?'on':''}" data-a="retoSeg" data-p="progreso">Muro de progreso</button></div>`;
- if(ui.retoSeg==="progreso"){$("v-retos").innerHTML=`<div class="vhead"><h2>Comunidad</h2><div class="sub">Transformaciones reales de la comunidad TNP</div></div>${seg}${muroProgresoHTML()}`;return}
- $("v-retos").innerHTML=`<div class="vhead"><h2>Comunidad</h2><div class="sub">El reto activo de la comunidad · puntos por día cumplido</div></div>${seg}
- <div class="retoHero"><span class="wk">Reto activo · Semana 2 de 4</span><h3>Fuerte es el nuevo flaca</h3>
-  <p>4 semanas de proteína + fuerza. Palomea tu día y suma puntos — las primeras 3 se llevan premio.</p>
-  <div class="prog"><i style="width:${Math.round(S.day/28*100)}%"></i></div>
-  <div class="plabel"><span>Día ${S.day} de 28</span><span>Tu puesto: #12 de 340</span></div>
-  <button class="retoBtn" data-a="checkday">Palomear mi día ✓</button></div>
- <div class="secT" style="margin-top:18px"><h3>Ranking</h3><a data-a="na">Ver completo</a></div>
- <div class="rrow top1"><div class="pos">1</div><div class="nm">Marta G.<span>14 días seguidos</span></div><div class="pts">720 pts</div></div>
- <div class="rrow"><div class="pos">2</div><div class="nm">Lupita R.<span>13 días</span></div><div class="pts">690 pts</div></div>
- <div class="rrow"><div class="pos">3</div><div class="nm">Ana P.<span>12 días</span></div><div class="pts">655 pts</div></div>
- <div class="rrow me"><div class="pos">12</div><div class="nm">${S.name} (tú)<span>${S.streak} días · racha viva</span></div><div class="pts" id="myPts">540 pts</div></div>
- <div class="secT" style="margin-top:18px"><h3>Muro de logros</h3><a data-a="post">Compartir logro</a></div>
- <div id="muro">
- <div class="logro"><div class="av2">L</div><p><b>Lupita</b> completó su semana 2 — 7 de 7 días. "Nunca había durado tanto en un plan."</p><span class="like" data-a="like">Ánimo +14</span></div>
- <div class="logro"><div class="av2">K</div><p><b>Karla</b> subió su primera foto de progreso.</p><span class="like" data-a="like">Ánimo +9</span></div>
- <div class="logro"><div class="av2">R</div><p><b>Rosa</b> llegó a su meta de proteína 5 días seguidos.</p><span class="like" data-a="like">Ánimo +6</span></div></div>
- <div class="secT" style="margin-top:18px"><h3>Videos de Stephy</h3><a data-a="videos">Ver todos</a></div>
- ${VIDEOS.slice(0,2).map(v=>`<div class="vrow" data-a="vplay"><div class="th">${ICON.play}</div><div><b>${v[0]}</b><span>${v[1]}</span></div><span class="badge">Exclusivo</span></div>`).join("")}`;
+ $("v-retos").innerHTML=`<div class="vhead"><h2>Comunidad</h2><div class="sub">Está en camino</div></div>
+ <div class="upCard" style="margin-top:16px"><h4>Aquí va a estar la comunidad</h4><p>Vas a poder ver tu avance junto al de las demás personas del programa, mandarles ánimo y sumar puntos por cada día que cumples. Te avisamos en cuanto abra.</p></div>
+ <div class="secT" style="margin-top:20px"><h3>Mientras tanto</h3></div>
+ <div class="hHab">
+  <div class="hTask" data-a="goTab" data-p="perfil"><span class="tk">${ICON.check}</span><b>Mira cómo vas en tu perfil</b><span class="ch">${ICON.chev}</span></div>
+  <div class="hTask" data-a="askStephy"><span class="tk">${ICON.check}</span><b>Pregúntale a Stephy</b><span class="ch">${ICON.chev}</span></div>
+  <div class="hTask" data-a="goPlan"><span class="tk">${ICON.check}</span><b>Revisa tu menú de la semana</b><span class="ch">${ICON.chev}</span></div>
+ </div>`;
 }
-const VIDEOS=[
- ["Antojos de dulce: 3 trucos reales","4 min · hoy"],
- ["Cómo leer una etiqueta en 20 segundos","6 min · ayer"],
- ["El error #1 con la proteína","5 min"],
- ["Qué pedir en restaurante sin salirte del plan","7 min"],
- ["Mini rutina de fuerza en casa","15 min"],
- ["La verdad del 'detox'","5 min"],
-];
 
 /* ================== RENDER: ENTRENA ================== */
 const WO_ROUTINES=[
- {id:"fuerza-total",yt:"B1iht4HDZ6o",t:"Fuerza total en casa",dur:"25 min",lvl:"Intermedio",focus:"Fuerza",tag:"fuerza",c:"#1E3A8A",ex:[["Sentadilla","3 x 12"],["Flexiones (o en pared)","3 x 10"],["Remo con liga","3 x 12"],["Puente de glúteo","3 x 15"],["Plancha","3 x 30 seg"]]},
- {id:"cardio-suave",yt:"WNz9C_vyIB0",t:"Cardio suave sin brincos",dur:"20 min",lvl:"Principiante",focus:"Cardio",tag:"cardio",c:"#E94B3C",ex:[["Marcha en tu lugar","3 min"],["Paso lateral","3 x 40 seg"],["Rodillas altas suaves","3 x 30 seg"],["Sentadilla a silla","3 x 12"],["Enfriamiento","2 min"]]},
- {id:"pierna-gluteo",yt:"ET_zhWpRt30",t:"Piernas y glúteos",dur:"30 min",lvl:"Intermedio",focus:"Fuerza",tag:"fuerza",c:"#1E3A8A",ex:[["Sentadilla sumo","4 x 12"],["Zancadas","3 x 10 c/lado"],["Puente con pausa","3 x 15"],["Patada de glúteo","3 x 12 c/lado"],["Sentadilla isométrica","3 x 30 seg"]]},
- {id:"core",yt:"aGXajT13IC0",t:"Core y abdomen",dur:"15 min",lvl:"Todos",focus:"Core",tag:"core",c:"#1E3A8A",ex:[["Plancha","3 x 30 seg"],["Bicho muerto","3 x 12"],["Elevación de piernas","3 x 12"],["Plancha lateral","3 x 20 seg c/lado"]]},
- {id:"movilidad",yt:"k73qaCghWP8",t:"Movilidad y estiramiento",dur:"12 min",lvl:"Todos",focus:"Movilidad",tag:"movilidad",c:"#1E3A8A",ex:[["Gato-camello","2 min"],["Estiramiento de cadera","2 min c/lado"],["Rotación torácica","2 min"],["Cuello y hombros","2 min"]]},
- {id:"express",yt:"kwEx3l998Ps",t:"Express quema",dur:"10 min",lvl:"Todos",focus:"Express",tag:"express",c:"#1E3A8A",ex:[["Sentadilla rápida","40 seg"],["Plancha","30 seg"],["Paso lateral","40 seg"],["Descanso","20 seg"],["Repite el circuito x2",""]]},
- {id:"menopausia",yt:"d8OJpBcLN_Y",t:"Fuerza para tu etapa (hueso y músculo)",dur:"25 min",lvl:"Todos",focus:"Fuerza · Menopausia",tag:"fuerza",c:"#1E3A8A",ex:[["Sentadilla a silla","3 x 12"],["Remo con liga","3 x 12"],["Puente de glúteo","3 x 15"],["Peso muerto con liga","3 x 12"],["Caminata de granjero","3 x 30 seg"]]},
-];
-const WO_VIDEOS=[
- ["Rutina completa de fuerza en casa","25 min · con coach invitada","w5onVaah7dM"],
- ["Cardio suave sin impacto","20 min","7oWFL8pfxTQ"],
- ["Glúteos con liga","18 min","pTpltPFeMQU"],
- ["Core sin lastimar la espalda","15 min","gglryB_YORQ"],
- ["Estiramiento para empezar el día","10 min","ZUa-FT1SQrg"],
- ["Mini rutina express","8 min","i7TEN7HKGQo"],
+ {id:"fuerza-total",t:"Fuerza total en casa",dur:"25 min",lvl:"Intermedio",focus:"Fuerza",tag:"fuerza",c:"#1E3A8A",ex:[["Sentadilla","3 x 12"],["Flexiones (o en pared)","3 x 10"],["Remo con liga","3 x 12"],["Puente de glúteo","3 x 15"],["Plancha","3 x 30 seg"]]},
+ {id:"cardio-suave",t:"Cardio suave sin brincos",dur:"20 min",lvl:"Principiante",focus:"Cardio",tag:"cardio",c:"#E94B3C",ex:[["Marcha en tu lugar","3 min"],["Paso lateral","3 x 40 seg"],["Rodillas altas suaves","3 x 30 seg"],["Sentadilla a silla","3 x 12"],["Enfriamiento","2 min"]]},
+ {id:"pierna-gluteo",t:"Piernas y glúteos",dur:"30 min",lvl:"Intermedio",focus:"Fuerza",tag:"fuerza",c:"#1E3A8A",ex:[["Sentadilla sumo","4 x 12"],["Zancadas","3 x 10 c/lado"],["Puente con pausa","3 x 15"],["Patada de glúteo","3 x 12 c/lado"],["Sentadilla isométrica","3 x 30 seg"]]},
+ {id:"core",t:"Core y abdomen",dur:"15 min",lvl:"Todos",focus:"Core",tag:"core",c:"#1E3A8A",ex:[["Plancha","3 x 30 seg"],["Bicho muerto","3 x 12"],["Elevación de piernas","3 x 12"],["Plancha lateral","3 x 20 seg c/lado"]]},
+ {id:"movilidad",t:"Movilidad y estiramiento",dur:"12 min",lvl:"Todos",focus:"Movilidad",tag:"movilidad",c:"#1E3A8A",ex:[["Gato-camello","2 min"],["Estiramiento de cadera","2 min c/lado"],["Rotación torácica","2 min"],["Cuello y hombros","2 min"]]},
+ {id:"express",t:"Express quema",dur:"10 min",lvl:"Todos",focus:"Express",tag:"express",c:"#1E3A8A",ex:[["Sentadilla rápida","40 seg"],["Plancha","30 seg"],["Paso lateral","40 seg"],["Descanso","20 seg"],["Repite el circuito x2",""]]},
+ {id:"menopausia",t:"Fuerza para tu etapa (hueso y músculo)",dur:"25 min",lvl:"Todos",focus:"Fuerza · Menopausia",tag:"fuerza",c:"#1E3A8A",ex:[["Sentadilla a silla","3 x 12"],["Remo con liga","3 x 12"],["Puente de glúteo","3 x 15"],["Peso muerto con liga","3 x 12"],["Caminata de granjero","3 x 30 seg"]]},
 ];
 /* miniatura y reproductor de YouTube (contenido de demostración) */
 const YTTH=id=>id?("https://i.ytimg.com/vi/"+id+"/hqdefault.jpg"):"";
@@ -1608,14 +1642,12 @@ function renderEntrena(){
  const f=ui.woFilter||"all";
  const list=WO_ROUTINES.filter(r=>f==="all"||r.tag===f);
  const hero=WO_ROUTINES[0];
- $("v-entrena").innerHTML=`<div class="vhead"><h2>Entrena</h2><div class="sub">Rutinas cortas para hacer en casa, guiadas por video</div></div>
- <div class="woHero" style="background:#111827 url('${YTTH(hero.yt)}') center/cover" data-wo="${hero.id}">
+ $("v-entrena").innerHTML=`<div class="vhead"><h2>Entrena</h2><div class="sub">Rutinas cortas para hacer en casa</div></div>
+ <div class="woHero" style="background:linear-gradient(135deg,var(--navy),var(--tinta))" data-wo="${hero.id}">
   <div class="play">${ICON.play}</div>
   <span class="tag">Rutina de la semana</span><h3>${hero.t}</h3><p>${hero.dur} · ${hero.lvl} · ${hero.focus}</p></div>
  <div class="chips">${WO_FILTERS.map(x=>`<span class="fchip ${f===x[0]?'on':''}" data-a="woFilter" data-p="${x[0]}">${x[1]}</span>`).join("")}</div>
- <div class="woGrid">${list.map(r=>`<div class="woCard" data-wo="${r.id}"><div class="woThumb" style="background:#E2E8F0 url('${YTTH(r.yt)}') center/cover"><div class="pl">${ICON.play}</div><span class="dur">${r.dur}</span></div><div class="woBody"><h4>${r.t}</h4><div class="m">${r.focus} · ${r.lvl}</div></div></div>`).join("")}</div>
- <div class="secT" style="margin-top:20px"><h3>Videos de entrenamiento</h3><a data-a="na">Ver todos</a></div>
- ${WO_VIDEOS.map((v,i)=>`<div class="vrow" data-a="vplayYT" data-p="${i}"><div class="th" style="background:#E2E8F0 url('${YTTH(v[2])}') center/cover"><span class="plmini">${ICON.play}</span></div><div><b>${v[0]}</b><span>${v[1]}</span></div><span class="badge">Video</span></div>`).join("")}
+ <div class="woGrid">${list.map(r=>`<div class="woCard" data-wo="${r.id}"><div class="woThumb" style="background:linear-gradient(135deg,${r.c},color-mix(in srgb,${r.c} 55%,var(--tinta)))"><div class="pl">${ICON.play}</div><span class="dur">${r.dur}</span></div><div class="woBody"><h4>${r.t}</h4><div class="m">${r.focus} · ${r.lvl}</div></div></div>`).join("")}</div>
  <p class="fda">El ejercicio es acompañamiento general de bienestar, no una indicación médica. Empieza suave, escucha a tu cuerpo y consulta a tu médico si tienes alguna condición.</p>`;
 }
 
@@ -1701,18 +1733,17 @@ function animarVista(id){
 
 /* ================== RENDER: TIENDA ================== */
 const PRODS=[
- ["Skinny Kit","Los 4 esenciales, juntos","129.99","#1E3A8A",false,"prod-skinnykit.jpg"],
  ["Ignite","Energía · metabolismo · enfoque","39.99","#E94B3C",true,"prod-ignite.jpg"],
  ["Interrupt","Apoyo al apetito · control","39.99","#1E3A8A",true,"prod-interrupt.jpg"],
  ["Perfect O","Omega 3-6-9 · salud cardiovascular","39.99","#1E3A8A",true,"prod-perfecto.jpg"],
  ["Vita Total","Nutrición completa · inmunidad","19.99","#1E3A8A",true,"prod-vitatotal.jpg"],
+ ["Skinny T","Ritual diario · 15 sobres","29.99","#1E3A8A",false,"prod-skinnytea.jpg"],
  ["Hydra","Equilibrio · hidratación","39.99","#1E3A8A",false,"prod-hydra.jpg"],
- ["Skinny Tea","Ritual diario · 15 sobres","19.99","#1E3A8A",false,"prod-skinnytea.jpg"],
 ];
 function renderTienda(){
  $("v-tienda").innerHTML=`<div class="vhead"><h2>Productos</h2><div class="sub">Los productos que acompañan tu plan · recompra en un toque</div></div>
  <div class="kitCard"><span class="tag">Lo más vendido</span><h3>El Kit</h3>
-  <p>Skinny Kit + tu plan personalizado + la app, todo en una sola suscripción.</p>
+  <p>El Kit (Perfect O, Ignite, Interrupt y Vita Total) + tu plan personalizado + la app, en una sola suscripción.</p>
   <div class="pr">$129.99 <small>/mes con plan personalizado + app</small></div>
   <button class="kitBtn" data-a="buy">${S.nivel==="top"?"Recomprar mi Kit":"Suscribirme"}</button></div>
  <div class="savRow"><span>Suscríbete y ahorra 15% en cada producto</span><span class="tog ${ui.sub?'on':''}" data-a="sub"></span></div>
@@ -1729,7 +1760,7 @@ function renderPerfil(){
  const q=S.quiz,g=S.goals;
  const NIV={top:"Membresía TOP · $129.99/mes",app:"App · Comunidad · $19.99/mes",plan:"App + Programa comprado"};
  $("v-perfil").innerHTML=`<div class="vhead"><h2>Tú</h2><div class="sub">Tu cuenta, tu programa y tu progreso</div></div>
- <div class="pcard"><div class="avatar">${FOTO.perfil?`<img src="${FOTO.perfil}" alt="${S.name}">`:S.name[0]}</div><div><h3>${S.name==="Tú"?"Tu cuenta":S.name+" Martínez"}</h3><span class="lvl">${NIV[S.nivel]}</span></div></div>
+ <div class="pcard"><div class="avatar">${FOTO.perfil?`<img src="${FOTO.perfil}" alt="${S.name}">`:S.name[0]}</div><div><h3>${S.name==="Tú"?"Tu cuenta":S.name}</h3><span class="lvl">${NIV[S.nivel]}</span></div></div>
  <div class="progcard"><div class="top"><span>Progreso del programa</span><span>Día ${S.day} de 28</span></div>
   <div class="bar"><i style="width:${Math.round(S.day/28*100)}%"></i></div>
   <div class="pnote">Racha de ${S.streak} días · siguiente medición: día ${S.day<7?7:S.day<14?14:S.day<21?21:28}</div></div>
@@ -1743,17 +1774,15 @@ function renderPerfil(){
  <div class="prow2"><span>Calorías objetivo</span><span>${g.kcal.toLocaleString()} kcal</span></div>
  <div class="prow2"><span>Meta de proteína</span><span>${g.prot} g/día · 20–30 g por comida</span></div>
  <div class="prow2"><span>Condiciones</span><span>${q.cond.length?q.cond.join(", "):"Ninguna"}</span></div>
+ <div class="prow2"><span>Alergias</span><span>${(q.salud&&q.salud.alerg&&q.salud.alerg.length)?q.salud.alerg.join(", "):"Ninguna"}</span></div>
  <div class="prow2"><span>Evitamos</span><span>${q.dislikes.length?q.dislikes.join(", "):"Nada"}</span></div>
  <div class="secT" style="margin-top:16px"><h3>Cuenta</h3></div>
- ${S.nivel==="top"?`<div class="prow2"><span>Mi Kit</span><span>Siguiente envío: 1 sep · <b style="color:var(--coral)" data-a="buy">recomprar</b></span></div>`:""}
+ ${S.nivel==="top"?`<div class="prow2" data-a="buy" style="cursor:pointer"><span>Mi Kit</span><span>Ver mi suscripción →</span></div>`:""}
  ${q.sexo!=="M"?`<div class="prow2" data-a="cycle" style="cursor:pointer"><span>Mi ciclo</span><span>${S.cycle&&S.cycle.on?"Fases + tips por tu ciclo →":"Actívalo →"}</span></div>`:""}
  <div class="prow2" data-a="reminders" style="cursor:pointer"><span>Recordatorios</span><span>Agua, comida, Live, Kit →</span></div>
  <div class="prow2" data-a="wa" style="cursor:pointer"><span>WhatsApp</span><span>Lista de súper y recordatorios →</span></div>
  <div class="prow2" data-a="install" style="cursor:pointer"><span>Instalar la app</span><span>Agrégala a tu pantalla de inicio →</span></div>
  <div class="prow2"><span>Ajustes</span><span>Notificaciones, privacidad</span></div>
- <div class="secT" style="margin-top:16px"><h3>Modo demo · cambia de nivel</h3></div>
- <div class="demoRow">${[["top","TOP $129.99"],["app","App $19.99"],["plan","App + Plan"]].map(n=>
-  `<span class="fchip ${S.nivel===n[0]?'on':''}" data-a="nivel" data-p="${n[0]}">${n[1]}</span>`).join("")}</div>
  <p class="fda">Tu plan es acompañamiento nutricional y no sustituye la atención médica. El acompañamiento GLP-1 apoya a quien ya está bajo cuidado médico. TNP · Tu Nuevo Plan © 2026.</p>`;
 }
 
@@ -1778,14 +1807,44 @@ document.body.addEventListener("click",e=>{
  const oa=e.target.closest("[data-oa]");
  if(oa){
   const t=oa.dataset.oa;
-  if(t==="demo"){S=demoState();genWeek();ensureExtras();save();$("onb").classList.remove("on");renderAll();return}
+  if(t==="demo"){S=demoState();S.demo=true;genWeek();ensureExtras();actualizarDia();save();$("onb").classList.remove("on");$("welcome").classList.remove("on");renderAll();toast("Estás viendo una cuenta de ejemplo");return}
   if(t==="prog"){ob.q.prog=oa.dataset.p;obRender();return}
   if(t==="act"){ob.q.act=oa.dataset.p;obRender();return}
+  if(t==="volver"){obRender();return}
+  if(t==="emb"||t==="lact"||t==="tca"||t==="tcaNo"){const sa=ob.q.salud||(ob.q.salud=SALUD0());
+   if(t==="emb")sa.emb=!sa.emb; if(t==="lact")sa.lact=!sa.lact;
+   if(t==="tca")sa.tca=true; if(t==="tcaNo")sa.tca=false; obRender();return}
+  if(t==="diab"){(ob.q.salud||(ob.q.salud=SALUD0())).diab=oa.dataset.p;obRender();return}
+  if(t==="marca"||t==="alerg"){const sa=ob.q.salud||(ob.q.salud=SALUD0());
+   const arr=t==="marca"?sa.marca:sa.alerg,v=oa.dataset.p,i=arr.indexOf(v);
+   i>=0?arr.splice(i,1):arr.push(v);obRender();return}
   if(t==="cond"||t==="dis"){const arr=t==="cond"?ob.q.cond:ob.q.dislikes;const v=oa.dataset.p;
    const i=arr.indexOf(v);i>=0?arr.splice(i,1):arr.push(v);obRender();return}
   if(t==="next"){
    if(ob.step===0&&!ob.q.prog){toast("Elige tu meta");return}
-   if(ob.step===1){const av=+$("iEdad").value||0;if(av){ob.q.edad=av;ob.q.edadSet=1}else ob.q.edad=34;ob.q.sexo=$("iSexo").value||"F";const pv=+$("iPeso").value||0;if(pv){ob.q.peso=KG(pv);ob.q.pesoSet=1}const ft=+$("iFt").value||0,inc=+$("iIn").value||0;const cm=CM(ft,inc);if(cm>=120){ob.q.est=cm;ob.q.estSet=1}}
+   if(ob.step===1){
+    const av=+$("iEdad").value||0;
+    if(!av){toast("Escribe tu edad");return}
+    if(av<18){obAlto("Por ahora atendemos de 18 años en adelante.",
+      "Si eres menor de edad, lo mejor es que te vea un nutriólogo en persona, junto con tu familia. Un plan hecho a distancia no es lo correcto a tu edad.");return}
+    if(av>100){toast("Revisa tu edad");return}
+    ob.q.edad=av;ob.q.edadSet=1;
+    ob.q.sexo=$("iSexo").value||"F";
+    const pv=+$("iPeso").value||0;
+    if(!pv){toast("Escribe tu peso");return}
+    ob.q.peso=KG(pv);ob.q.pesoSet=1;
+    const ft=+$("iFt").value||0,inc=+$("iIn").value||0;const cm=CM(ft,inc);
+    if(cm<120){toast("Escribe tu estatura");return}
+    ob.q.est=cm;ob.q.estSet=1;
+   }
+   if(ob.step===2){
+    const sa=ob.q.salud||SALUD0();
+    if(sa.emb){obAlto("Durante el embarazo no hacemos plan de pérdida de peso.",
+      "Felicidades. Tu cuerpo necesita más, no menos, y eso lo tiene que llevar tu médico u obstetra. Estamos preparando <b>Lifestyle</b>, un plan de mantenimiento — te avisamos en cuanto abra.");return}
+    const h=ob.q.est/100, imc=ob.q.peso/(h*h);
+    if(imc<18.5){obAlto("Queremos revisar tus números contigo antes de seguir.",
+      "Con el peso y la estatura que pusiste, tu cuerpo ya está por debajo del rango saludable. Un plan de pérdida de peso no es lo que te conviene ahora. Escríbenos y lo vemos con Stephy.");return}
+   }
    ob.step++;obRender();return}
   if(t==="finish"){startApp(true);return}
  }
@@ -1808,7 +1867,7 @@ document.body.addEventListener("click",e=>{
  if(wo){const r=WO_ROUTINES.find(x=>x.id===wo.dataset.wo);if(r){
   sheet(`<h3>${r.t}</h3><div class="sm">${r.dur} · ${r.lvl} · ${r.focus}</div>
   <div style="margin:6px 0 2px">${r.ex.map(x=>`<div class="exRow"><b>${x[0]}</b>${x[1]?`<span>${x[1]}</span>`:""}</div>`).join("")}</div>
-  <button class="btn solid" style="width:100%;margin-top:14px" data-a="vplayWO" data-p="${r.id}">${ICON.play} Reproducir rutina</button>`);}
+  <div class="sm" style="margin-top:12px">Los videos guiados de cada rutina se están grabando. Por ahora tienes la lista de ejercicios con sus series.</div>`);}
   return}
  const a=e.target.closest("[data-a]");if(!a)return;
  const act=a.dataset.a;
@@ -1818,13 +1877,9 @@ document.body.addEventListener("click",e=>{
  else if(act==="log"){openScan("comida")}
  else if(act==="scan"){openScan("scan")}
  else if(act==="scanMode"){openScan(a.dataset.p)}
- else if(act==="scanDetect"){scanDetect()}
  else if(act==="scanPick"){scanConfirm(a.dataset.p)}
  else if(act==="scanLog"){scanCommit()}
- else if(act==="checkin"){sheet(`<h3>¿Cómo amaneciste?</h3><div class="sm">Tu respuesta ajusta las porciones de tu día.</div>
-  <div class="quick"><button class="btn ghost" data-a="ci">Con hambre</button><button class="btn ghost" data-a="ci">Con antojo</button><button class="btn ghost" data-a="ci">Ligera</button></div>`)}
- else if(act==="ci"){$("sheetBg").classList.remove("on");toast("Gracias — ajustamos tu día")}
- else if(act==="ci2"){S.checkin={day:S.day,mood:a.dataset.m};save();renderHoy();toast("Listo — ajusté tu día 💛")}
+  else if(act==="ci2"){S.checkin={day:S.day,mood:a.dataset.m};marcarActividad();save();renderHoy();renderPerfil();toast("Anotado. Nos vemos mañana 💛")}
  else if(act==="askStephy"){openAsk()}
  else if(act==="askQ"){const x=STEPHY_QA[+a.dataset.p];if(x)askPush(x.q)}
  else if(act==="askSend"){const inp=$("askIn");const v=inp?inp.value.trim():"";if(v)askPush(v)}
@@ -1846,11 +1901,8 @@ document.body.addEventListener("click",e=>{
  else if(act==="hab"){openHabit(a.dataset.p)}
  else if(act==="habWater"){habWater()}
  else if(act==="habSet"){habSet(a.dataset.k,+a.dataset.v)}
- else if(act==="videos"){sheet(`<h3>Videos de Stephy</h3><div class="sm">Exclusivos de tu membresía — no salen en redes.</div>
-  ${VIDEOS.map(v=>`<div class="vrow" data-a="vplay"><div class="th">${ICON.play}</div><div><b>${v[0]}</b><span>${v[1]}</span></div></div>`).join("")}`)}
- else if(act==="vplay"){toast("El reproductor llega en Fase 1")}
- else if(act==="vplayYT"){const v=WO_VIDEOS[+a.dataset.p];if(v)ytSheet(v[2],v[0],v[1]);}
- else if(act==="vplayWO"){const r=WO_ROUTINES.find(x=>x.id===a.dataset.p);if(r)ytSheet(r.yt,r.t,r.dur+" · "+r.lvl+" · "+r.focus);}
+ else if(act==="videos"){sheet(`<h3>Videos de Stephy</h3><div class="sm">Todavía no hay videos publicados. En cuanto Stephy suba el primero, aparece aquí.</div>`)}
+ else if(act==="vplayWO"){toast("El video de esta rutina se está grabando")}
  else if(act==="goPlan"){document.querySelector('.nav [data-v="plan"]').click()}
  else if(act==="goTab"){const b=document.querySelector('[data-v="'+a.dataset.p+'"]');if(b)b.click()}
  else if(act==="task"){const k=a.dataset.p;S.tasks=S.tasks||{};S.tasks[k]=!S.tasks[k];save();a.classList.toggle("on",!!S.tasks[k])}
@@ -1866,19 +1918,15 @@ document.body.addEventListener("click",e=>{
   sheet(`<h3>Lista de súper</h3><div class="sm">Generada de tu semana · Programa ${PROG_META[S.quiz.prog].label}</div>
   <ul>${cats.map(i=>`<li>${i}</li>`).join("")}</ul>`)}
  else if(act==="regen"){S.swaps={};Object.keys(S.swaps).forEach(k=>delete S.swaps[k]);S.swaps["seed"]=(S.swaps["seed"]||0);for(let d=0;d<7;d++)for(let s=0;s<4;s++)S.swaps[d+"-"+s]=Math.floor((d*3+s*7)%3)+1;genWeek();save();renderPlan();renderHoy();toast("Mes regenerado — menú nuevo")}
- else if(act==="checkday"){toast("Día palomeado · +45 pts");const el=$("myPts");if(el)el.textContent="585 pts"}
- else if(act==="like"){a.textContent=a.textContent.replace(/\d+/,m=>+m+1);toast("Le mandaste ánimo")}
- else if(act==="post"){toast("Compartir logros llega en Fase 1")}
  else if(act==="addProgreso"){openAddProgreso()}
  else if(act==="unlog"){S.logged.splice(+a.dataset.i,1);save();renderHoy();toast("Quitado")}
- else if(act==="saveProgreso"){const inp=$("iPesoP");const val=inp?KG(inp.value):0;const share=$("cShare")&&$("cShare").checked;if(val){S.habits.peso=val;pushProgress(val)}save();renderHoy();renderPerfil();$("sheetBg").classList.remove("on");toast(share?"Progreso guardado y enviado al muro":"Progreso guardado");if(val)setTimeout(revisarPremios,420)}
+ else if(act==="saveProgreso"){const inp=$("iPesoP");const val=inp?KG(inp.value):0;if(val){S.habits.peso=val;pushProgress(val)}save();renderHoy();renderPerfil();$("sheetBg").classList.remove("on");toast("Progreso guardado");if(val)setTimeout(revisarPremios,420)}
  else if(act==="sub"){ui.sub=!ui.sub;renderTienda();toast(ui.sub?"Suscríbete y ahorra activado — 15% off":"Suscripción desactivada")}
  else if(act==="add"){toast(a.dataset.p+" agregado al carrito")}
  else if(act==="buy"){toast("Checkout se conecta con Shopify en Fase 1")}
- else if(act==="nivel"){S.nivel=a.dataset.p;save();renderAll();toast("Viendo la app como: "+a.dataset.p.toUpperCase())}
- else if(act==="requiz"){ob={step:0,q:{prog:null,sexo:"F",edad:S.quiz.edad,peso:S.quiz.peso,est:S.quiz.est,act:S.quiz.act,cond:[],dislikes:[]}};$("onb").classList.add("on");obRender()}
+ else if(act==="requiz"){ob={step:0,q:{prog:null,sexo:S.quiz.sexo||"F",edad:S.quiz.edad,edadSet:1,peso:S.quiz.peso,pesoSet:1,est:S.quiz.est,estSet:1,act:S.quiz.act,cond:[],dislikes:[],salud:(S.quiz.salud||SALUD0())}};$("onb").classList.add("on");obRender()}
  else if(act==="up"){toast("La compra se conecta con el checkout en Fase 1")}
- else if(act==="sos"){sheet(`<div class="shead"><img class="sph" src="stephy.jpg"><div><h3>Respira. Aquí estoy.</h3><div class="sm">Un antojo dura 10 minutos. Vamos a pasarlo juntas.</div></div></div>
+ else if(act==="sos"){sheet(`<div class="shead"><img class="sph" src="stephy.jpg"><div><h3>Respira. Aquí estoy.</h3><div class="sm">Un antojo dura 10 minutos. Vamos a pasarlo juntos.</div></div></div>
   <ul><li><b>1.</b> Tómate un vaso de agua completo, despacio.</li><li><b>2.</b> Come proteína rápida: yogurt, queso panela o 10 almendras.</li><li><b>3.</b> Ponte el audio de Stephy y espera 10 minutos antes de decidir.</li></ul>
   <div class="quick"><button class="btn solid" style="width:100%" data-a="playA" data-f="sos.mp3" data-t="SOS antojo">${ICON.audio} Escuchar a Stephy</button></div>
   <button class="btn ghost" style="width:100%;margin-top:10px" data-a="sinculpa">Caí — registrar sin culpa</button>`)}
@@ -1950,9 +1998,9 @@ document.body.addEventListener("click",e=>{
   else if(v.yt){box.classList.add("playing");box.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+v.yt+'?rel=0&playsinline=1&autoplay=1&modestbranding=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>'}
   else{toast("Ese video todavía se está grabando")}
  }
- else if(act==="wPick"){$("sheetBg").classList.remove("on");$("welcome").classList.remove("on");$("onb").classList.add("on");ob={step:1,q:{prog:a.dataset.p,sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[]}};obRender()}
- else if(act==="wStart"){$("welcome").classList.remove("on");$("onb").classList.add("on");ob={step:0,q:{prog:null,sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[]}};obRender()}
- else if(act==="wDemo"){S=demoState();genWeek();ensureExtras();save();$("welcome").classList.remove("on");$("onb").classList.remove("on");renderAll()}
+ else if(act==="wPick"){$("sheetBg").classList.remove("on");$("welcome").classList.remove("on");$("onb").classList.add("on");ob={step:1,q:{prog:a.dataset.p,sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[],salud:SALUD0()}};obRender()}
+ else if(act==="wStart"){$("welcome").classList.remove("on");$("onb").classList.add("on");ob={step:0,q:{prog:null,sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[],salud:SALUD0()}};obRender()}
+ else if(act==="wDemo"){toast("Las cuentas abren muy pronto")}
  else if(act==="na"){toast("Disponible en la versión completa")}
 });
 
@@ -1962,8 +2010,7 @@ function ensureExtras(){
  if(!S.logged)S.logged=[];
  if(!S.habits)S.habits={agua:0,sueno:0,pasos:0,peso:(S.quiz&&S.quiz.peso)||0};
  if(S.habits.peso==null)S.habits.peso=(S.quiz&&S.quiz.peso)||0;
- if(!S.progress){const p0=(S.quiz&&S.quiz.peso)||72;const dNow=Math.max(1,S.day||1);
-  S.progress=dNow>1?[{d:1,peso:p0},{d:dNow,peso:Math.round((p0-1.6)*10)/10}]:[{d:1,peso:p0}];}
+ if(!S.progress)S.progress=[];
  save();
 }
 function loggedTotals(){const L=(S&&S.logged)||[];return L.reduce((a,x)=>({k:a.k+(x.k||0),p:a.p+(x.p||0),c:a.c+(x.c||0),f:a.f+(x.f||0)}),{k:0,p:0,c:0,f:0})}
@@ -2013,12 +2060,6 @@ function renderScanSheet(){
  <div class="sm" style="margin:6px 0 8px;font-weight:700;color:var(--tinta)">Elige de la lista</div>
  <div class="scanList">${list.map((x,i)=>`<span class="fchip" data-a="scanPick" data-p="${i}">${x.n}</span>`).join("")}</div>`);
 }
-function scanDetect(){
- const list=scanState.mode==="supp"?SCAN_SUPPS:SCAN_FOODS;
- scanState.cand=list[Math.floor(Math.random()*list.length)];
- renderScanSheet();
- const h=$("scanHint");if(h)h.textContent="Detectado: "+scanState.cand.n;
-}
 function scanConfirm(idx){const list=scanState.mode==="supp"?SCAN_SUPPS:SCAN_FOODS;scanState.cand=list[+idx];renderScanSheet()}
 function scanCommit(){
  if(!scanState.cand){toast("Primero detecta o elige algo");return}
@@ -2054,26 +2095,16 @@ function openHabit(k){
 }
 function habWater(){S.habits.agua=Math.min(12,(S.habits.agua||0)+1);save();renderHoy();$("sheetBg").classList.remove("on");toast(S.habits.agua>=8?"Meta de agua cumplida":"+1 vaso")}
 function habSet(k,v){
- if(k==="peso"){const inp=$("iPesoH");const val=inp?KG(inp.value):0;if(!val){toast("Escribe tu peso");return}S.habits.peso=val;pushProgress(val);save();renderHoy();renderPerfil();$("sheetBg").classList.remove("on");toast("Peso guardado en tu progreso");setTimeout(revisarPremios,420);return}
+ if(k==="peso"){const inp=$("iPesoH");const val=inp?KG(inp.value):0;if(!val){toast("Escribe tu peso");return}S.habits.peso=val;pushProgress(val);marcarActividad();save();renderHoy();renderPerfil();$("sheetBg").classList.remove("on");toast("Peso guardado en tu progreso");setTimeout(revisarPremios,420);return}
  S.habits[k]=v;save();renderHoy();$("sheetBg").classList.remove("on");toast("Guardado");
 }
 function pushProgress(peso){if(!S.progress)S.progress=[];S.progress=S.progress.filter(x=>x.t);const d=S.day||1;const last=S.progress[S.progress.length-1];if(last&&last.d===d){last.peso=peso;last.t=Date.now()}else{S.progress.push({d,peso,t:Date.now()})}}
 
 /* ================== MURO DE PROGRESO ================== */
 function silhou(tone){return "data:image/svg+xml;utf8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='140' height='160'><rect width='140' height='160' fill='"+tone+"'/><circle cx='70' cy='52' r='24' fill='rgba(255,255,255,.55)'/><path d='M32 150c0-30 17-48 38-48s38 18 38 48z' fill='rgba(255,255,255,.55)'/></svg>")}
-const TRANSFORMS=[
- {nm:"Lupita R.",wk:"8 semanas · Skinny Plan",q:"\"Bajé tallas, pero sobre todo dejé de sentirme hinchada. El menú fue lo que me salvó.\"",a:"#CBD5E1",b:"#1E3A8A"},
- {nm:"Marisol T.",wk:"12 semanas · Meno Smart",q:"\"Recuperé fuerza y dejé de tenerle miedo a la pesa. Stephy me cambió el chip.\"",a:"#CBD5E1",b:"#CBD5E1"},
- {nm:"Ana P.",wk:"6 semanas · Gut Reset",q:"\"Se me desinflamó la panza en la primera semana. Ya no lo suelto.\"",a:"#1E3A8A",b:"#1E3A8A"},
-];
-function muroProgresoHTML(){
- return `<div class="transHead"><div><b>Tu progreso mueve a la comunidad</b><span>Sube tu antes/después y anima a las demás</span></div><button class="btn solid" style="flex:none;padding:11px 16px" data-a="addProgreso">${ICON.plus} Subir</button></div>
- ${TRANSFORMS.map(t=>`<div class="transCard"><div class="transPics"><figure><img src="${silhou(t.a)}" alt=""><figcaption>ANTES</figcaption></figure><figure><img src="${silhou(t.b)}" alt=""><figcaption>DESPUÉS</figcaption></figure></div>
-  <div class="transBody"><div class="transTop"><div class="av2">${t.nm[0]}</div><div><b>${t.nm}</b><span>${t.wk}</span></div><span class="like" data-a="like">Ánimo +${8+t.nm.length}</span></div><p>${t.q}</p></div></div>`).join("")}
- <p class="fda">Fotos de ejemplo. Los resultados son individuales y varían de persona a persona; el acompañamiento nutricional no garantiza resultados. En Fase 1 se suben fotos reales con el permiso de cada persona.</p>`;
-}
-function metaPeso(){const q=S&&S.quiz;if(!q||!q.peso)return 0;const g=Math.round(q.peso*0.9);return g<40?0:g;}
+function metaPeso(){const q=S&&S.quiz;if(!q||!q.peso||!q.est)return 0;if(q.salud&&q.salud.tca)return 0;const h=q.est/100;const piso=Math.round(20*h*h);const g=Math.max(Math.round(q.peso*0.9),piso);return g>=q.peso?0:g;}
 function miProgresoHTML(){
+ /* el muro compartido llega con la comunidad; por ahora las fotos son privadas */
  const m=(S&&S.measures)||{};
  const medLine=(m.cintura||m.cadera)?`Cintura ${m.cintura?m.cintura+" cm":"—"} · Cadera ${m.cadera?m.cadera+" cm":"—"}`:"Suma tu cintura — es de lo que más cuenta";
  return `<div class="secT" style="margin-top:16px"><h3>Cómo voy</h3><a data-a="hab" data-p="peso">Registrar peso</a></div>
@@ -2083,9 +2114,7 @@ function miProgresoHTML(){
   <div class="miBtns"><button class="btn ghost" data-a="measures">${ICON.plus} Medidas</button><button class="btn ghost" data-a="health">${ICON.heart2} Conectar salud</button></div>
  </div>
  <div class="miFotos">
-  <div class="fotoSlot"><img src="${FOTO.prog1||silhou('#CBD5E1')}" alt="" loading="lazy"><span>Día 1</span></div>
-  <div class="fotoSlot"><img src="${FOTO.prog2||silhou('#CBD5E1')}" alt="" loading="lazy"><span>Hoy · día ${S.day}</span></div>
-  <div class="fotoSlot add" data-a="addProgreso"><div class="fotoAdd">${ICON.plus}</div><span>Subir foto</span></div>
+  <div class="fotoSlot add" data-a="addProgreso"><div class="fotoAdd">${ICON.plus}</div><span>Registrar peso</span></div>
  </div>`;
 }
 function miSpark(pr,meta){
@@ -2100,13 +2129,9 @@ function miSpark(pr,meta){
  return `<svg width="100%" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="margin:2px 0 6px;display:block">${gl}<polyline points="${pts}" fill="none" stroke="var(--navy)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
 function openAddProgreso(){
- sheet(`<h3>Sube tu progreso</h3><div class="sm">Una foto de hoy y tu peso — tú decides si la compartes al muro.</div>
- <label class="upl" for="fFoto"><div class="fotoAdd">${ICON.plus}</div><span id="uplLbl">Tomar o elegir foto</span></label>
+ sheet(`<h3>Sube tu progreso</h3><div class="sm">Tu peso de hoy queda en tu progreso. La foto se queda en tu teléfono.</div>
  <div class="inRow" style="margin-top:10px"><div class="inp"><label>Peso de hoy (lb)</label><input id="iPesoP" type="number" inputmode="decimal" value="${(S.habits&&S.habits.peso)?LB(S.habits.peso):''}"></div></div>
- <label class="chk"><input type="checkbox" id="cShare"> Compartir mi antes/después al muro de la comunidad</label>
- <input id="fFoto" type="file" accept="image/*" capture="environment" style="display:none">
  <button class="btn solid" style="width:100%;margin-top:14px" data-a="saveProgreso">Guardar</button>`);
- const inp=$("fFoto");if(inp)inp.addEventListener("change",()=>{const l=$("uplLbl");if(l&&inp.files&&inp.files[0])l.textContent="Foto lista: "+inp.files[0].name});
 }
 
 /* ================== PREGÚNTALE A STEPHY ================== */
@@ -2116,21 +2141,21 @@ const STEPHY_QA=[
  {q:"¿Cuánta proteína al día?",k:["proteina","proteína","proteinas"],a:"Tu meta exacta está en tu perfil. La regla de oro: 20–30 g de proteína por comida. Es la que te quita el hambre y cuida tu músculo — cómela primero en cada plato."},
  {q:"Salgo a cenar, ¿qué pido?",k:["cenar","cena","restaurante","fuera","pido","buffet"],a:"Proteína a la plancha o al horno + verduras o ensalada, con el aderezo aparte. Revisa la tarjeta '¿Qué pido?' aquí en Hoy y te doy el pedido exacto para el lugar donde estés."},
  {q:"No bajé esta semana",k:["no baj","bajar","peso","bascula","báscula","estanc"],a:"La báscula no manda: mídete también por cómo te queda la ropa y tu energía. Revisa que pegaste la proteína y el agua toda la semana. Un estancamiento es normalísimo — no te bajes del barco, sigue tu ritmo."},
- {q:"Ando muy hinchada",k:["hinch","inflam","panza","desinflam","digest"],a:"Baja sal y ultraprocesados un par de días, sube agua y verdura con fibra, y muévete tantito después de comer. Si es constante, cuéntame qué comes y lo revisamos — a veces es un alimento en particular."},
+ {q:"Traigo mucha inflamación",k:["hinch","inflam","panza","desinflam","digest"],a:"Baja sal y ultraprocesados un par de días, sube agua y verdura con fibra, y muévete tantito después de comer. Si es constante, cuéntame qué comes y lo revisamos — a veces es un alimento en particular."},
 ];
 let askMsgs=[];let askBusy=false;
 const FREE_ASK_LIMIT=5;
 function askUsage(){const k=cyKey(new Date());let a=store.get("tnp_ask",{day:"",n:0});if(a.day!==k)a={day:k,n:0};return a;}
 function askLeft(){if(S&&S.nivel==="top")return Infinity;return Math.max(0,FREE_ASK_LIMIT-askUsage().n);}
-function openAsk(){askMsgs=[{who:"s",t:"¡Hola! Soy Stephy 💛 Pregúntame lo que sea de tu plan — antojos, qué comer fuera, proteína, lo que traigas."}];renderAsk()}
+function openAsk(){askMsgs=[{who:"s",t:"¡Hola! Soy el asistente de Stephy 💛 Respondo con su método. Pregúntame lo que sea de tu plan — antojos, qué comer fuera, proteína, lo que traigas."}];renderAsk()}
 function renderAsk(){
  const top=S&&S.nivel==="top";const left=askLeft();
  const foot=top
-   ? `Asesoría ilimitada con tu membresía TOP. Respuestas guía de nutrición; tu médico manda en lo clínico.`
-   : (left>0 ? `Te quedan <b>${left}</b> preguntas gratis hoy. Con TOP son ilimitadas.` : `Llegaste a tus preguntas gratis de hoy.`);
+   ? `Asesoría ilimitada con tu membresía TOP. Respuestas generadas por inteligencia artificial con el método de Stephy; no sustituyen a tu médico.`
+   : (left>0 ? `Te quedan <b>${left}</b> preguntas hoy. Respuestas generadas por inteligencia artificial con el método de Stephy; no sustituyen a tu médico.` : `Llegaste a tus preguntas gratis de hoy.`);
  const upsell=(!top&&left<=0)?`<button class="btn solid" style="width:100%;margin-top:10px" data-a="up">Conocer la membresía TOP</button>`:"";
- sheet(`<div class="shead"><img class="sph" src="stephy.jpg"><div><h3>Pregúntale a Stephy</h3><div class="sm">Respuestas al instante, con el método de la clínica.</div></div></div>
- <div class="chatBox" id="chatBox">${askMsgs.map(m=>`<div class="cmsg ${m.who}${m.typing?' typing':''}">${m.t}</div>`).join("")}</div>
+ sheet(`<div class="shead"><img class="sph" src="stephy.jpg"><div><h3>Pregúntale a Stephy</h3><div class="sm">Asistente con inteligencia artificial, entrenado con el método de la clínica.</div></div></div>
+ <div class="chatBox" id="chatBox">${askMsgs.map(m=>`<div class="cmsg ${m.who}${m.typing?' typing':''}">${esc(m.t)}</div>`).join("")}</div>
  ${upsell}
  <div class="sit" style="margin:10px 0 0">${STEPHY_QA.map((x,i)=>`<span class="fchip" data-a="askQ" data-p="${i}">${x.q}</span>`).join("")}</div>
  <div class="chatIn"><input id="askIn" placeholder="Escribe tu pregunta…" autocomplete="off"><button class="chatSend" data-a="askSend">Enviar</button></div>
@@ -2138,7 +2163,6 @@ function renderAsk(){
  const cb=$("chatBox");if(cb)cb.scrollTop=cb.scrollHeight;
  const inp=$("askIn");if(inp){inp.addEventListener("keydown",e=>{if(e.key==="Enter"){const v=inp.value.trim();if(v)askPush(v)}})}
 }
-function askAnswer(q){const s=(q||"").toLowerCase();for(const x of STEPHY_QA){if(x.k.some(k=>s.includes(k)))return x.a}return "Buena pregunta. La base siempre es la misma: proteína primero (20–30 g por comida), verdura que llene, agua, y el antojo lo agendas — no lo peleas. Cuéntame tu caso concreto y te lo aterrizo a tu día."}
 async function askAnswerAI(){
  const hist=askMsgs.filter(m=>!m.typing).slice(1).map(m=>({role:m.who==="u"?"user":"assistant",content:m.t}));
  const r=await fetch("/api/stephy",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({messages:hist,nivel:(S&&S.nivel)||"app",programa:(S&&S.quiz&&S.quiz.prog)||null})});
@@ -2151,7 +2175,7 @@ async function askPush(q){
  const top=S&&S.nivel==="top";
  if(!top){
   const a=askUsage();
-  if(a.n>=FREE_ASK_LIMIT){askMsgs.push({who:"u",t:q});askMsgs.push({who:"s",t:"Por hoy llegaste a tus preguntas gratis 💛 Con la membresía TOP tienes asesoría ilimitada conmigo — y las respuestas van más a fondo. ¿Le echamos un ojo?"});renderAsk();return;}
+  if(a.n>=FREE_ASK_LIMIT){askMsgs.push({who:"u",t:q});askMsgs.push({who:"s",t:"Por hoy llegaste a tu límite de preguntas 💛 Con la membresía TOP la asesoría es ilimitada. ¿Le echamos un ojo?"});renderAsk();return;}
   a.n++;store.set("tnp_ask",a);
  }
  askBusy=true;
@@ -2162,7 +2186,8 @@ async function askPush(q){
   const t=await askAnswerAI();
   askMsgs=askMsgs.filter(m=>!m.typing);askMsgs.push({who:"s",t});
  }catch(e){
-  askMsgs=askMsgs.filter(m=>!m.typing);askMsgs.push({who:"s",t:askAnswer(q)});
+  askMsgs=askMsgs.filter(m=>!m.typing);
+  askMsgs.push({who:"s",t:"Ahorita no pude responderte. Intenta de nuevo en un minuto. Si es algo urgente de salud, habla con tu médico."});
  }
  askBusy=false;renderAsk();
 }
@@ -2201,24 +2226,13 @@ const LBf=k=>(+k||0)*2.20462;
 const r1=n=>Math.round(n*10)/10;
 /* Serie real = registros con sello de tiempo. Sin registros reales se muestra una serie de ejemplo, marcada como tal. */
 function serieReal(){return ((S&&S.progress)||[]).filter(x=>x.t)}
-function serieDemo(){
- const p0=(S.quiz&&S.quiz.peso)||72,n=Math.max(8,Math.min(60,S.day||12));
- let seed=11;const rnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280};
- const out=[];
- for(let d=1;d<=n;d++){
-  if(d>1&&d<n&&rnd()<0.25)continue;           /* dias sin pesarse, como en la vida real */
-  const tend=p0-0.115*d;                        /* ~0.8 kg por semana: ritmo sano */
-  const agua=(rnd()-0.5)*0.7;                   /* +-0.35 kg de agua y sal */
-  out.push({d,peso:r1(tend+agua)});
- }
- return out;
-}
 function progresoSerie(){
  const r=serieReal();
- if(r.length){const p0=(S.quiz&&S.quiz.peso)||r[0].peso;return {pts:(r[0].d>1?[{d:1,peso:p0,base:true}]:[]).concat(r),demo:false}}
- return {pts:serieDemo(),demo:true};
+ if(!r.length)return {pts:[]};
+ const p0=(S.quiz&&S.quiz.peso)||r[0].peso;
+ return {pts:(r[0].d>1?[{d:1,peso:p0,base:true}]:[]).concat(r)};
 }
-function pesoActual(){const s=progresoSerie().pts;return s.length?s[s.length-1].peso:((S.quiz&&S.quiz.peso)||0)}
+function pesoActual(){const s=progresoSerie().pts;return s.length?s[s.length-1].peso:((S.habits&&S.habits.peso)||(S.quiz&&S.quiz.peso)||0)}
 /* promedio movil de 7 dias: la tendencia real, sin el ruido del agua */
 function tendencia(pts){return pts.map(p=>{const w=pts.filter(x=>x.d<=p.d&&x.d>p.d-7);return {d:p.d,peso:w.reduce((a,x)=>a+x.peso,0)/w.length}})}
 function cvChart(pts,meta){
@@ -2249,7 +2263,7 @@ function hoyItems(){
  const g=gratHoy();
  const agua=(S.habits&&S.habits.agua)||0;
  const dn=(S.done||[]).filter(Boolean).length,dt=(S.done||[]).length||4;
- const MOOD={hambre:"con hambre",antojo:"con antojo",ligera:"ligera"};
+ const MOOD={hambre:"con hambre",antojo:"con antojo",ligera:"con energía"};
  return [
   {ok:!!pesoHoy,t:"Registré mi peso",s:pesoHoy?LB(pesoHoy.peso)+" lb":"Registrar",tap:!pesoHoy?'data-a="hab" data-p="peso"':''},
   {ok:ci,t:"Hice mi check-in",s:ci?(MOOD[S.checkin.mood]||"listo"):"En Hoy"},
@@ -2267,7 +2281,8 @@ function comoVoyHTML(){
    <div class="cvScore"><b>${ok} de ${it.length}</b><span>${ok===it.length?"Día completo. Así se hace.":ok>=3?"Vas muy bien hoy.":"Todavía hay día — una cosa a la vez."}</span></div>
    <div class="cvHoy">${it.map(x=>`<div class="cvItem ${x.ok?'ok':''} ${x.tap?'tap':''}" ${x.tap}><span class="ck">${x.ok?ICON.check:''}</span>${x.t}<small>${x.s}</small></div>`).join("")}</div></div>`;
  }
- const {pts,demo}=progresoSerie();
+ const {pts}=progresoSerie();
+ if(!pts.length)return `<div class="cvCard">${segH}<div class="gratEmpty">Todavía no registras tu peso. En cuanto lo hagas, aquí aparece tu tendencia.<br><b style="color:var(--tinta)">Regístralo arriba, en “Registrar peso”.</b></div></div>`;
  const dias=seg==="semana"?7:30;
  const hoy=S.day||1;
  const win=pts.filter(p=>p.d>hoy-dias);
@@ -2284,12 +2299,11 @@ function comoVoyHTML(){
   <div class="cvHead"><b>${LB(fin.peso)}<small>lb</small></b><span class="${cambio>0?'sube':''}">${cambioTxt} ${perio}</span></div>
   ${cvChart(ws,seg==="mes"?meta:0)}
   <div class="cvStats">
-   <div class="cvStat"><b>${regs} de ${Math.min(dias,hoy)}</b><span>Días pesada</span></div>
+   <div class="cvStat"><b>${regs} de ${Math.min(dias,hoy)}</b><span>Días con registro</span></div>
    <div class="cvStat"><b>${prom} lb</b><span>Promedio</span></div>
    <div class="cvStat"><b>${faltaMeta==null?"—":faltaMeta===0?"¡Meta!":faltaMeta+" lb"}</b><span>${faltaMeta===0?"Lo lograste":"Para tu meta"}</span></div>
   </div>
   ${cambio>0?`<div class="cvDemo">Subir un poco de una pesada a otra es agua, sal u hormonas — no grasa. Fíjate en la línea azul, no en los puntos.</div>`:""}
-  ${demo?`<div class="cvDemo"><b>Ejemplo.</b> Así se va a ver tu progreso. En cuanto registres tu primer peso, esta gráfica se llena solo con tus datos.</div>`:""}
  </div>`;
 }
 
@@ -2312,11 +2326,12 @@ const PREMIO_CFG={
 };
 function premiosLista(){
  const q=(S&&S.quiz)||{};const p0=q.peso||0;
- const meta=metaPeso();const hm=(q.est||160)/100;const piso=18.5*hm*hm;
+ const meta=metaPeso();const hm=(q.est||0)/100;const piso=hm?20*hm*hm:1e9;
  const tope=Math.max(meta||0,piso);
  const maxLb=p0?Math.floor(LBf(p0)-LBf(tope)):0;
  const L=[{id:"d7",tipo:"dias",n:7,t:"Tu primera semana",k:"msg"}];
- for(let lb=10;lb<=maxLb;lb+=10)L.push({id:"lb"+lb,tipo:"lb",n:lb,t:lb+" libras menos",k:(lb/10)%2===1?"video":"cupon"});
+ const sinLb=!!(q.salud&&q.salud.tca);
+ for(let lb=10;!sinLb&&lb<=maxLb;lb+=10)L.push({id:"lb"+lb,tipo:"lb",n:lb,t:lb+" libras menos",k:(lb/10)%2===1?"video":"cupon"});
  L.push({id:"d30",tipo:"dias",n:30,t:"30 días de constancia",k:"cupon"});
  L.push({id:"d60",tipo:"dias",n:60,t:"60 días de constancia",k:"video"});
  L.push({id:"d90",tipo:"dias",n:90,t:"90 días de constancia",k:"agenda"});
@@ -2596,7 +2611,7 @@ function openCycleSetup(){
 if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();window.__dp=e});
 const VER_INICIO=/[?&](inicio|nuevo)\b/i.test(location.search);
-if(S&&S.quiz&&!VER_INICIO){if(!S.week)genWeek();ensureExtras();renderAll()}
+if(S&&S.quiz&&!VER_INICIO){if(!S.week)genWeek();ensureExtras();actualizarDia();renderAll()}
 else{
  S=demoState();genWeek();renderAll();S=null;
  renderPills();
