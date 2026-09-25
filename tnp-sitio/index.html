@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F2F4F8">
+<link rel="icon" href="/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/base.css">
+<title>TNP · Tu Nuevo Plan</title>
+<meta name="description" content="El método de la clínica Skinny Sekret, ahora en tu celular. Elige tu programa y empieza el mismo día.">
+<meta property="og:title" content="TNP · Tu Nuevo Plan"><meta property="og:description" content="El método de la clínica Skinny Sekret, ahora en tu celular. Elige tu programa y empieza el mismo día.">
+<meta property="og:type" content="website"><meta name="twitter:card" content="summary">
+</head>
+<body>
+<div class="bar"><div class="wrap">
+  <a class="mark" href="/"><img src="/logo.svg" width="32" height="32" alt=""><b>Tu Nuevo Plan</b></a>
+  <a class="barCta" href="/#fundadores">Quiero mi lugar</a>
+</div></div>
+<style>
+.hero{padding-block:52px 44px;text-align:center}
+.hero .kick{font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--coral)}
+.hero h1{font-size:clamp(34px,8vw,58px);font-weight:800;line-height:1.04;margin:14px auto 0;max-width:15ch;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--navy);position:relative;white-space:nowrap}
+.hero h1 em::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:4px;border-radius:3px;background:var(--coral)}
+.hero p{font-size:17.5px;color:var(--gris);margin:26px auto 0;max-width:44ch}
+.cta{display:inline-flex;align-items:center;gap:9px;background:var(--coral);color:#fff;text-decoration:none;
+  font-family:'Manrope',sans-serif;font-weight:700;font-size:16px;padding:16px 30px;border-radius:999px;margin-top:28px;
+  box-shadow:0 16px 30px -10px rgba(233,75,60,.6)}
+.cta svg{width:17px;height:17px}
+.hero .fine2{font-size:13px;color:var(--gris);margin-top:12px}
+.cred{display:inline-flex;align-items:center;gap:10px;background:var(--sup);border:1px solid var(--borde);
+  border-radius:999px;padding:9px 18px;margin-top:30px;font-size:13.5px;color:var(--gris)}
+.cred b{font-family:'Manrope',sans-serif;font-weight:700;color:var(--tinta);font-size:14px}
+
+.pasos{background:var(--tinta);color:#fff;padding-block:46px}
+.pasos h2{font-size:clamp(24px,5.4vw,32px);font-weight:800;color:#fff;text-align:center;text-wrap:balance}
+.pasos h2 em{font-style:normal;color:var(--coral)}
+.pg{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:26px}
+.pz{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:18px}
+.pz i{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:11px;
+  background:rgba(233,75,60,.16);border:1px solid rgba(233,75,60,.45);color:var(--coral);
+  font-family:'Manrope',sans-serif;font-weight:800;font-size:16px;font-style:normal}
+.pz b{display:block;font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-top:12px}
+.pz span{display:block;font-size:13.5px;color:rgba(242,244,248,.68);margin-top:4px;line-height:1.45}
+
+.sec{padding-block:52px}
+.sec .kick{font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--coral);text-align:center}
+.sec h2{font-size:clamp(25px,5.6vw,34px);font-weight:800;text-align:center;margin-top:9px;text-wrap:balance}
+.sec .sub{text-align:center;color:var(--gris);font-size:15.5px;margin:9px auto 0;max-width:46ch}
+
+.progs{display:grid;grid-template-columns:repeat(auto-fit,minmax(288px,1fr));gap:13px;margin-top:30px}
+.pr{background:var(--sup);border:1px solid var(--borde);border-radius:20px;padding:20px;display:flex;flex-direction:column;
+  box-shadow:0 14px 30px -26px rgba(var(--sombra),.5)}
+.pr .lbl{font-family:'Manrope',sans-serif;font-weight:800;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--coral)}
+.pr h3{font-size:20px;font-weight:800;margin-top:7px}
+.pr .tg{font-size:13.5px;color:var(--gris);margin-top:5px;line-height:1.45;flex:1}
+.pr .pie{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--borde)}
+.pr .pz2{font-family:'Manrope',sans-serif;font-weight:800;font-size:21px;color:var(--navy)}
+.pr .pz2 small{font-size:11.5px;font-weight:500;color:var(--gris);margin-left:3px}
+.pr.top{background:var(--tinta);border-color:var(--tinta)}
+.pr.top h3,.pr.top .pz2{color:#fff}
+.pr.top .tg{color:rgba(242,244,248,.72)}
+.pr.top .pie{border-top-color:rgba(255,255,255,.16)}
+.pr.top .pz2 small{color:rgba(242,244,248,.6)}
+.tag{display:inline-block;font-family:'Manrope',sans-serif;font-weight:800;font-size:8.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--coral);background:rgba(233,75,60,.1);border:1px solid rgba(233,75,60,.28);
+  border-radius:999px;padding:3px 8px;margin-left:7px;vertical-align:2px}
+
+.esc{background:var(--sup);border:1px solid var(--borde);border-radius:20px;padding:6px 22px;margin-top:22px}
+.esc div{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding-block:14px;border-top:1px solid var(--borde);font-size:15px}
+.esc div:first-child{border-top:0}
+.esc b{font-family:'Manrope',sans-serif;font-weight:700}
+.esc span{font-family:'Manrope',sans-serif;font-weight:800;color:var(--navy);white-space:nowrap}
+
+#fundadores{background:linear-gradient(160deg,#1E3A8A 0%,var(--tinta) 55%,#0E1524 100%);color:#fff;scroll-margin-top:70px}
+#fundadores h2{color:#fff}
+#fundadores .sub{color:rgba(242,244,248,.72)}
+.form{display:flex;gap:9px;max-width:460px;margin:26px auto 0;flex-wrap:wrap}
+.form input{flex:1;min-width:200px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.26);
+  border-radius:999px;padding:15px 20px;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;outline:none}
+.form input::placeholder{color:rgba(242,244,248,.5)}
+.form input:focus{border-color:var(--coral);background:rgba(255,255,255,.14)}
+.form button{flex:none;background:var(--coral);color:#fff;border:none;border-radius:999px;padding:15px 26px;
+  font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;cursor:pointer}
+.form button:disabled{opacity:.6;cursor:default}
+.fmsg{max-width:460px;margin:14px auto 0;font-size:14.5px;text-align:center;min-height:22px;color:rgba(242,244,248,.82)}
+.fmsg.ok{color:#A8E0B4;font-weight:600}
+.fmsg.err{color:#FFB3A6}
+#fundadores .fine2{text-align:center;font-size:12.5px;color:rgba(242,244,248,.55);margin-top:16px}
+#fundadores .fine2 a{color:rgba(242,244,248,.8)}
+
+.clinica{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.clinica div{flex:1;min-width:150px;background:var(--sup);border:1px solid var(--borde);border-radius:16px;padding:18px;text-align:center}
+.clinica b{display:block;font-family:'Manrope',sans-serif;font-size:24px;font-weight:800;color:var(--navy)}
+.clinica span{display:block;font-size:12.5px;color:var(--gris);margin-top:4px}
+.nota{font-size:13px;color:var(--gris);text-align:center;margin-top:26px;line-height:1.6;max-width:62ch;margin-inline:auto}
+</style>
+
+<div class="wrap hero">
+  <p class="kick">Día uno</p>
+  <h1>Comida real. Un plan claro. <em>Tu nueva versión.</em></h1>
+  <p>El método de la clínica Skinny Sekret, ahora en tu celular. Tu plan se arma con lo que nos cuentas, y se renueva cada mes.</p>
+  <a class="cta" href="#fundadores">Apartar mi lugar<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  <p class="fine2">Sin tarjeta · te avisamos cuando abra</p>
+  <div class="cred"><b>Stephanie Kantú</b> · Nutrióloga</div>
+</div>
+
+<div class="pasos"><div class="wrap">
+  <h2>Tu Nuevo Plan es tan fácil como <em>1, 2, 3</em>.</h2>
+  <div class="pg">
+    <div class="pz"><i>1</i><b>Elige tu programa</b><span>El que va con tu meta. Abajo están los siete.</span></div>
+    <div class="pz"><i>2</i><b>Cuéntanos de ti</b><span>Un cuestionario corto: tus datos, tu salud, lo que te gusta comer.</span></div>
+    <div class="pz"><i>3</i><b>Empiezas el mismo día</b><span>Tu menú queda armado, con porciones y lista de súper.</span></div>
+  </div>
+</div></div>
+
+<div class="sec" id="programas"><div class="wrap">
+  <p class="kick">Paso 1</p>
+  <h2>¿Cuál es el tuyo?</h2>
+  <p class="sub">Cada programa cambia el menú, los números y los productos que lo acompañan.</p>
+  <div class="progs">
+    <div class="pr"><span class="lbl">Si ya lo intentaste antes</span><h3>Skinny Plan<span class="tag">El más elegido</span></h3><p class="tg">Reseteo metabólico y pérdida de peso. Comida real, estructura clara.</p><div class="pie"><span class="pz2">$39.99</span></div></div>
+    <div class="pr"><span class="lbl">Si estás en menopausia</span><h3>Meno Smart</h3><p class="tg">Peri y menopausia, con un plan que sí entiende tu etapa. Protege músculo y hueso.</p><div class="pie"><span class="pz2">$59.99</span></div></div>
+    <div class="pr"><span class="lbl">Si llevas tratamiento GLP-1</span><h3>GLP1 Pro</h3><p class="tg">Acompañamiento mientras dura tu tratamiento, para que lo que bajes sea grasa y no músculo.</p><div class="pie"><span class="pz2">$59.99</span></div></div>
+    <div class="pr"><span class="lbl">Si vives con inflamación</span><h3>Gut Reset</h3><p class="tg">Menos inflamación y una digestión que no pesa.</p><div class="pie"><span class="pz2">$39.99</span></div></div>
+    <div class="pr"><span class="lbl">Si tu azúcar anda inestable</span><h3>Gluco Control</h3><p class="tg">Glucosa estable y energía pareja todo el día. Proteína y fibra en cada comida.</p><div class="pie"><span class="pz2">$39.99</span></div></div>
+    <div class="pr"><span class="lbl">Si quieres marcarte</span><h3>Body Recomp</h3><p class="tg">Menos grasa, más músculo. Construido alrededor de tu proteína del día.</p><div class="pie"><span class="pz2">$39.99</span></div></div>
+    <div class="pr"><span class="lbl">Si quieres algo hecho para ti</span><h3>Personalizado</h3><p class="tg">El plan más afinado a tu cuerpo, tus gustos y tus condiciones.</p><div class="pie"><span class="pz2">$79.99</span></div></div>
+    <div class="pr top"><span class="lbl">Todo junto</span><h3>Membresía TOP</h3><p class="tg">El Kit de productos + tu plan personalizado + la app completa, en una sola suscripción.</p><div class="pie"><span class="pz2">$129.99<small>/mes</small></span></div></div>
+  </div>
+
+  <div class="esc">
+    <div><b>App y Comunidad, por su cuenta</b><span>$19.99/mes</span></div>
+    <div><b>Solo el plan de tu meta</b><span>desde $39.99</span></div>
+    <div><b>Todo incluido, con el Kit</b><span>$129.99/mes</span></div>
+  </div>
+  <p class="nota">Cada programa es un ciclo de cuatro semanas. Los planes se refrescan con tu compra del mes siguiente; la App y la Membresía TOP son suscripciones que puedes cancelar cuando quieras.</p>
+</div></div>
+
+<div class="sec" style="background:var(--sup);border-block:1px solid var(--borde)"><div class="wrap">
+  <p class="kick">Esto no empezó en internet</p>
+  <h2>Atrás de la app hay una clínica.</h2>
+  <p class="sub">Skinny Sekret, la clínica que fundó Stephy Kantú en Dallas. TNP es ese mismo método, ahora en tu celular.</p>
+  <div class="clinica">
+    <div><b>Dallas</b><span>clínica física</span></div>
+    <div><b>8 años</b><span>atendiendo</span></div>
+    <div><b>+70,000</b><span>clientes atendidos</span></div>
+  </div>
+</div></div>
+
+<div class="sec" id="fundadores"><div class="wrap">
+  <p class="kick">Primer grupo</p>
+  <h2>Estamos abriendo el primer grupo de fundadores.</h2>
+  <p class="sub">Déjanos tu correo y eres de los primeros en entrar, con precio de fundador. No te cobramos nada hoy.</p>
+  <form class="form" id="f" novalidate>
+    <input id="e" type="email" inputmode="email" autocomplete="email" placeholder="tu@correo.com" required aria-label="Tu correo">
+    <button id="b" type="submit">Apartar mi lugar</button>
+  </form>
+  <p class="fmsg" id="m" role="status" aria-live="polite"></p>
+  <p class="fine2">Solo te escribimos para avisarte cuando abra. Puedes salirte cuando quieras. <a href="/privacidad.html">Privacidad</a></p>
+</div></div>
+
+<script>
+(function(){
+ var URL_SB="https://juahjgeewcwqjovnlril.supabase.co/rest/v1/lista_espera";
+ var KEY="sb_publishable_F8Com7KmemJ7kyCe83eahg_LpHGoLIU";
+ var f=document.getElementById("f"),e=document.getElementById("e"),b=document.getElementById("b"),m=document.getElementById("m");
+ function di(t,c){m.textContent=t;m.className="fmsg"+(c?" "+c:"")}
+ f.addEventListener("submit",function(ev){
+  ev.preventDefault();
+  var v=(e.value||"").trim();
+  if(!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v)){di("Revisa tu correo, parece que le falta algo.","err");e.focus();return}
+  b.disabled=true;b.textContent="Apartando…";di("");
+  fetch(URL_SB,{method:"POST",headers:{"apikey":KEY,"Authorization":"Bearer "+KEY,"Content-Type":"application/json","Prefer":"return=minimal"},
+   body:JSON.stringify({correo:v,origen:"sitio"})})
+  .then(function(r){
+   if(r.ok){f.style.display="none";di("Listo. Te escribimos en cuanto abramos el primer grupo.","ok");return}
+   if(r.status===409){f.style.display="none";di("Ese correo ya está en la lista. Tranquilo, no se nos va a olvidar.","ok");return}
+   throw new Error(r.status);
+  })
+  .catch(function(){b.disabled=false;b.textContent="Apartar mi lugar";
+   di("No se pudo guardar ahorita. Intenta otra vez, o escríbenos a hola@tunuevoplan.com","err")});
+ });
+})();
+</script>
+<footer><div class="wrap">
+  <div>
+    <div class="lks">
+      <a href="/">Inicio</a><a href="/#programas">Programas</a>
+      <a href="/terminos.html">Términos</a><a href="/privacidad.html">Privacidad</a><a href="/reembolsos.html">Reembolsos</a>
+      <a href="mailto:hola@tunuevoplan.com">hola@tunuevoplan.com</a>
+    </div>
+    <p class="fine" style="margin-top:14px">Tu Nuevo Plan es acompañamiento nutricional. No diagnostica, trata ni cura ninguna enfermedad, y no sustituye la atención de tu médico. Los resultados varían de persona a persona.</p>
+  </div>
+  <p class="fine">© 2026 Tu Nuevo Plan</p>
+</div></footer>
+
+</body>
+</html>
