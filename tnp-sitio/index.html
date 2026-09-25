@@ -16,7 +16,7 @@
 <body>
 <div class="bar"><div class="wrap">
   <a class="mark" href="/"><img src="/logo.svg" width="32" height="32" alt=""><b>Tu Nuevo Plan</b></a>
-  <a class="barCta" href="/#fundadores">Quiero mi lugar</a>
+  <a class="barCta" href="https://app.tunuevoplan.com/">Empezar</a>
 </div></div>
 <style>
 .hero{padding-block:52px 44px;text-align:center}
@@ -102,8 +102,8 @@
   <p class="kick">Día uno</p>
   <h1>Comida real. Un plan claro. <em>Tu nueva versión.</em></h1>
   <p>El método de la clínica Skinny Sekret, ahora en tu celular. Tu plan se arma con lo que nos cuentas, y se renueva cada mes.</p>
-  <a class="cta" href="#fundadores">Apartar mi lugar<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-  <p class="fine2">Sin tarjeta · te avisamos cuando abra</p>
+  <a class="cta" href="#programas">Ver los programas<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  <p class="fine2">Elige el tuyo y contesta el cuestionario · sin tarjeta</p>
   <div class="cred"><b>Stephanie Kantú</b> · Nutrióloga</div>
 </div>
 
@@ -150,47 +150,21 @@
   </div>
 </div></div>
 
-<div class="sec" id="fundadores"><div class="wrap">
-  <p class="kick">Primer grupo</p>
-  <h2>Estamos abriendo el primer grupo de fundadores.</h2>
-  <p class="sub">Déjanos tu correo y eres de los primeros en entrar, con precio de fundador. No te cobramos nada hoy.</p>
-  <form class="form" id="f" novalidate>
-    <input id="e" type="email" inputmode="email" autocomplete="email" placeholder="tu@correo.com" required aria-label="Tu correo">
-    <button id="b" type="submit">Apartar mi lugar</button>
-  </form>
-  <p class="fmsg" id="m" role="status" aria-live="polite"></p>
-  <p class="fine2">Solo te escribimos para avisarte cuando abra. Puedes salirte cuando quieras. <a href="/privacidad.html">Privacidad</a></p>
-</div></div>
-
-<script>
-(function(){
- var URL_SB="https://juahjgeewcwqjovnlril.supabase.co/rest/v1/lista_espera";
- var KEY="sb_publishable_F8Com7KmemJ7kyCe83eahg_LpHGoLIU";
- var f=document.getElementById("f"),e=document.getElementById("e"),b=document.getElementById("b"),m=document.getElementById("m");
- function di(t,c){m.textContent=t;m.className="fmsg"+(c?" "+c:"")}
- f.addEventListener("submit",function(ev){
-  ev.preventDefault();
-  var v=(e.value||"").trim();
-  if(!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v)){di("Revisa tu correo, parece que le falta algo.","err");e.focus();return}
-  b.disabled=true;b.textContent="Apartando…";di("");
-  fetch(URL_SB,{method:"POST",headers:{"apikey":KEY,"Authorization":"Bearer "+KEY,"Content-Type":"application/json","Prefer":"return=minimal"},
-   body:JSON.stringify({correo:v,origen:"sitio"})})
-  .then(function(r){
-   if(r.ok){f.style.display="none";di("Listo. Te escribimos en cuanto abramos el primer grupo.","ok");return}
-   if(r.status===409){f.style.display="none";di("Ese correo ya está en la lista. Tranquilo, no se nos va a olvidar.","ok");return}
-   throw new Error(r.status);
-  })
-  .catch(function(){b.disabled=false;b.textContent="Apartar mi lugar";
-   di("No se pudo guardar ahorita. Intenta otra vez, o escríbenos a hola@tunuevoplan.com","err")});
- });
-})();
-</script>
+<div class="sec" id="empezar" style="background:linear-gradient(160deg,#1E3A8A 0%,var(--tinta) 55%,#0E1524 100%);color:#fff;scroll-margin-top:70px">
+ <div class="wrap" style="text-align:center">
+  <p class="kick">Paso 2</p>
+  <h2 style="color:#fff">Cuéntanos de ti y te armamos el plan.</h2>
+  <p class="sub" style="color:rgba(242,244,248,.72)">Un cuestionario corto: tus datos, tu salud y lo que te gusta comer. Dos minutos.</p>
+  <a class="cta" href="https://app.tunuevoplan.com/" style="margin-top:26px">Empezar mi cuestionario<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  <p style="font-size:12.5px;color:rgba(242,244,248,.55);margin-top:16px">Sin tarjeta para contestarlo.</p>
+ </div>
+</div>
 <footer><div class="wrap">
   <div>
     <div class="lks">
       <a href="/">Inicio</a><a href="/#programas">Programas</a>
       <a href="/terminos.html">Términos</a><a href="/privacidad.html">Privacidad</a><a href="/reembolsos.html">Reembolsos</a>
-      <a href="mailto:hola@tunuevoplan.com">hola@tunuevoplan.com</a>
+      <a href="mailto:info@tunuevoplan.com">info@tunuevoplan.com</a>
     </div>
     <p class="fine" style="margin-top:14px">Tu Nuevo Plan es acompañamiento nutricional. No diagnostica, trata ni cura ninguna enfermedad, y no sustituye la atención de tu médico. Los resultados varían de persona a persona.</p>
   </div>
