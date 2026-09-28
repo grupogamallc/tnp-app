@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F2F4F8">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/base.css">
+<title>Preguntas para Stephy · TNP</title>
+</head>
+<body>
+<div class="bar"><div class="wrap">
+  <span class="mark"><img src="/logo.svg" width="32" height="32" alt=""><b>Tu Nuevo Plan</b></span>
+</div></div>
+<style>
+.qwrap{max-width:720px;margin-inline:auto;padding-inline:20px;padding-block:36px 90px}
+.qhead .kick{font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;letter-spacing:.17em;text-transform:uppercase;color:var(--coral)}
+.qhead h1{font-size:clamp(27px,6.4vw,38px);font-weight:800;line-height:1.08;margin:10px 0 0}
+.qhead p{font-size:16px;color:var(--gris);margin-top:14px;max-width:52ch}
+.qhead .nom{margin-top:22px}
+.inp2{display:block;width:100%;background:var(--sup);border:1.5px solid var(--borde);border-radius:14px;
+  padding:14px 16px;font-family:'DM Sans',sans-serif;font-size:15.5px;color:var(--tinta);outline:none}
+.inp2:focus{border-color:var(--coral)}
+label.lb{display:block;font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--gris);margin-bottom:7px}
+
+.bl{margin-top:40px}
+.bl .bt{font-family:'Manrope',sans-serif;font-weight:800;font-size:21px;letter-spacing:-.02em;
+  padding-bottom:9px;border-bottom:2px solid var(--tinta)}
+.bl .bd{font-size:14.5px;color:var(--gris);margin-top:10px}
+
+.q{background:var(--sup);border:1px solid var(--borde);border-radius:18px;padding:20px;margin-top:14px;
+  box-shadow:0 12px 26px -24px rgba(var(--sombra),.5)}
+.q.ok{border-color:color-mix(in srgb,var(--navy) 34%,var(--borde))}
+.q .n{font-family:'Manrope',sans-serif;font-weight:800;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--coral)}
+.q .qt{font-size:16.5px;line-height:1.45;margin-top:7px;color:var(--tinta)}
+.q .qt b{font-weight:600}
+.ops{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.op{display:flex;gap:12px;align-items:flex-start;background:var(--papel);border:1.5px solid transparent;
+  border-radius:13px;padding:13px 15px;cursor:pointer;font-size:15px;line-height:1.45}
+.op:hover{border-color:var(--gris-l)}
+.op.on{border-color:var(--coral);background:color-mix(in srgb,var(--coral) 7%,#fff)}
+.op input{margin:0;flex:none;width:19px;height:19px;accent-color:var(--coral);margin-top:2px}
+.op span{flex:1}
+.op span b{font-weight:700}
+.nota{margin-top:11px}
+.nota textarea{width:100%;background:var(--papel);border:1.5px solid var(--borde);border-radius:12px;
+  padding:11px 13px;font-family:'DM Sans',sans-serif;font-size:14.5px;color:var(--tinta);outline:none;
+  resize:vertical;min-height:44px}
+.nota textarea:focus{border-color:var(--coral);background:#fff}
+.nota .h{font-size:12.5px;color:var(--gris);margin-bottom:5px}
+
+.barra{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(255,255,255,.95);
+  backdrop-filter:blur(10px);border-top:1px solid var(--borde);
+  padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px))}
+.barra .in{max-width:720px;margin-inline:auto;display:flex;align-items:center;gap:14px}
+.barra .pg{flex:1;min-width:0}
+.barra .pgt{font-size:12.5px;font-weight:600;color:var(--gris)}
+.barra .pgb{height:6px;border-radius:99px;background:var(--borde);margin-top:6px;overflow:hidden}
+.barra .pgb i{display:block;height:100%;background:var(--coral);border-radius:99px;width:0;transition:width .3s}
+.barra button{flex:none;background:var(--coral);color:#fff;border:none;border-radius:999px;padding:14px 24px;
+  font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;cursor:pointer}
+.barra button:disabled{opacity:.45;cursor:default}
+
+.fin{background:var(--sup);border:1px solid var(--borde);border-radius:20px;padding:34px 26px;text-align:center;margin-top:40px}
+.fin .ic{width:62px;height:62px;border-radius:50%;background:var(--navy);color:#fff;display:flex;
+  align-items:center;justify-content:center;margin:0 auto 16px}
+.fin h2{font-size:25px;font-weight:800}
+.fin p{font-size:15.5px;color:var(--gris);margin-top:10px;max-width:40ch;margin-inline:auto}
+.aviso2{font-size:13.5px;color:var(--gris);background:var(--papel);border-radius:13px;padding:14px 16px;margin-top:18px;line-height:1.55}
+.err{color:#B4472F;font-size:14px;font-weight:600;margin-top:10px;text-align:center}
+</style>
+
+<div class="qwrap" id="app">
+ <div class="qhead">
+  <p class="kick">TNP · Motor de planes</p>
+  <h1>Stephy, necesito que me cierres estas.</h1>
+  <p>Son 16 preguntas con opciones. Ninguna te va a tomar más de un minuto. Si una opción no te convence, siempre hay un espacio abajo para escribirme.</p>
+  <p style="font-size:14.5px;margin-top:10px">Se guarda solo mientras contestas, así que puedes cerrar y volver.</p>
+  <div class="nom">
+   <label class="lb" for="quien">¿Quién contesta?</label>
+   <input class="inp2" id="quien" placeholder="Tu nombre" autocomplete="name">
+  </div>
+ </div>
+ <div id="bloques"></div>
+ <div class="bl">
+  <div class="bt">Lo último</div>
+  <div class="q">
+   <div class="qt">¿Algo más que deba saber antes de programar el motor?</div>
+   <div class="nota" style="margin-top:12px"><textarea id="final" rows="4" placeholder="Opcional"></textarea></div>
+  </div>
+ </div>
+ <p class="aviso2">Esto lo lee Juan y lo uso para programar el generador de menús. No se publica en ningún lado.</p>
+ <p class="err" id="err" hidden></p>
+</div>
+
+<div class="barra" id="barra"><div class="in">
+ <div class="pg"><div class="pgt" id="pgt">0 de 16</div><div class="pgb"><i id="pgb"></i></div></div>
+ <button id="enviar">Enviar</button>
+</div></div>
+
+<script src="/preguntas.js"></script>
+<script>
+(function(){
+ var SB="https://juahjgeewcwqjovnlril.supabase.co/rest/v1/cuestionario_stephy";
+ var KEY="sb_publishable_F8Com7KmemJ7kyCe83eahg_LpHGoLIU";
+ var CLAVE="tnp_cuest_stephy";
+ var R={}; try{R=JSON.parse(localStorage.getItem(CLAVE)||"{}")}catch(e){R={}}
+ var TOTAL=0, cont=document.getElementById("bloques"), h="";
+
+ BLOQUES.forEach(function(b){
+  h+='<div class="bl"><div class="bt">'+b.t+'</div><div class="bd">'+b.d+'</div>';
+  b.qs.forEach(function(q){
+   TOTAL++;
+   var num=TOTAL;
+   h+='<div class="q" id="q-'+q.id+'"><div class="n">Pregunta '+num+'</div><div class="qt">'+q.q+'</div><div class="ops">';
+   q.o.forEach(function(op,i){
+    h+='<label class="op" data-q="'+q.id+'" data-i="'+i+'">'+
+       '<input type="'+(q.m?"checkbox":"radio")+'" name="'+q.id+'" value="'+i+'">'+
+       '<span>'+op+'</span></label>';
+   });
+   h+='</div><div class="nota"><div class="h">¿Quieres agregar algo?</div>'+
+      '<textarea rows="2" data-nota="'+q.id+'" placeholder="Opcional"></textarea></div></div>';
+  });
+  h+='</div>';
+ });
+ cont.innerHTML=h;
+ document.getElementById("pgt").textContent="0 de "+TOTAL;
+
+ // restaurar borrador
+ if(R.quien)document.getElementById("quien").value=R.quien;
+ if(R.final)document.getElementById("final").value=R.final;
+ Object.keys(R.r||{}).forEach(function(id){
+  var v=R.r[id];
+  (Array.isArray(v)?v:[v]).forEach(function(i){
+   var el=document.querySelector('input[name="'+id+'"][value="'+i+'"]');
+   if(el){el.checked=true; el.closest(".op").classList.add("on")}
+  });
+ });
+ Object.keys(R.n||{}).forEach(function(id){
+  var t=document.querySelector('textarea[data-nota="'+id+'"]');
+  if(t)t.value=R.n[id];
+ });
+
+ function leer(){
+  var r={},n={};
+  BLOQUES.forEach(function(b){b.qs.forEach(function(q){
+   var sel=[].slice.call(document.querySelectorAll('input[name="'+q.id+'"]:checked')).map(function(x){return +x.value});
+   if(sel.length)r[q.id]=q.m?sel:sel[0];
+   var t=document.querySelector('textarea[data-nota="'+q.id+'"]');
+   if(t&&t.value.trim())n[q.id]=t.value.trim().slice(0,1200);
+  })});
+  return {quien:document.getElementById("quien").value.trim().slice(0,80),
+          final:document.getElementById("final").value.trim().slice(0,3000), r:r, n:n};
+ }
+ function pintar(){
+  var d=leer(), hechas=Object.keys(d.r).length;
+  document.getElementById("pgt").textContent=hechas+" de "+TOTAL;
+  document.getElementById("pgb").style.width=Math.round(hechas/TOTAL*100)+"%";
+  BLOQUES.forEach(function(b){b.qs.forEach(function(q){
+   var c=document.getElementById("q-"+q.id); if(c)c.classList.toggle("ok",d.r[q.id]!==undefined);
+  })});
+  try{localStorage.setItem(CLAVE,JSON.stringify(d))}catch(e){}
+  return d;
+ }
+ document.addEventListener("change",function(e){
+  if(e.target.name||e.target.dataset.nota){
+   var lab=e.target.closest(".op");
+   if(lab){
+    if(e.target.type==="radio"){
+     [].slice.call(document.querySelectorAll('.op[data-q="'+lab.dataset.q+'"]')).forEach(function(x){x.classList.remove("on")});
+     lab.classList.add("on");
+    } else lab.classList.toggle("on",e.target.checked);
+   }
+   pintar();
+  }
+ });
+ document.addEventListener("input",function(e){if(e.target.tagName==="TEXTAREA"||e.target.id==="quien")pintar()});
+ pintar();
+
+ var btn=document.getElementById("enviar"), err=document.getElementById("err");
+ btn.addEventListener("click",function(){
+  var d=pintar(), hechas=Object.keys(d.r).length;
+  if(!hechas){err.textContent="Contesta al menos una pregunta antes de enviar.";err.hidden=false;return}
+  err.hidden=true; btn.disabled=true; btn.textContent="Enviando…";
+  fetch(SB,{method:"POST",headers:{"apikey":KEY,"Authorization":"Bearer "+KEY,
+    "Content-Type":"application/json","Prefer":"return=minimal"},
+   body:JSON.stringify({quien:d.quien||null,notas:d.final||null,completo:hechas===TOTAL,
+     respuestas:{respuestas:d.r,notas:d.n,total:TOTAL,contestadas:hechas}})})
+  .then(function(res){
+   if(!res.ok)throw new Error(res.status);
+   try{localStorage.removeItem(CLAVE)}catch(e){}
+   document.getElementById("barra").remove();
+   document.getElementById("app").innerHTML=
+    '<div class="fin"><div class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>'+
+    '<h2>Listo, gracias Stephy.</h2><p>Ya me llegaron tus respuestas'+(hechas<TOTAL?' ('+hechas+' de '+TOTAL+').':'.')+
+    ' Con esto programo el motor.</p>'+(hechas<TOTAL?'<p style="margin-top:14px;font-size:14px">Si quieres contestar las que faltan, vuelve a abrir el enlace.</p>':'')+'</div>';
+   window.scrollTo(0,0);
+  })
+  .catch(function(){btn.disabled=false;btn.textContent="Enviar";
+   err.textContent="No se pudo enviar. Intenta otra vez, o escríbele a Juan.";err.hidden=false});
+ });
+})();
+</script>
+
+</body>
+</html>
