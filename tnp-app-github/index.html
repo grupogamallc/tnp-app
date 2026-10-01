@@ -2033,6 +2033,15 @@ document.body.addEventListener("click",e=>{
 /* ================== EXTRAS: estado nuevo ================== */
 function ensureExtras(){
  if(!S)return;
+ /* Red de seguridad: el estado puede venir de la nube con campos de menos
+    (de una version anterior, o a medio guardar). Sin esto, un campo faltante
+    truena el dibujado y la persona se queda atorada en la bienvenida. */
+ if(!S.name)S.name="Tú";
+ if(!Array.isArray(S.done))S.done=[false,false,false,false];
+ if(!S.swaps)S.swaps={};
+ if(!S.day)S.day=1;
+ if(!S.inicio)S.inicio=hoyISO();
+ if(typeof S.streak!=="number")S.streak=0;
  if(!S.logged)S.logged=[];
  if(!S.habits)S.habits={agua:0,sueno:0,pasos:0,peso:(S.quiz&&S.quiz.peso)||0};
  if(S.habits.peso==null)S.habits.peso=(S.quiz&&S.quiz.peso)||0;
@@ -2531,7 +2540,9 @@ async function bajarEstado(){
   if(!d||!d.datos||!d.datos.quiz)return false;
   const tNube=+new Date(d.actualizado||0);
   const tLocal=(S&&S.guardado)||0;
-  if(!S||!S.quiz||tNube>tLocal){S=d.datos;store.set("tnp",S);return true}
+  if(!S||!S.quiz||tNube>tLocal){
+   S=Object.assign({name:"Tú",day:1,streak:0,done:[false,false,false,false],swaps:{}},d.datos);
+   store.set("tnp",S);return true}
  }catch(e){}
  return false;
 }
@@ -2573,8 +2584,11 @@ async function trasEntrar(){
  await leerMembresia();
  const cambio=await bajarEstado();
  if(cambio){
-  if(!S.week)genWeek();
-  ensureExtras();actualizarDia();renderAll();
+  try{
+   ensureExtras();
+   if(!S.week)genWeek();
+   actualizarDia();renderAll();
+  }catch(e){console.warn("render tras entrar",e)}
   $("welcome")&&$("welcome").classList.remove("on");
   $("onb")&&$("onb").classList.remove("on");
  }
