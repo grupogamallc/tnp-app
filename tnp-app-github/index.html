@@ -1951,6 +1951,7 @@ document.body.addEventListener("click",e=>{
  else if(act==="abrirCuenta"){accAbrir("entrar");return}
  else if(act==="salirCuenta"){salirCuenta();return}
  else if(act==="verPlanes"){location.href="https://tunuevoplan.com/#programas";return}
+ else if(act==="miSuscripcion"){abrirPortal();return}
  else if(act==="requiz"){ob={step:0,q:{prog:null,sexo:S.quiz.sexo||"F",edad:S.quiz.edad,edadSet:1,peso:S.quiz.peso,pesoSet:1,est:S.quiz.est,estSet:1,meta:S.quiz.meta||0,metaSet:S.quiz.meta?1:0,act:S.quiz.act,cond:[],dislikes:[],salud:(S.quiz.salud||SALUD0())}};$("onb").classList.add("on");obRender()}
  else if(act==="up"){toast("La compra se conecta con el checkout en Fase 1")}
  else if(act==="sos"){sheet(`<div class="shead"><img class="sph" src="stephy.jpg"><div><h3>Respira. Aquí estoy.</h3><div class="sm">Un antojo dura 10 minutos. Vamos a pasarlo juntos.</div></div></div>
@@ -2455,6 +2456,8 @@ const SB_KEY="sb_publishable_F8Com7KmemJ7kyCe83eahg_LpHGoLIU";
 /* Mientras no exista el cobro, quien no inicia sesion usa la app en local como hasta hoy.
    Con el cobro vivo esto pasa a true y el muro aplica tambien sin sesion. */
 const MURO_DURO=false;
+/* Las funciones de servidor viven junto a la app */
+const API=location.origin.indexOf("tunuevoplan.com")>=0?"https://app.tunuevoplan.com":"";
 
 let sbUser=null,sbEstado="",_syncT=null,_nubeT=null,_cuentaP=null;
 let MEMB=null;          /* {nivel,estado,acceso_hasta} — lo dice la base */
@@ -2566,9 +2569,27 @@ async function _cuentaIniciar(){
  if(SES&&!await sesValida())sesGuardar(null);
  sbUser=SES&&SES.user?SES.user:null;
 
+ const q=new URLSearchParams(location.search);
+
+ /* Vuelve de pagar. Stripe regresa al comprador en el mismo instante que dispara
+    el aviso al servidor, asi que puede llegar antes de que su cuenta exista.
+    Esta ruta hace el mismo trabajo por su cuenta y es idempotente. */
+ if(q.get("pago")==="ok"&&q.get("sid")){
+  const sid=q.get("sid");
+  try{history.replaceState(null,"",location.pathname)}catch(e){}
+  accAbrir("pagoOk");
+  try{
+   const r=await fetch(API+"/api/claim",{method:"POST",
+     headers:{"Content-Type":"application/json"},body:JSON.stringify({sid})});
+   const b=await r.json().catch(()=>null);
+   if(r.ok&&b&&b.url){location.href=b.url;return}
+   accMsg=(b&&b.mensaje)||"Tu pago sí entró. Te llega un correo con tu acceso en unos minutos.";
+  }catch(e){accMsg="Tu pago sí entró. Te llega un correo con tu acceso en unos minutos."}
+  accModo="pagoOkLento";accRender();return;
+ }
+
  /* liga de un solo uso: NUNCA se canjea sola. Los filtros de correo abren las ligas
     antes que la persona y queman el token, asi que se pide un toque real. */
- const q=new URLSearchParams(location.search);
  const th=q.get("t");
  if(th){
   accTok=th;accTipo=q.get("tipo")==="recovery"?"recovery":"magiclink";
@@ -2623,6 +2644,7 @@ function accRender(){
   ${accMsg?`<div class="accErr">${esc(accMsg)}</div>`:""}
   <button class="onbBtn" data-ac="entrar">Entrar</button>
   <a class="accLink" data-ac="pedirLiga">Entrar con una liga por correo</a>
+  <a class="accLink" data-ac="recuperar">Olvidé mi contraseña</a>
   <a class="accLink" data-ac="cerrar">Ahora no</a>`;
  }else if(accModo==="liga"){
   h=`<div class="k">Revisa tu correo</div><h1>Te mandamos una liga.</h1>
@@ -2643,6 +2665,18 @@ function accRender(){
    <input id="aPw1" type="password" autocomplete="new-password" placeholder="mínimo 8 caracteres"></div></div>
   ${accMsg?`<div class="accErr">${esc(accMsg)}</div>`:""}
   <button class="onbBtn" data-ac="guardarPw">Guardar y entrar</button>`;
+ }else if(accModo==="pagoOk"){
+  h=`<div class="k">Gracias por tu compra</div><h1>Abriendo tu plan…</h1>
+  <div class="d">Un momento, estamos preparando tu acceso.</div>`;
+ }else if(accModo==="pagoOkLento"){
+  h=`<div class="k">Gracias por tu compra</div><h1>Tu pago entró.</h1>
+  ${accMsg?`<div class="accNota">${esc(accMsg)}</div>`:""}
+  <div class="d" style="margin-top:12px">Revisa tu correo: ahí te llega la liga para entrar. Si no aparece en unos minutos, búscala en spam.</div>
+  <a class="accLink" data-ac="volverEntrar">Ya tengo mi contraseña</a>`;
+ }else if(accModo==="recuperar"){
+  h=`<div class="k">Tu contraseña</div><h1>Te mandamos una liga.</h1>
+  <div class="d">Si ese correo tiene cuenta con nosotros, en un momento te llega para elegir una contraseña nueva.</div>
+  <a class="accLink" data-ac="volverEntrar">Volver</a>`;
  }else if(accModo==="muro"){
   const venc=MEMB&&MEMB.acceso_hasta?new Date(MEMB.acceso_hasta):null;
   const vencida=!!(venc&&venc<=new Date());
@@ -2700,6 +2734,24 @@ async function accGuardarPw(){
  FORZAR_PW=false;accCerrar();toast("Listo, tu contraseña quedó guardada");
  await trasEntrar();
 }
+async function accRecuperar(){
+ const m=(($("aMail")||{}).value||"").trim();
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m)){accMsg="Escribe tu correo arriba y vuelve a tocar.";accRender();return}
+ try{await fetch(API+"/api/reset",{method:"POST",headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({correo:m})})}catch(e){}
+ accAbrir("recuperar");
+}
+async function abrirPortal(){
+ if(!SES||!SES.access_token){toast("Entra a tu cuenta primero");return}
+ toast("Abriendo tu suscripción…");
+ try{
+  const r=await fetch(API+"/api/portal",{method:"POST",
+    headers:{"Content-Type":"application/json",Authorization:"Bearer "+SES.access_token}});
+  const b=await r.json().catch(()=>null);
+  if(r.ok&&b&&b.url){location.href=b.url;return}
+  toast((b&&b.mensaje)||"No se pudo abrir tu suscripción.");
+ }catch(e){toast("No se pudo abrir tu suscripción.")}
+}
 async function salirCuenta(){
  try{await authFetch("/logout",{})}catch(e){}
  sesGuardar(null);sbUser=null;MEMB=null;accCerrar();
@@ -2714,7 +2766,7 @@ function cuentaHTML(){
  const hace=S&&S.syncT?Math.round((Date.now()-S.syncT)/60000):null;
  const est=sbEstado||(hace==null?"Todavía sin sincronizar":hace<1?"Sincronizado hace un momento":"Sincronizado hace "+hace+" min");
  const mb=tieneAcceso()
-   ? `<div class="acctRow"><small>Membresía activa${MEMB&&MEMB.acceso_hasta?" hasta el "+new Date(MEMB.acceso_hasta).toLocaleDateString("es-MX",{day:"numeric",month:"long"}):""}</small></div>`
+   ? `<div class="acctRow"><small>Membresía activa${MEMB&&MEMB.acceso_hasta?" hasta el "+new Date(MEMB.acceso_hasta).toLocaleDateString("es-MX",{day:"numeric",month:"long"}):""}</small><a data-a="miSuscripcion">Mi suscripción</a></div>`
    : `<div class="acctRow"><small>Sin membresía activa</small><a data-a="verPlanes">Ver planes</a></div>`;
  return `<div class="acct on"><b>Tu cuenta está conectada</b><span>${esc(sbUser.email||"")}</span>
   ${mb}<div class="acctRow"><small>${est}</small><a data-a="salirCuenta">Cerrar sesión</a></div></div>`;
@@ -2764,6 +2816,7 @@ document.body.addEventListener("click",e=>{
  else if(t==="cerrar")accCerrar();
  else if(t==="salir")salirCuenta();
  else if(t==="verPlanes")location.href="https://tunuevoplan.com/#programas";
+ else if(t==="recuperar")accRecuperar();
 });
 document.addEventListener("keydown",e=>{
  if(e.key!=="Enter"||!e.target)return;
