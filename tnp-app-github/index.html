@@ -244,7 +244,12 @@
   #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 
   /* ONBOARDING */
-  #onb{position:fixed;inset:0;background:var(--papel);z-index:100;display:none;justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #onb,#acceso{position:fixed;inset:0;background:var(--papel);z-index:100;display:none;justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #acceso{z-index:120}
+  #acceso.on{display:flex}
+  .accLink{display:block;text-align:center;margin-top:14px;font-size:13px;font-weight:700;color:var(--navy);cursor:pointer;text-decoration:underline}
+  .accNota{font-size:12px;line-height:1.55;color:var(--gris);margin-top:12px}
+  .accErr{background:var(--coral-bg,#FBE5E2);color:var(--coral);border-radius:10px;padding:10px 12px;font-size:12.5px;font-weight:600;margin-top:12px}
   #onb.on{display:flex}
   .onbIn{width:100%;max-width:430px;padding:26px 22px calc(26px + env(safe-area-inset-bottom));display:flex;flex-direction:column;min-height:100dvh}
   .onbTop{display:flex;align-items:center;justify-content:space-between}
@@ -954,6 +959,12 @@
 <div id="toast"></div>
 
 <!-- ONBOARDING / QUIZ -->
+<div id="acceso"><div class="onbIn">
+  <div class="onbTop">
+    <div class="lg2"><svg width="36" height="36" viewBox="0 0 512 512"><rect x="54" y="54" width="404" height="404" rx="118" fill="#111827"/><g transform="translate(95.87,300.00)"><path d="M39.216 0V-99.76H4.128V-120.4H97.008V-99.76H61.92V0Z" fill="#F2F4F8"/><path d="M112.488 0V-120.4H155.66L179.568 -15.48H182.664V-120.4H205.024V0H161.852L137.944 -104.92H134.848V0Z" fill="#E94B3C"/><path d="M227.728 0V-120.4H277.264Q288.616 -120.4 297.302 -115.842Q305.988 -111.284 310.89 -103.028Q315.792 -94.772 315.792 -83.42V-81.012Q315.792 -69.832 310.718 -61.49Q305.644 -53.148 296.958 -48.59Q288.272 -44.032 277.264 -44.032H250.432V0ZM250.432 -64.672H275.028Q283.112 -64.672 288.1 -69.144Q293.088 -73.616 293.088 -81.356V-83.076Q293.088 -90.816 288.1 -95.288Q283.112 -99.76 275.028 -99.76H250.432Z" fill="#F2F4F8"/></g><rect x="209" y="322" width="94" height="15" rx="7.5" fill="#1E3A8A"/></svg><span>Tu Nuevo Plan</span></div>
+  </div>
+  <div class="onbStep" id="accesoStep"></div>
+</div></div>
 <div id="onb"><div class="onbIn">
   <div class="onbTop">
     <div class="lg2"><svg width="36" height="36" viewBox="0 0 512 512"><rect x="54" y="54" width="404" height="404" rx="118" fill="#111827"/><g transform="translate(95.87,300.00)"><path d="M39.216 0V-99.76H4.128V-120.4H97.008V-99.76H61.92V0Z" fill="#F2F4F8"/><path d="M112.488 0V-120.4H155.66L179.568 -15.48H182.664V-120.4H205.024V0H161.852L137.944 -104.92H134.848V0Z" fill="#E94B3C"/><path d="M227.728 0V-120.4H277.264Q288.616 -120.4 297.302 -115.842Q305.988 -111.284 310.89 -103.028Q315.792 -94.772 315.792 -83.42V-81.012Q315.792 -69.832 310.718 -61.49Q305.644 -53.148 296.958 -48.59Q288.272 -44.032 277.264 -44.032H250.432V0ZM250.432 -64.672H275.028Q283.112 -64.672 288.1 -69.144Q293.088 -73.616 293.088 -81.356V-83.076Q293.088 -90.816 288.1 -95.288Q283.112 -99.76 275.028 -99.76H250.432Z" fill="#F2F4F8"/></g><rect x="209" y="322" width="94" height="15" rx="7.5" fill="#1E3A8A"/></svg><span>Tu Nuevo Plan</span></div>
@@ -1258,19 +1269,20 @@ function startApp(fromQuiz){
   if(q.cond.includes("glp1")&&q.prog!=="GLP1")toast("Te pusimos en GLP1 Pro por tu tratamiento");
   if(q.cond.includes("glp1"))q.prog="GLP1";
   q.dislikes=Array.from(new Set((q.dislikes||[]).concat((q.salud&&q.salud.alerg)||[])));
-  S={name:"Tú",nivel:"top",quiz:q,goals:calcGoals(q),day:1,streak:0,inicio:hoyISO(),done:[false,false,false,false],swaps:{},acepto:ob.acepto||{v:TERMS_VER,t:new Date().toISOString()}};
+  S={name:"Tú",quiz:q,goals:calcGoals(q),day:1,streak:0,inicio:hoyISO(),done:[false,false,false,false],swaps:{},acepto:ob.acepto||{v:TERMS_VER,t:new Date().toISOString()}};
  }
  if(!S.week)genWeek();
  ensureExtras();
  store.set("tnp",S);
  $("onb").classList.remove("on");
  renderAll();
+ if(typeof revisarMuro==="function")revisarMuro();
 }
 function demoState(){
  const q={prog:"PESO",sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[],salud:SALUD0()};
  const lp=new Date();lp.setDate(lp.getDate()-17);
  const cyc={on:true,lastStart:lp.getFullYear()+"-"+String(lp.getMonth()+1).padStart(2,"0")+"-"+String(lp.getDate()).padStart(2,"0"),cycleLen:28,periodLen:5,logs:{}};
- return {name:"Andrea",nivel:"top",quiz:q,goals:calcGoals(q),day:12,streak:12,inicio:hoyISO(),diaVisto:hoyISO(),done:[true,false,false,false],swaps:{},cycle:cyc};
+ return {name:"Andrea",demo:true,quiz:q,goals:calcGoals(q),day:12,streak:12,inicio:hoyISO(),diaVisto:hoyISO(),done:[true,false,false,false],swaps:{},cycle:cyc};
 }
 
 /* ================== RENDER: HOY ================== */
@@ -1799,7 +1811,8 @@ function toast(t){const el=$("toast");el.textContent=t;el.classList.add("on");cl
 function sheet(html){$("sheet").innerHTML=html;$("sheetBg").classList.add("on")}
 $("sheetBg").addEventListener("click",e=>{if(e.target.id==="sheetBg")$("sheetBg").classList.remove("on")});
 let _enSync=false;
-function save(){store.set("tnp",S);if(!_enSync&&typeof syncLuego==="function")syncLuego()}
+function save(){if(S)S.guardado=Date.now();store.set("tnp",S);
+ if(!_enSync&&typeof syncLuego==="function")syncLuego()}
 
 /* ================== EVENTOS ================== */
 document.body.addEventListener("click",e=>{
@@ -1935,6 +1948,9 @@ document.body.addEventListener("click",e=>{
  else if(act==="sub"){ui.sub=!ui.sub;renderTienda();toast(ui.sub?"Suscríbete y ahorra activado — 15% off":"Suscripción desactivada")}
  else if(act==="add"){toast(a.dataset.p+" agregado al carrito")}
  else if(act==="buy"){toast("Checkout se conecta con Shopify en Fase 1")}
+ else if(act==="abrirCuenta"){accAbrir("entrar");return}
+ else if(act==="salirCuenta"){salirCuenta();return}
+ else if(act==="verPlanes"){location.href="https://tunuevoplan.com/#programas";return}
  else if(act==="requiz"){ob={step:0,q:{prog:null,sexo:S.quiz.sexo||"F",edad:S.quiz.edad,edadSet:1,peso:S.quiz.peso,pesoSet:1,est:S.quiz.est,estSet:1,meta:S.quiz.meta||0,metaSet:S.quiz.meta?1:0,act:S.quiz.act,cond:[],dislikes:[],salud:(S.quiz.salud||SALUD0())}};$("onb").classList.add("on");obRender()}
  else if(act==="up"){toast("La compra se conecta con el checkout en Fase 1")}
  else if(act==="sos"){sheet(`<div class="shead"><img class="sph" src="stephy.jpg"><div><h3>Respira. Aquí estoy.</h3><div class="sm">Un antojo dura 10 minutos. Vamos a pasarlo juntos.</div></div></div>
@@ -1984,7 +2000,6 @@ document.body.addEventListener("click",e=>{
  else if(act==="wVerPlanes"){const el=$("wPills");if(el)el.scrollIntoView({behavior:"smooth",block:"center"})}
  else if(act==="wPlan"){planSheet(a.dataset.p)}
  else if(act==="cvSeg"){ui.progSeg=a.dataset.p;renderPerfil()}
- else if(act==="mailLink"){mandarLink()}
  else if(act==="salirCuenta"){salirCuenta()}
  else if(act==="gratSave"){gratGuardar()}
  else if(act==="gratAll"){gratitudTodo()}
@@ -2418,81 +2433,297 @@ function gratGuardar(){
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target&&e.target.id==="iGrat"){e.preventDefault();gratGuardar()}});
 
 
-/* ================== CUENTA · Supabase ==================
-   OCULTA hasta que llegue la respuesta legal (HIPAA): solo aparece con ?cuenta en la URL.
-   La llave de abajo es la PUBLICA (publishable): esta hecha para ir dentro de la app.
-   Lo que protege los datos son las reglas RLS de la base: cada quien solo ve lo suyo. */
+/* ================== CUENTA Y ACCESO ==================
+   La llave de abajo es la PUBLICA (publishable): está hecha para ir dentro de la app.
+   Lo que protege los datos son las reglas de la base (RLS).
+
+   El PERMISO de acceso vive en la tabla "membresias", que NADIE puede escribir desde
+   el navegador: solo el webhook de Stripe, con la llave de servicio. Todo lo de aquí
+   abajo decide que se dibuja; lo que se sirve lo decide Postgres. */
 const SB_URL="https://juahjgeewcwqjovnlril.supabase.co";
 const SB_KEY="sb_publishable_F8Com7KmemJ7kyCe83eahg_LpHGoLIU";
-const CUENTA_ON=(()=>{try{
- if(/[?&]cuenta\b/i.test(location.search)||/access_token=/.test(location.hash))localStorage.setItem("tnp_cuenta","1");
- return localStorage.getItem("tnp_cuenta")==="1"}catch(e){return false}})();
-let sb=null,sbUser=null,sbEstado="",_syncT=null;
-function sbCargar(){return new Promise((ok,no)=>{if(window.supabase&&window.supabase.createClient)return ok();const x=document.createElement("script");x.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";x.onload=ok;x.onerror=no;document.head.appendChild(x)})}
+
+/* Mientras no exista el cobro, quien no inicia sesion usa la app en local como hasta hoy.
+   Con el cobro vivo esto pasa a true y el muro aplica tambien sin sesion. */
+const MURO_DURO=false;
+
+let sb=null,sbUser=null,sbEstado="",_syncT=null,_nubeT=null,_cuentaP=null;
+let MEMB=null;          /* {nivel,estado,acceso_hasta} — lo dice la base */
+let FORZAR_PW=false;    /* tras entrar con liga, pedir contraseña antes de soltarla */
+let accModo="entrar",accMsg="",accTok=null,accTipo="magiclink";
+
+function sbCargar(){return new Promise((ok,no)=>{
+ if(window.supabase&&window.supabase.createClient)return ok();
+ const x=document.createElement("script");
+ x.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+ x.onload=ok;x.onerror=no;document.head.appendChild(x)})}
+
 function perfilOtraVez(){try{if(S&&$("v-perfil"))renderPerfil()}catch(e){}}
-async function cuentaIniciar(){
- if(!CUENTA_ON)return;
- try{await sbCargar()}catch(e){sbEstado="No se pudo conectar. Revisa tu internet.";perfilOtraVez();return}
- sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"implicit"}});
- const {data}=await sb.auth.getSession();sbUser=data&&data.session?data.session.user:null;
- sb.auth.onAuthStateChange((ev,ses)=>{const antes=sbUser;sbUser=ses?ses.user:null;
-  if(sbUser&&!antes){ui.linkEnviado=null;syncNube(true);toast("Tu cuenta quedó conectada")}
-  perfilOtraVez()});
- if(/access_token=/.test(location.hash)){try{history.replaceState(null,"",location.pathname+"?cuenta")}catch(e){}}
- if(sbUser)syncNube(false);
+
+/* ---------------- el permiso ---------------- */
+function tieneAcceso(){
+ if(!MEMB||MEMB.estado!=="activa")return false;
+ return !MEMB.acceso_hasta||new Date(MEMB.acceso_hasta)>new Date();
+}
+async function leerMembresia(){
+ MEMB=null;
+ if(!sb||!sbUser)return;
+ try{const r=await sb.from("membresias").select("nivel,estado,acceso_hasta")
+   .eq("perfil_id",sbUser.id).maybeSingle();
+  MEMB=r&&r.data?r.data:null}catch(e){}
+}
+
+/* ---------------- el estado vive en el servidor ---------------- */
+async function bajarEstado(){
+ if(!sb||!sbUser)return false;
+ try{
+  const r=await sb.from("estado_usuario").select("datos,actualizado")
+    .eq("perfil_id",sbUser.id).maybeSingle();
+  const d=r&&r.data;
+  if(!d||!d.datos||!d.datos.quiz)return false;
+  const tNube=+new Date(d.actualizado||0);
+  const tLocal=(S&&S.guardado)||0;
+  if(!S||!S.quiz||tNube>tLocal){S=d.datos;store.set("tnp",S);return true}
+ }catch(e){}
+ return false;
+}
+function subirEstado(){
+ if(!sb||!sbUser||!S)return;
+ clearTimeout(_nubeT);
+ _nubeT=setTimeout(async()=>{
+  try{await sb.from("estado_usuario").upsert(
+    {perfil_id:sbUser.id,datos:S,actualizado:new Date().toISOString()},
+    {onConflict:"perfil_id"})}catch(e){}
+ },1500);
+}
+
+/* ---------------- arranque de la cuenta ---------------- */
+/* Promesa compartida: si entra dos veces, la segunda espera el mismo resultado. */
+function cuentaIniciar(){
+ if(_cuentaP)return _cuentaP;
+ _cuentaP=_cuentaIniciar().finally(()=>{_cuentaP=null});
+ return _cuentaP;
+}
+async function _cuentaIniciar(){
+ try{await sbCargar()}catch(e){
+  sbEstado="No se pudo conectar. Revisa tu internet.";perfilOtraVez();return}
+ sb=window.supabase.createClient(SB_URL,SB_KEY,
+   {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+
+ sb.auth.onAuthStateChange(async(ev,ses)=>{
+  const antes=sbUser;sbUser=ses?ses.user:null;
+  if(sbUser&&!antes){await trasEntrar()}
+  if(!sbUser&&antes){MEMB=null}
+  perfilOtraVez();
+ });
+
+ const r=await sb.auth.getSession();
+ sbUser=r&&r.data&&r.data.session?r.data.session.user:null;
+
+ /* liga de un solo uso: NUNCA se canjea sola. Los filtros de correo abren las ligas
+    antes que la persona y queman el token, asi que se pide un toque real. */
+ const q=new URLSearchParams(location.search);
+ const th=q.get("t");
+ if(th){
+  accTok=th;accTipo=q.get("tipo")==="recovery"?"recovery":"magiclink";
+  try{history.replaceState(null,"",location.pathname)}catch(e){}
+  accAbrir("canjear");return;
+ }
+
+ if(sbUser)await trasEntrar();
  perfilOtraVez();
 }
+
+async function trasEntrar(){
+ await leerMembresia();
+ const cambio=await bajarEstado();
+ if(cambio){
+  if(!S.week)genWeek();
+  ensureExtras();actualizarDia();renderAll();
+  $("welcome")&&$("welcome").classList.remove("on");
+  $("onb")&&$("onb").classList.remove("on");
+ }
+ if(tieneAcceso())syncNube(true);
+ revisarMuro();
+ perfilOtraVez();
+}
+
+/* ---------------- el muro ---------------- */
+function revisarMuro(){
+ const hayPlan=!!(S&&S.quiz);
+ const falta=!tieneAcceso();
+ const aplica=sbUser?falta:(MURO_DURO&&falta);
+ if(hayPlan&&aplica&&!(S&&S.demo)){accAbrir("muro");return true}
+ if(accModo==="muro")accCerrar();
+ return false;
+}
+
+/* ---------------- pantallas ---------------- */
+function accAbrir(modo){accModo=modo;accMsg="";accRender();$("acceso").classList.add("on")}
+function accCerrar(){$("acceso").classList.remove("on");accMsg=""}
+function accRender(){
+ const c=$("accesoStep");if(!c)return;
+ let h="";
+ if(accModo==="entrar"){
+  h=`<div class="k">Tu cuenta</div><h1>Entra a tu plan.</h1>
+  <div class="d">Tu plan vive en tu cuenta, no en este teléfono. Entra desde donde sea.</div>
+  <div class="inRow"><div class="inp"><label>Correo</label>
+   <input id="aMail" type="email" inputmode="email" autocomplete="email" placeholder="tu@correo.com"></div></div>
+  <div class="inRow"><div class="inp"><label>Contraseña</label>
+   <input id="aPw" type="password" autocomplete="current-password" placeholder="••••••••"></div></div>
+  ${accMsg?`<div class="accErr">${esc(accMsg)}</div>`:""}
+  <button class="onbBtn" data-ac="entrar">Entrar</button>
+  <a class="accLink" data-ac="pedirLiga">Entrar con una liga por correo</a>
+  <a class="accLink" data-ac="cerrar">Ahora no</a>`;
+ }else if(accModo==="liga"){
+  h=`<div class="k">Revisa tu correo</div><h1>Te mandamos una liga.</h1>
+  <div class="d">Abre el correo y toca el botón. Si no llega en dos minutos, busca en spam.</div>
+  ${accMsg?`<div class="accErr">${esc(accMsg)}</div>`:""}
+  <div class="accNota">La liga sirve una sola vez. Al tocarla te pedimos crear una contraseña, para que la próxima vez entres directo.</div>
+  <a class="accLink" data-ac="volverEntrar">Volver</a>`;
+ }else if(accModo==="canjear"){
+  h=`<div class="k">Un paso más</div><h1>Confirma que eres tú.</h1>
+  <div class="d">Toca el botón para entrar a tu cuenta.</div>
+  ${accMsg?`<div class="accErr">${esc(accMsg)}</div>`:""}
+  <button class="onbBtn" data-ac="canjear">Entrar a mi cuenta</button>
+  <div class="accNota">Pedimos este toque porque algunos correos abren las ligas solos y gastarían tu entrada antes de que llegues.</div>`;
+ }else if(accModo==="pw"){
+  h=`<div class="k">Casi listo</div><h1>Crea tu contraseña.</h1>
+  <div class="d">Con esto entras cuando quieras, sin esperar un correo.</div>
+  <div class="inRow"><div class="inp"><label>Contraseña nueva</label>
+   <input id="aPw1" type="password" autocomplete="new-password" placeholder="mínimo 8 caracteres"></div></div>
+  ${accMsg?`<div class="accErr">${esc(accMsg)}</div>`:""}
+  <button class="onbBtn" data-ac="guardarPw">Guardar y entrar</button>`;
+ }else if(accModo==="muro"){
+  const venc=MEMB&&MEMB.acceso_hasta?new Date(MEMB.acceso_hasta):null;
+  const vencida=!!(venc&&venc<=new Date());
+  h=`<div class="k">${vencida?"Tu acceso terminó":"Tu plan te espera"}</div>
+  <h1>${vencida?"Renueva para seguir.":"Activa tu programa."}</h1>
+  <div class="d">${vencida
+    ? "Tu membresía llegó a su fecha. Renuévala y todo sigue donde lo dejaste."
+    : "Ya tenemos tus números. Falta activar tu membresía para abrir tu menú, tus hábitos y tu seguimiento."}</div>
+  <button class="onbBtn" data-ac="verPlanes">Ver los planes</button>
+  ${sbUser?`<a class="accLink" data-ac="salir">Cerrar sesión</a>`
+          :`<a class="accLink" data-ac="volverEntrar">Ya soy miembro</a>`}`;
+ }
+ c.innerHTML=h;
+}
+
+/* ---------------- acciones ---------------- */
+async function accEntrar(){
+ const m=($("aMail")||{}).value||"",pw=($("aPw")||{}).value||"";
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m.trim())){accMsg="Escribe un correo válido.";accRender();return}
+ if(!pw){accMsg="Escribe tu contraseña.";accRender();return}
+ if(!sb){accMsg="Conectando, intenta en un momento.";accRender();return}
+ const b=document.querySelector('[data-ac="entrar"]');if(b){b.disabled=true;b.textContent="Entrando…"}
+ const r=await sb.auth.signInWithPassword({email:m.trim(),password:pw});
+ if(r.error){accMsg=/Invalid/i.test(r.error.message)
+   ? "Ese correo y contraseña no coinciden. Puedes entrar con una liga por correo."
+   : "No se pudo entrar. Intenta otra vez.";accRender();return}
+ accCerrar();toast("Bienvenida de vuelta");
+}
+async function accPedirLiga(){
+ const m=(($("aMail")||{}).value||"").trim();
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m)){accMsg="Escribe tu correo arriba y vuelve a tocar.";accRender();return}
+ if(!sb){accMsg="Conectando, intenta en un momento.";accRender();return}
+ const r=await sb.auth.signInWithOtp({email:m,options:{shouldCreateUser:true}});
+ if(r.error){accMsg=/rate|limit|seconds/i.test(r.error.message)
+   ? "Demasiados intentos. Espera unos minutos." : "No se pudo enviar. Intenta otra vez.";accRender();return}
+ accAbrir("liga");
+}
+async function accCanjear(){
+ if(!sb||!accTok)return;
+ const b=document.querySelector('[data-ac="canjear"]');if(b){b.disabled=true;b.textContent="Entrando…"}
+ /* La bandera se pone ANTES: verifyOtp emite SIGNED_IN durante su propia ejecución. */
+ FORZAR_PW=true;
+ const r=await sb.auth.verifyOtp({token_hash:accTok,type:accTipo});
+ accTok=null;
+ if(r.error){FORZAR_PW=false;
+  accMsg="Esa liga ya no sirve. Pide una nueva desde tu correo.";accModo="entrar";accRender();return}
+ accAbrir("pw");
+}
+async function accGuardarPw(){
+ const p=($("aPw1")||{}).value||"";
+ if(p.length<8){accMsg="Usa al menos 8 caracteres.";accRender();return}
+ if(!sb){accMsg="Conectando, intenta en un momento.";accRender();return}
+ const b=document.querySelector('[data-ac="guardarPw"]');if(b){b.disabled=true;b.textContent="Guardando…"}
+ const r=await sb.auth.updateUser({password:p});
+ if(r.error){accMsg="No se pudo guardar. Intenta con otra contraseña.";accRender();return}
+ FORZAR_PW=false;accCerrar();toast("Listo, tu contraseña quedó guardada");
+ await trasEntrar();
+}
+async function salirCuenta(){
+ if(!sb)return;
+ await sb.auth.signOut();
+ sbUser=null;MEMB=null;accCerrar();
+ perfilOtraVez();toast("Sesión cerrada. Tus datos siguen en este celular.");
+}
+
+/* ---------------- tarjeta de cuenta en Perfil ---------------- */
 function cuentaHTML(){
- if(!CUENTA_ON)return "";
  if(!sb)return `<div class="acct"><b>Tu cuenta</b><span>${sbEstado||"Conectando…"}</span></div>`;
  if(!sbUser)return `<div class="acct"><b>Guarda tu progreso en tu cuenta</b>
-  <span>Te mandamos un link a tu correo. Sin contraseña. Lo que ya registraste en este celular se sube solo.</span>
-  ${ui.linkEnviado?`<div class="acctOk">Listo — revisa tu correo <b style="display:inline;font-size:12px">${esc(ui.linkEnviado)}</b> y toca el link. Si no llega en 2 minutos, busca en spam.</div>`
-   :`<div class="gratBox"><input id="iMail" type="email" inputmode="email" autocomplete="email" placeholder="tu@correo.com" enterkeyhint="send"><button data-a="mailLink">Enviar link</button></div>`}</div>`;
+  <span>Entra con tu correo y tu plan te sigue a cualquier teléfono.</span>
+  <div class="acctRow"><small>Hoy tus datos solo viven en este aparato.</small><a data-a="abrirCuenta">Entrar</a></div></div>`;
  const hace=S&&S.syncT?Math.round((Date.now()-S.syncT)/60000):null;
  const est=sbEstado||(hace==null?"Todavía sin sincronizar":hace<1?"Sincronizado hace un momento":"Sincronizado hace "+hace+" min");
+ const mb=tieneAcceso()
+   ? `<div class="acctRow"><small>Membresía activa${MEMB&&MEMB.acceso_hasta?" hasta el "+new Date(MEMB.acceso_hasta).toLocaleDateString("es-MX",{day:"numeric",month:"long"}):""}</small></div>`
+   : `<div class="acctRow"><small>Sin membresía activa</small><a data-a="verPlanes">Ver planes</a></div>`;
  return `<div class="acct on"><b>Tu cuenta está conectada</b><span>${esc(sbUser.email||"")}</span>
-  <div class="acctRow"><small>${est}</small><a data-a="salirCuenta">Cerrar sesión</a></div></div>`;
+  ${mb}<div class="acctRow"><small>${est}</small><a data-a="salirCuenta">Cerrar sesión</a></div></div>`;
 }
-async function mandarLink(){
- const i=$("iMail");const mail=i?i.value.trim():"";
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)){toast("Escribe un correo válido");i&&i.focus();return}
- if(!sb){toast("Conectando… intenta en un momento");return}
- const b=document.querySelector('[data-a="mailLink"]');if(b){b.disabled=true;b.textContent="Enviando…"}
- const {error}=await sb.auth.signInWithOtp({email:mail,options:{emailRedirectTo:location.origin+"/?cuenta",shouldCreateUser:true}});
- if(error){if(b){b.disabled=false;b.textContent="Enviar link"}
-  toast(/rate|limit|seconds/i.test(error.message)?"Demasiados intentos. Espera unos minutos.":"No se pudo enviar. Intenta otra vez.");console.warn(error);return}
- ui.linkEnviado=mail;perfilOtraVez();
+
+/* ---------------- sincronización por tabla (solo con membresia) ---------------- */
+function syncLuego(){
+ subirEstado();
+ if(!sb||!sbUser||!tieneAcceso())return;
+ clearTimeout(_syncT);_syncT=setTimeout(()=>syncNube(false),1500);
 }
-async function salirCuenta(){if(!sb)return;await sb.auth.signOut();sbUser=null;perfilOtraVez();toast("Sesión cerrada. Tus datos siguen en este celular.")}
-function syncLuego(){if(!sb||!sbUser)return;clearTimeout(_syncT);_syncT=setTimeout(()=>syncNube(false),1500)}
-/* Sube lo que falta. Solo empuja datos del celular a la cuenta; nunca borra nada del celular. */
 async function syncNube(primera){
- if(!sb||!sbUser||!S)return;
+ if(!sb||!sbUser||!S||!tieneAcceso())return;
  const uid=sbUser.id;
  try{
   const hoyISO=new Date().toISOString().slice(0,10);
   if(primera){
    const ini=new Date(Date.now()-((S.day||1)-1)*864e5).toISOString().slice(0,10);
    const nom=(S.name&&S.name!=="Tú")?S.name.slice(0,60):null;
-   const {error}=await sb.from("perfiles").update({nombre:nom,programa:(S.quiz&&S.quiz.prog)||null,fecha_inicio:ini}).eq("id",uid);
-   if(error)throw error;
+   const r=await sb.from("perfiles").update({nombre:nom,programa:(S.quiz&&S.quiz.prog)||null,fecha_inicio:ini}).eq("id",uid);
+   if(r.error)throw r.error;
   }
   const P=(S.progress||[]).filter(x=>x.t&&!x.sy);
-  if(P.length){const {error}=await sb.from("pesos").insert(P.map(x=>({perfil_id:uid,peso_kg:x.peso,dia_programa:x.d,fecha:new Date(x.t).toISOString()})));if(error)throw error;P.forEach(x=>x.sy=1)}
+  if(P.length){const r=await sb.from("pesos").insert(P.map(x=>({perfil_id:uid,peso_kg:x.peso,dia_programa:x.d,fecha:new Date(x.t).toISOString()})));if(r.error)throw r.error;P.forEach(x=>x.sy=1)}
   const G=(S.gratitud||[]).filter(x=>!x.sy);
-  if(G.length){const {error}=await sb.from("gratitud").insert(G.map(x=>({perfil_id:uid,texto:x.txt,dia_programa:x.d,fecha:new Date(x.t).toISOString()})));if(error)throw error;G.forEach(x=>x.sy=1)}
+  if(G.length){const r=await sb.from("gratitud").insert(G.map(x=>({perfil_id:uid,texto:x.txt,dia_programa:x.d,fecha:new Date(x.t).toISOString()})));if(r.error)throw r.error;G.forEach(x=>x.sy=1)}
   const PR=Object.entries(S.premios||{});
-  if(PR.length){const {error}=await sb.from("premios").upsert(PR.map(([id,t])=>({perfil_id:uid,premio_id:id,fecha:new Date(t).toISOString()})),{onConflict:"perfil_id,premio_id",ignoreDuplicates:true});if(error)throw error}
+  if(PR.length){const r=await sb.from("premios").upsert(PR.map(([id,t])=>({perfil_id:uid,premio_id:id,fecha:new Date(t).toISOString()})),{onConflict:"perfil_id,premio_id",ignoreDuplicates:true});if(r.error)throw r.error}
   const it=hoyItems();const com=(S.done||[]).filter(Boolean).length;
   const pts=(it[0].ok?10:0)+(it[1].ok?10:0)+(it[2].ok?5:0)+(it[3].ok?10:0)+Math.min(20,com*5);
-  {const {error}=await sb.from("dias_cumplidos").upsert({perfil_id:uid,fecha:hoyISO,puntos:pts,detalle:{peso:it[0].ok,checkin:it[1].ok,gratitud:it[2].ok,agua:it[3].ok,comidas:com}},{onConflict:"perfil_id,fecha"});if(error)throw error}
+  {const r=await sb.from("dias_cumplidos").upsert({perfil_id:uid,fecha:hoyISO,puntos:pts,detalle:{peso:it[0].ok,checkin:it[1].ok,gratitud:it[2].ok,agua:it[3].ok,comidas:com}},{onConflict:"perfil_id,fecha"});if(r.error)throw r.error}
   S.syncT=Date.now();sbEstado="";
   _enSync=true;save();_enSync=false;
  }catch(e){sbEstado="No se pudo sincronizar. Lo intento de nuevo al rato.";console.warn("sync",e)}
  perfilOtraVez();
 }
-document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target&&e.target.id==="iMail"){e.preventDefault();mandarLink()}});
+
+/* ---------------- eventos de las pantallas de acceso ---------------- */
+document.body.addEventListener("click",e=>{
+ const a=e.target.closest("[data-ac]");if(!a)return;
+ const t=a.dataset.ac;
+ if(t==="entrar")accEntrar();
+ else if(t==="pedirLiga")accPedirLiga();
+ else if(t==="canjear")accCanjear();
+ else if(t==="guardarPw")accGuardarPw();
+ else if(t==="volverEntrar")accAbrir("entrar");
+ else if(t==="cerrar")accCerrar();
+ else if(t==="salir")salirCuenta();
+ else if(t==="verPlanes")location.href="https://tunuevoplan.com/#programas";
+});
+document.addEventListener("keydown",e=>{
+ if(e.key!=="Enter"||!e.target)return;
+ if(e.target.id==="aPw"){e.preventDefault();accEntrar()}
+ if(e.target.id==="aPw1"){e.preventDefault();accGuardarPw()}
+});
 function badgesHTML(){
  const got=BADGES.filter(b=>{try{return b.on(S)}catch(e){return false}}).length;
  return `<div class="secT" style="margin-top:16px"><h3>Logros</h3><span style="font-size:11px;font-weight:700;color:var(--gris)">${got} de ${BADGES.length}</span></div>
