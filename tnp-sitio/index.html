@@ -96,6 +96,34 @@
 .clinica b{display:block;font-family:'Manrope',sans-serif;font-size:24px;font-weight:800;color:var(--navy)}
 .clinica span{display:block;font-size:12.5px;color:var(--gris);margin-top:4px}
 .nota{font-size:13px;color:var(--gris);text-align:center;margin-top:26px;line-height:1.6;max-width:62ch;margin-inline:auto}
+
+.cmp{font-family:'Manrope',sans-serif;font-weight:700;font-size:12.5px;letter-spacing:-.01em;
+ background:var(--coral);color:#fff;border:none;border-radius:999px;padding:9px 18px;cursor:pointer;
+ white-space:nowrap;transition:transform .12s ease,filter .12s ease}
+.cmp:hover{filter:brightness(1.06)} .cmp:active{transform:scale(.97)}
+.cmp[disabled]{opacity:.55;cursor:default}
+.cmp.chico{margin-top:9px;padding:7px 14px;font-size:11.5px}
+.pr.top .cmp{background:#fff;color:var(--navy)}
+#cmpBg{position:fixed;inset:0;background:rgba(17,24,39,.55);backdrop-filter:blur(3px);
+ display:none;align-items:center;justify-content:center;padding:20px;z-index:200}
+#cmpBg.on{display:flex}
+.cmpCaja{background:#fff;border-radius:18px;padding:26px 24px;width:100%;max-width:400px;
+ box-shadow:0 30px 60px -20px rgba(17,24,39,.4)}
+.cmpCaja h4{font-family:'Manrope',sans-serif;font-size:21px;font-weight:800;letter-spacing:-.02em}
+.cmpCaja .sub{font-size:13.5px;color:var(--gris);margin-top:6px;line-height:1.5}
+.cmpCaja label{display:block;font-family:'Manrope',sans-serif;font-size:10px;font-weight:700;
+ letter-spacing:.09em;text-transform:uppercase;color:var(--gris);margin:16px 0 5px}
+.cmpCaja input{width:100%;border:1.5px solid var(--borde);border-radius:12px;padding:12px 14px;
+ font-family:inherit;font-size:15px;color:var(--tinta);outline:none;background:#fff}
+.cmpCaja input:focus{border-color:var(--navy)}
+.cmpCaja .ir{width:100%;margin-top:18px;background:var(--coral);color:#fff;border:none;
+ border-radius:999px;padding:15px;font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;cursor:pointer}
+.cmpCaja .ir[disabled]{opacity:.6;cursor:default}
+.cmpCaja .cancel{display:block;width:100%;text-align:center;margin-top:12px;background:none;border:none;
+ font-size:13px;color:var(--gris);cursor:pointer;font-family:inherit}
+.cmpCaja .err{background:#FBE5E2;color:var(--coral);border-radius:10px;padding:10px 12px;
+ font-size:12.5px;font-weight:600;margin-top:14px;line-height:1.45}
+.cmpCaja .fina{font-size:11.5px;color:var(--gris);margin-top:14px;line-height:1.5}
 </style>
 
 <div class="wrap hero">
@@ -121,22 +149,22 @@
   <h2>¿Cuál es el tuyo?</h2>
   <p class="sub">Cada programa cambia el menú, los números y los productos que lo acompañan.</p>
   <div class="progs">
-    <div class="pr"><span class="lbl">Si ya lo intentaste antes</span><h3>Skinny Plan<span class="tag">El más elegido</span></h3><p class="tg">Reseteo metabólico y pérdida de peso. Comida real, estructura clara.</p><div class="pie"><span class="pz2">$39.99</span></div></div>
-    <div class="pr"><span class="lbl">Si estás en menopausia</span><h3>Meno Smart</h3><p class="tg">Peri y menopausia, con un plan que sí entiende tu etapa. Protege músculo y hueso.</p><div class="pie"><span class="pz2">$59.99</span></div></div>
-    <div class="pr"><span class="lbl">Si llevas tratamiento GLP-1</span><h3>GLP1 Pro</h3><p class="tg">Acompañamiento mientras dura tu tratamiento, para que lo que bajes sea grasa y no músculo.</p><div class="pie"><span class="pz2">$59.99</span></div></div>
-    <div class="pr"><span class="lbl">Si vives con inflamación</span><h3>Gut Reset</h3><p class="tg">Menos inflamación y una digestión que no pesa.</p><div class="pie"><span class="pz2">$39.99</span></div></div>
-    <div class="pr"><span class="lbl">Si tu azúcar anda inestable</span><h3>Gluco Control</h3><p class="tg">Glucosa estable y energía pareja todo el día. Proteína y fibra en cada comida.</p><div class="pie"><span class="pz2">$39.99</span></div></div>
-    <div class="pr"><span class="lbl">Si quieres marcarte</span><h3>Body Recomp</h3><p class="tg">Menos grasa, más músculo. Construido alrededor de tu proteína del día.</p><div class="pie"><span class="pz2">$39.99</span></div></div>
-    <div class="pr"><span class="lbl">Si quieres algo hecho para ti</span><h3>Personalizado</h3><p class="tg">El plan más afinado a tu cuerpo, tus gustos y tus condiciones.</p><div class="pie"><span class="pz2">$79.99</span></div></div>
-    <div class="pr top"><span class="lbl">Todo junto</span><h3>Membresía TOP</h3><p class="tg">El Kit de productos + tu plan personalizado + la app completa, en una sola suscripción.</p><div class="pie"><span class="pz2">$129.99<small>/mes</small></span></div></div>
+    <div class="pr"><span class="lbl">Si ya lo intentaste antes</span><h3>Skinny Plan<span class="tag">El más elegido</span></h3><p class="tg">Reseteo metabólico y pérdida de peso. Comida real, estructura clara.</p><div class="pie"><span class="pz2">$39.99<small>/mes</small></span><button class="cmp" data-prod="plan_peso" data-nom="Skinny Plan">Empezar</button></div></div>
+    <div class="pr"><span class="lbl">Si estás en menopausia</span><h3>Meno Smart</h3><p class="tg">Peri y menopausia, con un plan que sí entiende tu etapa. Protege músculo y hueso.</p><div class="pie"><span class="pz2">$59.99<small>/mes</small></span><button class="cmp" data-prod="plan_menopausia" data-nom="Meno Smart">Empezar</button></div></div>
+    <div class="pr"><span class="lbl">Si llevas tratamiento GLP-1</span><h3>GLP1 Pro</h3><p class="tg">Acompañamiento mientras dura tu tratamiento, para que lo que bajes sea grasa y no músculo.</p><div class="pie"><span class="pz2">$59.99<small>/mes</small></span><button class="cmp" data-prod="plan_glp1" data-nom="GLP1 Pro">Empezar</button></div></div>
+    <div class="pr"><span class="lbl">Si vives con inflamación</span><h3>Gut Reset</h3><p class="tg">Menos inflamación y una digestión que no pesa.</p><div class="pie"><span class="pz2">$39.99<small>/mes</small></span><button class="cmp" data-prod="plan_desinflamar" data-nom="Gut Reset">Empezar</button></div></div>
+    <div class="pr"><span class="lbl">Si tu azúcar anda inestable</span><h3>Gluco Control</h3><p class="tg">Glucosa estable y energía pareja todo el día. Proteína y fibra en cada comida.</p><div class="pie"><span class="pz2">$39.99<small>/mes</small></span><button class="cmp" data-prod="plan_balance" data-nom="Gluco Control">Empezar</button></div></div>
+    <div class="pr"><span class="lbl">Si quieres marcarte</span><h3>Body Recomp</h3><p class="tg">Menos grasa, más músculo. Construido alrededor de tu proteína del día.</p><div class="pie"><span class="pz2">$39.99<small>/mes</small></span><button class="cmp" data-prod="plan_fuerte" data-nom="Body Recomp">Empezar</button></div></div>
+    <div class="pr"><span class="lbl">Si quieres algo hecho para ti</span><h3>Personalizado</h3><p class="tg">El plan más afinado a tu cuerpo, tus gustos y tus condiciones.</p><div class="pie"><span class="pz2">$79.99<small>/mes</small></span><button class="cmp" data-prod="plan_personalizado" data-nom="Personalizado">Empezar</button></div></div>
+    <div class="pr top"><span class="lbl">Todo junto</span><h3>Membresía TOP</h3><p class="tg">El Kit de productos + tu plan personalizado + la app completa, en una sola suscripción.</p><div class="pie"><span class="pz2">$129.99<small>/mes</small></span><button class="cmp" data-prod="top" data-nom="Membresía TOP">Empezar</button></div></div>
   </div>
 
   <div class="esc">
-    <div><b>App y Comunidad, por su cuenta</b><span>$19.99/mes</span></div>
+    <div><b>App y Comunidad, por su cuenta</b><span>$19.99/mes</span><button class="cmp chico" data-prod="app" data-nom="App y Comunidad">Empezar</button></div>
     <div><b>Solo el plan de tu meta</b><span>desde $39.99</span></div>
     <div><b>Todo incluido, con el Kit</b><span>$129.99/mes</span></div>
   </div>
-  <p class="nota">Cada programa es un ciclo de cuatro semanas. Los planes se refrescan con tu compra del mes siguiente; la App y la Membresía TOP son suscripciones que puedes cancelar cuando quieras.</p>
+  <p class="nota">Cada programa es un ciclo de cuatro semanas que se renueva cada mes, con tus números y tus menús recalculados. Todas son suscripciones y puedes cancelar cuando quieras desde la app.</p>
 </div></div>
 
 <div class="sec" style="background:var(--sup);border-block:1px solid var(--borde)"><div class="wrap">
@@ -171,5 +199,57 @@
   <p class="fine">© 2026 Tu Nuevo Plan</p>
 </div></footer>
 
+
+<div id="cmpBg"><div class="cmpCaja">
+  <h4 id="cmpTit">Empezar</h4>
+  <div class="sub" id="cmpSub"></div>
+  <label for="cmpNom">Tu nombre</label>
+  <input id="cmpNom" type="text" autocomplete="name" placeholder="Cómo te llamas">
+  <label for="cmpMail">Tu correo</label>
+  <input id="cmpMail" type="email" inputmode="email" autocomplete="email" placeholder="tu@correo.com">
+  <div id="cmpErr" class="err" style="display:none"></div>
+  <button class="ir" id="cmpIr">Continuar al pago</button>
+  <button class="cancel" id="cmpNo">Ahora no</button>
+  <p class="fina">El pago lo procesa Stripe en su propia página: tu tarjeta nunca pasa por aquí.
+  Al continuar aceptas los <a href="/terminos.html">Términos</a> y el <a href="/privacidad.html">Aviso de privacidad</a>.</p>
+</div></div>
+<script>
+(function(){
+ var API="https://app.tunuevoplan.com";
+ var bg=document.getElementById("cmpBg"), tit=document.getElementById("cmpTit"),
+     sub=document.getElementById("cmpSub"), nom=document.getElementById("cmpNom"),
+     mail=document.getElementById("cmpMail"), err=document.getElementById("cmpErr"),
+     ir=document.getElementById("cmpIr"), no=document.getElementById("cmpNo");
+ var prod=null;
+ function abrir(p,n){prod=p;tit.textContent=n;sub.textContent="Te pedimos solo esto. La cuenta se crea sola cuando tu pago se confirma.";
+  err.style.display="none";ir.disabled=false;ir.textContent="Continuar al pago";
+  bg.classList.add("on");setTimeout(function(){mail.focus()},60)}
+ function cerrar(){bg.classList.remove("on")}
+ function fallo(m){err.textContent=m;err.style.display="block";ir.disabled=false;ir.textContent="Continuar al pago"}
+ document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-prod]");
+  if(b){abrir(b.dataset.prod,b.dataset.nom||"Empezar");return}
+  if(e.target===bg)cerrar();
+ });
+ no.addEventListener("click",cerrar);
+ document.addEventListener("keydown",function(e){
+  if(e.key==="Escape")cerrar();
+  if(e.key==="Enter"&&bg.classList.contains("on")&&(e.target===mail||e.target===nom)){e.preventDefault();ir.click()}
+ });
+ ir.addEventListener("click",function(){
+  var m=(mail.value||"").trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m)){fallo("Escribe un correo válido. Ahí te llega tu acceso.");mail.focus();return}
+  ir.disabled=true;ir.textContent="Abriendo el pago…";err.style.display="none";
+  fetch(API+"/api/checkout",{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({producto:prod,correo:m,nombre:(nom.value||"").trim()})})
+   .then(function(r){return r.json().then(function(b){return {ok:r.ok,b:b}})})
+   .then(function(x){
+     if(x.ok&&x.b&&x.b.url){location.href=x.b.url;return}
+     fallo((x.b&&x.b.mensaje)||"No se pudo abrir el pago. Intenta otra vez en un momento.");
+   })
+   .catch(function(){fallo("No se pudo conectar. Revisa tu internet e intenta otra vez.")});
+ });
+})();
+</script>
 </body>
 </html>
