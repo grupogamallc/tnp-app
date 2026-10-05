@@ -68,11 +68,11 @@ module.exports = async (req, res) => {
       return;
     }
     /* El codigo de arriba (de Supabase o de Stripe) viaja de regreso: es un
-       numero, no filtra nada, y sin el no hay forma de saber que fallo cuando
-       los registros del servidor no estan a la mano. */
+       numero, no dice nada de adentro, y sin el no hay forma de saber que fallo
+       cuando los registros del servidor no estan a la mano. El mensaje del error
+       se queda en el registro, no en la respuesta. */
     console.error("checkout", e && e.status, e && e.message);
     res.status(500).json({ error: "servidor", codigo: (e && e.status) || null,
-      pista: (e && e.message || "").slice(0, 90),
       mensaje: "No se pudo abrir el pago. Intenta otra vez." });
   }
 };
