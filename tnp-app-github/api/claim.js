@@ -19,7 +19,9 @@ module.exports = async (req, res) => {
     if (!/^cs_[A-Za-z0-9_]{10,200}$/.test(sid)) { res.status(400).json({ error: "sid" }); return; }
 
     const sesion = await L.stripe("/checkout/sessions/" + sid);
-    const pagada = sesion.payment_status === "paid" || sesion.status === "complete";
+    /* "complete" no es "pagada": con metodos asincronos la sesion se completa
+       antes de que llegue el dinero. Solo el estado del pago decide. */
+    const pagada = sesion.payment_status === "paid" || sesion.payment_status === "no_payment_required";
     if (!pagada) { res.status(402).json({ error: "no_pagada", mensaje: "Ese pago todavía no se confirma." }); return; }
 
     const r = await L.activarCompra({ sesion });

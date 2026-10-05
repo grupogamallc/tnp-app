@@ -49,9 +49,16 @@ module.exports = async (req, res) => {
 
     switch (ev.type) {
 
-      /* El pago inicial. Nunca las renovaciones. */
-      case "checkout.session.completed": {
-        if (o.payment_status !== "paid" && o.status !== "complete") break;
+      /* El pago inicial. Nunca las renovaciones.
+         Van juntos a proposito: con metodos de pago asincronos (transferencia,
+         debito bancario) la sesion se marca "complete" PERO el dinero todavia no
+         llega. En ese caso completed trae payment_status "unpaid" y el dinero se
+         confirma despues con async_payment_succeeded. Dar acceso con la sesion
+         completa pero sin pagar es regalar el producto. */
+      case "checkout.session.completed":
+      case "checkout.session.async_payment_succeeded": {
+        const pagado = o.payment_status === "paid" || o.payment_status === "no_payment_required";
+        if (!pagado) break;
         const r = await L.activarCompra({ sesion: o });
         /* El correo de acceso: Stripe manda el recibo, pero no puede mandar la
            llave del producto. Va fuera del camino critico — si falla, el acceso
@@ -106,7 +113,14 @@ module.exports = async (req, res) => {
         break;
       }
 
-      /* Cobro fallido: se MARCA, no se corta. Stripe reintenta durante dias y
+      /* Pago asincrono rechazado: la compra queda marcada y nunca se activo nada. */
+      case "checkout.session.async_payment_failed": {
+        await L.dbUpd("compras", "stripe_session=eq." + encodeURIComponent(o.id),
+          { estado: "fallida", actualizado: new Date().toISOString() }).catch(() => {});
+        break;
+      }
+
+      /* Cobro fallido de una renovacion: se MARCA, no se corta. Stripe reintenta durante dias y
          cortarle a alguien cuya tarjeta vencio es perder un cliente que si paga. */
       case "invoice.payment_failed": {
         const m = await porSuscripcion(o.subscription);
