@@ -1115,6 +1115,29 @@ const TPL={
  PERSONALIZADO:[["licuado","avenaCr","huevAgua","yogChia"],["polloCal","salmonCam","bistec","poke"],["yogFresa","manzanaCr","requeson","jicama"],["ensPollo","fajitas","sopaVer","salmonEsp"]],
  MENOPAUSIA:[["yogChia","omelette","avenaCr","licuado"],["salmonCam","polloCal","bistec","tinga"],["requeson","yogFresa","cafeCol","manzanaCr"],["salmonEsp","ensPollo","sopaVer","fajitas"]],
 };
+/* Lo que se vende hoy. Los otros cuatro programas no tienen plan propio todavia:
+   su menu se genera igual, y para cobrarlos se ofrece Personalizado, que se arma
+   alrededor del caso de cada quien. Cuando abra un plan, basta agregarlo aqui. */
+const SITIO="https://tunuevoplan.com";
+const PROG_PROD={PESO:"plan_peso",GLP1:"plan_glp1",PERSONALIZADO:"plan_personalizado"};
+const PROD_INFO={
+ plan_peso:{n:"Skinny Plan",precio:"$39.99",ancla:"/#programas"},
+ plan_glp1:{n:"GLP1 Pro",precio:"$59.99",ancla:"/#programas"},
+ plan_personalizado:{n:"Personalizado",precio:"$79.99",ancla:"/#personalizado"},
+};
+const SUPLE="plan_personalizado";
+/* TOP y App-por-su-cuenta quedan fuera del lanzamiento: los upsells que los
+   mencionaban apuntan al plan Personalizado mientras no se vendan. */
+const TOP_EN_VENTA=false;
+const progPropio=p=>!!PROG_PROD[p];
+const planDeProg=p=>PROG_PROD[p]||SUPLE;
+function irAPlanes(){
+ /* sin programa elegido no se le manda a una tarjeta en particular */
+ const prog=S&&S.quiz?S.quiz.prog:null;
+ const d=prog?PROD_INFO[planDeProg(prog)]:null;
+ location.href=SITIO+(d?d.ancla:"/#programas");
+}
+
 const PROG_META={
  PESO:{label:"SKINNY PLAN",adj:-400,gkg:1.4},
  DESINFLAMAR:{label:"GUT RESET",adj:-250,gkg:1.2},
@@ -1406,7 +1429,9 @@ function renderHoy(){
   :`<div class="secT" style="margin-top:18px"><h3>Recetas para ti</h3><a data-a="goRec">Ver recetario</a></div>
     <div class="rgrid">${["ensPollo","licuado","sopaVer"].map(k=>{const d=DP[k];
      return `<div class="rcard" data-rec="${k}"><div class="rimg"><img src="plato-${k}.jpg" alt="${d.n}" loading="lazy"></div><div class="rbody"><div class="rt">${d.p} g prot · ${d.min} min</div><h4>${d.n}</h4><p>${d.k} kcal</p></div></div>`}).join("")}</div>
-    <div class="upCard"><h4>Tu plan personalizado te espera</h4><p>Con la membresía TOP, el generador arma tu menú de cada día — tú solo palomeas. Kit + plan vivo + app.</p><button class="upBtn" data-a="up">Conocer TOP · $129.99/mes</button></div>`;
+    <div class="upCard"><h4>Tu plan personalizado te espera</h4>${TOP_EN_VENTA
+     ?`<p>Con la membresía TOP, el generador arma tu menú de cada día — tú solo palomeas. Kit + plan vivo + app.</p><button class="upBtn" data-a="up">Conocer TOP · $129.99/mes</button>`
+     :`<p>El plan Personalizado se arma alrededor de tu cuerpo, tus gustos y tus condiciones. El generador te deja el menú de cada día — tú solo palomeas.</p><button class="upBtn" data-a="up">Ver Personalizado · ${PROD_INFO[SUPLE].precio}/mes</button>`}</div>`;
  const totalD=28, pct=Math.max(0,Math.min(100,Math.round(S.day/totalD*100)));
  const tsk=S.tasks||(S.tasks={});
  const tareasHTML=TAREAS.map(t=>`<div class="hTask ${tsk[t.k]?'on':''}" data-a="task" data-p="${t.k}">
@@ -1599,7 +1624,7 @@ function renderPlan(){
   body=`<div class="chips">${F.map(f=>`<span class="fchip ${ui.recFilter===f[0]?'on':''}" data-a="filter" data-p="${f[0]}">${f[1]}</span>`).join("")}</div>
    <div class="rgrid">${list.map(([k,d])=>`<div class="rcard" data-rec="${k}"><div class="rimg"><img src="plato-${k}.jpg" alt="${d.n}" loading="lazy"></div><div class="rbody"><div class="rt">${d.p} g prot · ${d.min} min</div><h4>${d.n}</h4><p>${d.k} kcal</p></div></div>`).join("")}</div>`;
  } else if(S.nivel==="app"){
-  body=`<div class="upCard" style="margin-top:16px"><h4>Aún no tienes un plan activo</h4><p>Tu membresía incluye comunidad, videos y recetario. Compra el programa de tu meta ($39.99) o sube a TOP para el plan personalizado vivo.</p><button class="upBtn" data-a="up">Ver programas</button></div>
+  body=`<div class="upCard" style="margin-top:16px"><h4>Aún no tienes un plan activo</h4><p>Tu membresía incluye comunidad, videos y recetario. Compra el programa de tu meta para abrir tu menú, tus números y tu seguimiento.</p><button class="upBtn" data-a="up">Ver programas</button></div>
    <div class="secT" style="margin-top:18px"><h3>Recetas para hoy</h3></div>
    <div class="rgrid">${["avenaCr","tacosPo","ensPollo","sopaVer"].map(k=>{const d=DP[k];return `<div class="rcard" data-rec="${k}"><div class="rimg"><img src="plato-${k}.jpg" alt="${d.n}" loading="lazy"></div><div class="rbody"><div class="rt">${d.p} g prot</div><h4>${d.n}</h4><p>${d.k} kcal</p></div>`}).join("")}</div>`;
  } else {
@@ -1950,10 +1975,10 @@ document.body.addEventListener("click",e=>{
  else if(act==="buy"){toast("Checkout se conecta con Shopify en Fase 1")}
  else if(act==="abrirCuenta"){accAbrir("entrar");return}
  else if(act==="salirCuenta"){salirCuenta();return}
- else if(act==="verPlanes"){location.href="https://tunuevoplan.com/#programas";return}
+ else if(act==="verPlanes"){irAPlanes();return}
  else if(act==="miSuscripcion"){abrirPortal();return}
  else if(act==="requiz"){ob={step:0,q:{prog:null,sexo:S.quiz.sexo||"F",edad:S.quiz.edad,edadSet:1,peso:S.quiz.peso,pesoSet:1,est:S.quiz.est,estSet:1,meta:S.quiz.meta||0,metaSet:S.quiz.meta?1:0,act:S.quiz.act,cond:[],dislikes:[],salud:(S.quiz.salud||SALUD0())}};$("onb").classList.add("on");obRender()}
- else if(act==="up"){toast("La compra se conecta con el checkout en Fase 1")}
+ else if(act==="up"){irAPlanes();return}
  else if(act==="sos"){sheet(`<div class="shead"><img class="sph" src="stephy.jpg"><div><h3>Respira. Aquí estoy.</h3><div class="sm">Un antojo dura 10 minutos. Vamos a pasarlo juntos.</div></div></div>
   <ul><li><b>1.</b> Tómate un vaso de agua completo, despacio.</li><li><b>2.</b> Come proteína rápida: yogurt, queso panela o 10 almendras.</li><li><b>3.</b> Ponte el audio de Stephy y espera 10 minutos antes de decidir.</li></ul>
   <div class="quick"><button class="btn solid" style="width:100%" data-a="playA" data-f="sos.mp3" data-t="SOS antojo">${ICON.audio} Escuchar a Stephy</button></div>
@@ -2189,8 +2214,8 @@ function renderAsk(){
  const top=S&&S.nivel==="top";const left=askLeft();
  const foot=top
    ? `Asesoría ilimitada con tu membresía TOP. Respuestas generadas por inteligencia artificial con el método de Stephy; no sustituyen a tu médico.`
-   : (left>0 ? `Te quedan <b>${left}</b> preguntas hoy. Respuestas generadas por inteligencia artificial con el método de Stephy; no sustituyen a tu médico.` : `Llegaste a tus preguntas gratis de hoy.`);
- const upsell=(!top&&left<=0)?`<button class="btn solid" style="width:100%;margin-top:10px" data-a="up">Conocer la membresía TOP</button>`:"";
+   : (left>0 ? `Te quedan <b>${left}</b> preguntas hoy. Respuestas generadas por inteligencia artificial con el método de Stephy; no sustituyen a tu médico.` : `Llegaste a tus preguntas gratis de hoy. Mañana se reinician.`);
+ const upsell=(!top&&left<=0&&TOP_EN_VENTA)?`<button class="btn solid" style="width:100%;margin-top:10px" data-a="up">Conocer la membresía TOP</button>`:"";
  sheet(`<div class="shead"><img class="sph" src="stephy.jpg"><div><h3>Pregúntale a Stephy</h3><div class="sm">Asistente con inteligencia artificial, entrenado con el método de la clínica.</div></div></div>
  <div class="chatBox" id="chatBox">${askMsgs.map(m=>`<div class="cmsg ${m.who}${m.typing?' typing':''}">${esc(m.t)}</div>`).join("")}</div>
  ${upsell}
@@ -2212,7 +2237,7 @@ async function askPush(q){
  const top=S&&S.nivel==="top";
  if(!top){
   const a=askUsage();
-  if(a.n>=FREE_ASK_LIMIT){askMsgs.push({who:"u",t:q});askMsgs.push({who:"s",t:"Por hoy llegaste a tu límite de preguntas 💛 Con la membresía TOP la asesoría es ilimitada. ¿Le echamos un ojo?"});renderAsk();return;}
+  if(a.n>=FREE_ASK_LIMIT){askMsgs.push({who:"u",t:q});askMsgs.push({who:"s",t:TOP_EN_VENTA?"Por hoy llegaste a tu límite de preguntas 💛 Con la membresía TOP la asesoría es ilimitada. ¿Le echamos un ojo?":"Por hoy llegaste a tu límite de preguntas 💛 Mañana se reinician. Nos vemos aquí."});renderAsk();return;}
   a.n++;store.set("tnp_ask",a);
  }
  askBusy=true;
@@ -2685,7 +2710,8 @@ function accRender(){
   <div class="d">${vencida
     ? "Tu membresía llegó a su fecha. Renuévala y todo sigue donde lo dejaste."
     : "Ya tenemos tus números. Falta activar tu membresía para abrir tu menú, tus hábitos y tu seguimiento."}</div>
-  <button class="onbBtn" data-ac="verPlanes">Ver los planes</button>
+  ${(!vencida&&S&&S.quiz&&!progPropio(S.quiz.prog))?`<div class="accNota">Tu programa <b>${PROG_META[S.quiz.prog].label}</b> abre más adelante. Para tu caso va el plan <b>Personalizado</b> (${PROD_INFO[SUPLE].precio}/mes): se arma alrededor de lo que nos contaste, y tus números y tu menú ya están hechos.</div>`:""}
+  <button class="onbBtn" data-ac="verPlanes">${(S&&S.quiz&&!progPropio(S.quiz.prog))?"Ver Personalizado":"Ver los planes"}</button>
   ${sbUser?`<a class="accLink" data-ac="salir">Cerrar sesión</a>`
           :`<a class="accLink" data-ac="volverEntrar">Ya soy miembro</a>`}`;
  }
@@ -2815,7 +2841,7 @@ document.body.addEventListener("click",e=>{
  else if(t==="volverEntrar")accAbrir("entrar");
  else if(t==="cerrar")accCerrar();
  else if(t==="salir")salirCuenta();
- else if(t==="verPlanes")location.href="https://tunuevoplan.com/#programas";
+ else if(t==="verPlanes")irAPlanes();
  else if(t==="recuperar")accRecuperar();
 });
 document.addEventListener("keydown",e=>{
