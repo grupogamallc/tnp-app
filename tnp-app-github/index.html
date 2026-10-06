@@ -1004,7 +1004,7 @@
     <div class="wEasy">
       <h1 class="wAnim" style="--d:420ms">Tu Nuevo Plan es tan fácil como <em>1, 2, 3</em>.</h1>
       <div class="wSteps">
-        <div class="wStep wAnim" style="--d:540ms"><span class="n">1</span><div><b>Elige tu plan</b><span>El que va con tu meta. Aquí abajo están los siete.</span></div></div>
+        <div class="wStep wAnim" style="--d:540ms"><span class="n">1</span><div><b>Elige tu plan</b><span>El que va con tu meta. Aquí abajo están los tres.</span></div></div>
         <div class="wStep wAnim" style="--d:640ms"><span class="n">2</span><div><b>Cuéntanos de ti</b><span>Cinco preguntas rápidas. Dos minutos.</span></div></div>
         <div class="wStep wAnim" style="--d:740ms"><span class="n">3</span><div><b>Comienza</b><span>Tu plan queda listo y arrancas el mismo día.</span></div></div>
       </div>
@@ -1511,7 +1511,7 @@ function renderHoy(){
 /* ================== RENDER: PLAN ================== */
 /* Brand Bible: un solo color institucional para todos los programas — prohibido un color por plan */
 const PROG_ACCENT={PESO:"#1E3A8A",DESINFLAMAR:"#1E3A8A",FUERTE:"#1E3A8A",BALANCE:"#1E3A8A",GLP1:"#1E3A8A",PERSONALIZADO:"#1E3A8A",MENOPAUSIA:"#1E3A8A"};
-/* ---- Detalle de los 7 planes (pastillas de la bienvenida) ---- */
+/* ---- Detalle de los planes. PLAN_ORDER decide cuales se muestran ---- */
 const PLAN_INFO={
  PESO:{n:"Skinny Plan",tag:"Reseteo metabólico. Comida real, estructura clara.",precio:"$39.99",
   who:"Para ti si quieres bajar de peso y <b>mantenerlo</b> — con un plan armado, no a punta de fuerza de voluntad.",
@@ -1540,10 +1540,10 @@ const PLAN_INFO={
   dia:"4 tiempos al día",kit:"Skinny Kit + tus suplementos",
   inc:["Menú que protege músculo y hueso","Calcio y vitamina D desde comida real","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Guía de arranque del programa"],
   nota:"Acompañamiento nutricional de la etapa. No es tratamiento de síntomas."},
- PERSONALIZADO:{n:"Personalizado",tag:"Tu plan, armado uno por uno.",precio:"$79.99",
-  who:"Para ti si quieres el plan más afinado a tu cuerpo, tus gustos y tus condiciones, armado con el método de Stephy.",
+ PERSONALIZADO:{n:"Personalizado",tag:"Menopausia, inflamación, glucosa o músculo: armado para tu caso.",precio:"$79.99",
+  who:"Para ti si quieres el plan más afinado a tu cuerpo, tus gustos y tus condiciones — y para ti si tu caso es menopausia, inflamación, glucosa inestable o recomposición: todo eso se arma aquí, uno por uno, con el método de Stephy.",
   dia:"4 tiempos al día",kit:"Skinny Kit + tus suplementos",
-  inc:["Armado con el método y las guías de Stephy","A tu medida: meta, gustos, alergias y condiciones","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Guía de arranque del programa"]},
+  inc:["Armado con el método y las guías de Stephy","A tu medida: meta, gustos, alergias y condiciones","Cubre menopausia, inflamación, glucosa y recomposición","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Guía de arranque del programa"]},
 };
 /* ---- Video vertical de 15 seg dentro de la ficha de cada programa ----
    Cada programa acepta:  {mp4:"vid-peso.mp4"}   (archivo en el repo)
@@ -1567,7 +1567,7 @@ const PLAN_LBL={
  DESINFLAMAR:"Si vives inflamada",
  BALANCE:"Si tu azúcar anda inestable",
  FUERTE:"Si quieres marcarte",
- PERSONALIZADO:"Si quieres algo hecho para ti",
+ PERSONALIZADO:"Si tu caso pide algo propio",
 };
 /* Foto vertical de cada programa en la pastilla */
 const PLAN_FOTO={
@@ -1575,7 +1575,9 @@ const PLAN_FOTO={
  DESINFLAMAR:"pv-desinflamar.jpg",BALANCE:"pv-balance.jpg",
  FUERTE:"pv-fuerte.jpg",PERSONALIZADO:"pv-personalizado.jpg",
 };
-const PLAN_ORDER=["PESO","MENOPAUSIA","GLP1","DESINFLAMAR","BALANCE","FUERTE","PERSONALIZADO"];
+/* Solo los planes en venta. Las fichas de los otros se quedan completas abajo:
+   el dia que abra uno, se agrega aqui y a PROG_PROD y vuelve a aparecer. */
+const PLAN_ORDER=["PESO","GLP1","PERSONALIZADO"];
 function renderPills(){
  const el=$("wPills"); if(!el) return;
  const CH='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
