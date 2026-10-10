@@ -2,7 +2,7 @@
    La app (index.html) va primero a la red: asi un despliegue nuevo llega en la
    siguiente carga en vez de quedarse pegado al cache. El cache es el respaldo
    para cuando no hay internet. Lo demas (iconos, imagenes) si va primero al cache. */
-const CACHE = "tnp-v64";
+const CACHE = "tnp-v65";
 const ASSETS = ["/", "/index.html", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png", "/icon-maskable-512.png", "/apple-touch-icon.png"];
 
 self.addEventListener("install", e => {

@@ -418,6 +418,7 @@
   /* BIENVENIDA */
   #welcome{position:fixed;inset:0;z-index:110;display:none;justify-content:center;background:var(--papel);overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
   #welcome.on{display:flex}
+  .waltSm{display:inline-block;margin-top:6px;font-size:12px;opacity:.72}
   .wlIn{width:100%;max-width:430px;position:relative;display:flex;flex-direction:column;min-height:100dvh;background:linear-gradient(180deg,var(--blush) 0%,#F7F9FC 24%,var(--papel) 46%)}
   .wblob{position:absolute;border-radius:50%;filter:blur(3px);opacity:.5;pointer-events:none}
   .wblob.b1{width:200px;height:200px;background:radial-gradient(circle,var(--durazno),transparent 70%);top:30px;left:-75px}
@@ -1044,9 +1045,9 @@
   <div class="wfoot">
     <div class="ctaWrap">
       <button class="wcta" data-a="wVerPlanes">Elegir mi plan<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-      <div class="wRe"><i></i>2 minutos · sin tarjeta</div>
+      <div class="wRe" id="wRe"><i></i>2 minutos · sin tarjeta</div>
     </div>
-    <div class="walt">¿Ya tienes cuenta? <b data-a="wDemo">Inicia sesión</b></div>
+    <div class="walt" id="wAlt">¿Ya tienes cuenta? <b data-a="wEntrar">Inicia sesión</b></div>
   </div>
 </div></div>
 
@@ -2054,7 +2055,8 @@ document.body.addEventListener("click",e=>{
  }
  else if(act==="wPick"){$("sheetBg").classList.remove("on");$("welcome").classList.remove("on");$("onb").classList.add("on");ob={step:1,q:{prog:a.dataset.p,sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[],salud:SALUD0()}};obRender()}
  else if(act==="wStart"){$("welcome").classList.remove("on");$("onb").classList.add("on");ob={step:0,q:{prog:null,sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[],salud:SALUD0()}};obRender()}
- else if(act==="wDemo"){toast("Las cuentas abren muy pronto")}
+ else if(act==="wEntrar"){accAbrir("entrar")}
+ else if(act==="salirW"){salirCuenta()}
  else if(act==="na"){toast("Disponible en la versión completa")}
 });
 
@@ -2548,6 +2550,26 @@ const dbUps=(tabla,filas,conflicto,ignorar)=>dbFetch(
   body:JSON.stringify(filas)});
 const unaFila=r=>(r&&r.data&&r.data.length)?r.data[0]:null;
 
+/* El pie de la bienvenida cambia segun quien este viendo. Quien ya pago y ya
+   entro NO puede ver "¿Ya tienes cuenta? Inicia sesion": ya entro. Lo que le
+   falta es contestar el cuestionario, y eso hay que decirselo. */
+function pintarWelcome(){
+ const w=$("wAlt"); if(!w)return;
+ const re=$("wRe");
+ if(!sbUser){
+  w.innerHTML='¿Ya tienes cuenta? <b data-a="wEntrar">Inicia sesión</b>';
+  if(re)re.innerHTML='<i></i>2 minutos · sin tarjeta';
+  return;
+ }
+ const correo=esc(sbUser.email||"");
+ if(tieneAcceso()){
+  w.innerHTML='<b>Tu membresía está activa.</b><br>Contesta el cuestionario y armamos tu plan.<br><span class="waltSm">'+correo+' · <b data-a="salirW">Cerrar sesión</b></span>';
+  if(re)re.innerHTML='<i></i>2 minutos · ya está pagado';
+ }else{
+  w.innerHTML='Entraste como '+correo+' · <b data-a="salirW">Cerrar sesión</b>';
+ }
+}
+
 function perfilOtraVez(){try{if(S&&$("v-perfil"))renderPerfil()}catch(e){}}
 
 /* ---------------- el permiso ---------------- */
@@ -2643,6 +2665,7 @@ async function trasEntrar(){
  }
  if(tieneAcceso())syncNube(true);
  revisarMuro();
+ pintarWelcome();
  perfilOtraVez();
 }
 
@@ -2784,7 +2807,7 @@ async function abrirPortal(){
 async function salirCuenta(){
  try{await authFetch("/logout",{})}catch(e){}
  sesGuardar(null);sbUser=null;MEMB=null;accCerrar();
- perfilOtraVez();toast("Sesión cerrada. Tus datos siguen en este celular.");
+ pintarWelcome();perfilOtraVez();toast("Sesión cerrada. Tus datos siguen en este celular.");
 }
 
 /* ---------------- tarjeta de cuenta en Perfil ---------------- */
