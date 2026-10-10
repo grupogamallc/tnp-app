@@ -77,12 +77,13 @@ module.exports = async (req, res) => {
 
       /* Renovacion cobrada: se mueve la fecha de acceso. */
       case "invoice.paid": {
-        const m = await porSuscripcion(o.subscription);
+        /* El id de la suscripcion NO se saca de o.subscription: ese campo ya no
+           existe en el API nuevo. L.subDeFactura sabe donde esta. */
+        const subId = L.subDeFactura(o);
+        const m = await porSuscripcion(subId);
         if (!m) break;
-        const sub = await L.stripe("/subscriptions/" + o.subscription).catch(() => null);
-        const hasta = sub && sub.current_period_end
-          ? new Date(sub.current_period_end * 1000).toISOString()
-          : new Date(Date.now() + 31 * 864e5).toISOString();
+        const sub = subId ? await L.stripe("/subscriptions/" + subId).catch(() => null) : null;
+        const hasta = L.finDePeriodo(sub) || new Date(Date.now() + 31 * 864e5).toISOString();
         await L.dbUpd("membresias", "perfil_id=eq." + m.perfil_id,
           { estado: "activa", acceso_hasta: hasta, actualizado: new Date().toISOString() });
         break;
@@ -95,8 +96,7 @@ module.exports = async (req, res) => {
         const sanos = ["active", "trialing"];
         const estado = sanos.includes(o.status) ? "activa"
                      : (o.status === "canceled" ? "cancelada" : "vencida");
-        const hasta = o.current_period_end
-          ? new Date(o.current_period_end * 1000).toISOString() : null;
+        const hasta = L.finDePeriodo(o);
         await L.dbUpd("membresias", "perfil_id=eq." + m.perfil_id,
           { estado, ...(hasta ? { acceso_hasta: hasta } : {}), actualizado: new Date().toISOString() });
         break;
@@ -123,7 +123,7 @@ module.exports = async (req, res) => {
       /* Cobro fallido de una renovacion: se MARCA, no se corta. Stripe reintenta durante dias y
          cortarle a alguien cuya tarjeta vencio es perder un cliente que si paga. */
       case "invoice.payment_failed": {
-        const m = await porSuscripcion(o.subscription);
+        const m = await porSuscripcion(L.subDeFactura(o));
         if (!m) break;
         await L.dbUpd("membresias", "perfil_id=eq." + m.perfil_id,
           { estado: "vencida", actualizado: new Date().toISOString() });

@@ -19,6 +19,12 @@ const SB_URL = process.env.SUPABASE_URL || "https://juahjgeewcwqjovnlril.supabas
 const APP_URL = process.env.APP_URL || "https://app.tunuevoplan.com";
 const SITIO_URL = process.env.SITIO_URL || "https://tunuevoplan.com";
 
+/* La version del API de Stripe va fija a proposito. Es la MISMA que tiene el
+   destino del webhook (Workbench > Webhooks > API version). Si quedara libre,
+   Stripe contesta con la version default de la cuenta y el dia que esa cambie
+   los campos se mueven de lugar sin aviso: ya paso una vez, ver finDePeriodo. */
+const STRIPE_API = "2026-08-26.dahlia";
+
 /* ---------- CORS: la pagina de venta vive en otro dominio ---------- */
 function cors(req, res) {
   const permitidos = [SITIO_URL, "https://www.tunuevoplan.com", APP_URL];
@@ -55,6 +61,7 @@ async function stripe(ruta, cuerpo, metodo) {
     headers: {
       authorization: "Bearer " + key,
       "content-type": "application/x-www-form-urlencoded",
+      "stripe-version": STRIPE_API,
     },
     body: cuerpo ? formEncode(cuerpo) : undefined,
   });
@@ -225,6 +232,29 @@ async function correo(para, asunto, html, texto) {
 
 const correoValido = m => typeof m === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m.trim()) && m.length < 200;
 
+/* ---------- Donde vive la fecha de corte y la suscripcion ----------
+   Stripe movio estos dos campos de lugar y no avisa: los lee el webhook y los
+   lee el alta de la compra, asi que se leen en UN solo lugar.
+
+   - La suscripcion YA NO viene en factura.subscription. Vive en
+     factura.parent.subscription_details.subscription.
+   - El fin del periodo YA NO viene en suscripcion.current_period_end. Vive en
+     suscripcion.items.data[0].current_period_end.
+
+   Las dos funciones buscan primero donde esta hoy y luego donde estaba antes:
+   asi sirven igual si la version del API sube o baja. */
+function subDeFactura(inv) {
+  if (!inv) return null;
+  const p = inv.parent && inv.parent.subscription_details;
+  return (p && p.subscription) || inv.subscription || null;
+}
+function finDePeriodo(sub) {
+  if (!sub) return null;
+  const it = sub.items && sub.items.data && sub.items.data[0];
+  const t = (it && it.current_period_end) || sub.current_period_end || null;
+  return t ? new Date(t * 1000).toISOString() : null;
+}
+
 /* ---------- Dar de alta una compra: lo usan el webhook y el canje ----------
    Es idempotente a proposito: el webhook y el regreso del comprador se disparan
    al mismo tiempo y no se sabe cual llega primero. */
@@ -239,9 +269,7 @@ async function activarCompra({ sesion, suscripcion }) {
 
   const sub = suscripcion || (sesion.subscription
     ? await stripe("/subscriptions/" + sesion.subscription).catch(() => null) : null);
-  const hasta = sub && sub.current_period_end
-    ? new Date(sub.current_period_end * 1000).toISOString()
-    : new Date(Date.now() + 31 * 864e5).toISOString();
+  const hasta = finDePeriodo(sub) || new Date(Date.now() + 31 * 864e5).toISOString();
 
   /* 1. la compra, con stripe_session UNICO: un reintento no duplica */
   await dbUps("compras", [{
@@ -289,4 +317,5 @@ module.exports = {
   db, dbSel, dbIns, dbUpd, dbUps, unaFila,
   auth, usuarioPorCorreo, crearUsuario, ligaDeEntrada,
   plantilla, correo, correoValido, activarCompra,
+  subDeFactura, finDePeriodo, STRIPE_API,
 };
