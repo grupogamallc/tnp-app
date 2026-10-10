@@ -2480,9 +2480,10 @@ document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target&&e.target.i
 const SB_URL="https://juahjgeewcwqjovnlril.supabase.co";
 const SB_KEY="sb_publishable_F8Com7KmemJ7kyCe83eahg_LpHGoLIU";
 
-/* Mientras no exista el cobro, quien no inicia sesion usa la app en local como hasta hoy.
-   Con el cobro vivo esto pasa a true y el muro aplica tambien sin sesion. */
-const MURO_DURO=false;
+/* El muro aplica a todos: con sesion o sin ella. Quien no tiene membresia activa
+   ve la pantalla de planes en cuanto tiene su cuestionario contestado.
+   La cuenta de ejemplo ("Ver demo") sigue abierta: revisarMuro la excluye. */
+const MURO_DURO=true;
 /* Las funciones de servidor viven junto a la app */
 const API=location.origin.indexOf("tunuevoplan.com")>=0?"https://app.tunuevoplan.com":"";
 
