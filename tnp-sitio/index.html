@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#E9EEF7">
 <link rel="icon" href="/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/base.css">
 <title>TNP · Tu Nuevo Plan</title>
 <meta name="description" content="Tu plan de alimentación armado por una nutrióloga, en tu celular. Elige tu programa, contesta el cuestionario y empieza el mismo día.">
@@ -92,7 +92,7 @@
     <div class="pasoVisor rev r1">
       <img src="/img/pv-personalizado.jpg" alt="Tu cuestionario" class="on" data-vis="0" loading="lazy">
       <img src="/img/foto-menu.jpg" alt="Un plato de tu menú" data-vis="1" loading="lazy">
-      <img src="/img/foto-habitos.jpg" alt="Tu avance en la app" data-vis="2" loading="lazy">
+      <img src="/img/plato-tacosPo.jpg" alt="Una comida de tu semana" data-vis="2" loading="lazy">
       <div class="pasoPie">
         <b data-pie="0">Cinco preguntas</b>
         <span data-pie-s="0">Sin llamadas, sin consultorio.</span>
@@ -181,9 +181,9 @@
       <img src="/img/foto-menu.jpg" alt="Un plato de tu menú del día" loading="lazy">
       <div class="tx"><h4>Tu menú del día</h4><p>Comida latina de verdad, con tus porciones ya medidas. Y la lista de súper de la semana.</p></div>
     </div>
-    <div class="bx foto b-mov rev r1">
-      <img src="/img/foto-habitos.jpg" alt="Tus hábitos del día" loading="lazy">
-      <div class="tx"><h4>Movimiento y hábitos</h4><p>Rutinas en casa o gimnasio, con video de cada ejercicio. Agua y suplementos en un toque.</p></div>
+    <div class="bx b-mov rev r1">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4.5a1.4 1.4 0 1 0 0-.1z"/><path d="M8.5 21l2-5.2-2.6-2.3.9-4.6 3.4-1.4 2.6 2.6 3 .9"/><path d="M11.8 15.8L15 19l1 2"/><path d="M8.8 8.9L5.6 10"/></svg></span>
+      <h4>Movimiento y hábitos</h4><p>Rutinas en casa o gimnasio, con video de cada ejercicio. Agua y suplementos en un toque.</p>
     </div>
     <div class="bx b-peso rev r2">
       <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg></span>
@@ -382,7 +382,7 @@ if(mp){
   var tarjeta=function(p){
     return '<a href="/tienda.html" style="flex:none;width:188px;margin-inline:9px;text-decoration:none;color:inherit">'+
       '<span class="pimg" style="display:block"><img src="/img/'+p[0]+'" alt="'+p[1]+'" loading="lazy"></span>'+
-      '<span style="display:block;font-family:Manrope,sans-serif;font-weight:800;font-size:13.5px;margin-top:10px">'+p[1]+'</span></a>';
+      '<span style="display:block;font-family:var(--serif);font-weight:800;font-size:13.5px;margin-top:10px">'+p[1]+'</span></a>';
   };
   var fila=prods.map(tarjeta).join("");
   mp.innerHTML=fila+fila;
@@ -393,7 +393,7 @@ var pasos=[].slice.call(document.querySelectorAll(".paso"));
 var vistas=[].slice.call(document.querySelectorAll("[data-vis]"));
 var PIE=[["Cinco preguntas","Sin llamadas, sin consultorio."],
          ["Tu menú, ya medido","Cinco comidas y lista de súper."],
-         ["Tu avance, desde hoy","Marcas y ves cómo vas."]];
+         ["Tu plan, desde hoy","Abres la app y ahí está."]];
 var act=0, reloj=null;
 function mostrar(i){
   act=i;

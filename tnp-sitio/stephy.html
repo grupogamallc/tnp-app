@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/base.css">
 <title>Preguntas para Stephy · TNP</title>
 </head>
@@ -17,41 +17,41 @@
 </div></div>
 <style>
 .qwrap{max-width:720px;margin-inline:auto;padding-inline:20px;padding-block:36px 90px}
-.qhead .kick{font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;letter-spacing:.17em;text-transform:uppercase;color:var(--coral)}
+.qhead .kick{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.17em;text-transform:uppercase;color:var(--coral-tx)}
 .qhead h1{font-size:clamp(27px,6.4vw,38px);font-weight:800;line-height:1.08;margin:10px 0 0}
 .qhead p{font-size:16px;color:var(--gris);margin-top:14px;max-width:52ch}
 .qhead .nom{margin-top:22px}
 .inp2{display:block;width:100%;background:var(--sup);border:1.5px solid var(--borde);border-radius:14px;
-  padding:14px 16px;font-family:'DM Sans',sans-serif;font-size:15.5px;color:var(--tinta);outline:none}
+  padding:14px 16px;font-family:var(--sans);font-size:15.5px;color:var(--tinta);outline:none}
 .inp2:focus{border-color:var(--coral)}
-label.lb{display:block;font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;letter-spacing:.1em;
+label.lb{display:block;font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.1em;
   text-transform:uppercase;color:var(--gris);margin-bottom:7px}
 
 .bl{margin-top:40px}
-.bl .bt{font-family:'Manrope',sans-serif;font-weight:800;font-size:21px;letter-spacing:-.02em;
+.bl .bt{font-family:var(--sans);font-weight:800;font-size:21px;letter-spacing:-.02em;
   padding-bottom:9px;border-bottom:2px solid var(--tinta)}
 .bl .bd{font-size:14.5px;color:var(--gris);margin-top:10px}
 
 .q{background:var(--sup);border:1px solid var(--borde);border-radius:18px;padding:20px;margin-top:14px;
   box-shadow:0 12px 26px -24px rgba(var(--sombra),.5)}
 .q.ok{border-color:color-mix(in srgb,var(--navy) 34%,var(--borde))}
-.q .n{font-family:'Manrope',sans-serif;font-weight:800;font-size:11px;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--coral)}
+.q .n{font-family:var(--sans);font-weight:800;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--coral-tx)}
 .q .qt{font-size:16.5px;line-height:1.45;margin-top:7px;color:var(--tinta)}
 .q .qt b{font-weight:600}
 .ops{margin-top:14px;display:flex;flex-direction:column;gap:8px}
 .op{display:flex;gap:12px;align-items:flex-start;background:var(--papel);border:1.5px solid transparent;
   border-radius:13px;padding:13px 15px;cursor:pointer;font-size:15px;line-height:1.45}
 .op:hover{border-color:var(--gris-l)}
-.op.on{border-color:var(--coral);background:color-mix(in srgb,var(--coral) 7%,#fff)}
+.op.on{border-color:var(--coral);background:color-mix(in srgb,var(--coral) 7%,var(--crema))}
 .op input{margin:0;flex:none;width:19px;height:19px;accent-color:var(--coral);margin-top:2px}
 .op span{flex:1}
 .op span b{font-weight:700}
 .nota{margin-top:11px}
 .nota textarea{width:100%;background:var(--papel);border:1.5px solid var(--borde);border-radius:12px;
-  padding:11px 13px;font-family:'DM Sans',sans-serif;font-size:14.5px;color:var(--tinta);outline:none;
+  padding:11px 13px;font-family:var(--sans);font-size:14.5px;color:var(--tinta);outline:none;
   resize:vertical;min-height:44px}
-.nota textarea:focus{border-color:var(--coral);background:#fff}
+.nota textarea:focus{border-color:var(--coral);background:var(--crema)}
 .nota .h{font-size:12.5px;color:var(--gris);margin-bottom:5px}
 
 .barra{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(255,255,255,.95);
@@ -62,8 +62,8 @@ label.lb{display:block;font-family:'Manrope',sans-serif;font-weight:700;font-siz
 .barra .pgt{font-size:12.5px;font-weight:600;color:var(--gris)}
 .barra .pgb{height:6px;border-radius:99px;background:var(--borde);margin-top:6px;overflow:hidden}
 .barra .pgb i{display:block;height:100%;background:var(--coral);border-radius:99px;width:0;transition:width .3s}
-.barra button{flex:none;background:var(--coral);color:#fff;border:none;border-radius:999px;padding:14px 24px;
-  font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;cursor:pointer}
+.barra button{flex:none;background:var(--coral);color:var(--tinta);border:none;border-radius:999px;padding:14px 24px;
+  font-family:var(--sans);font-weight:700;font-size:15px;cursor:pointer}
 .barra button:disabled{opacity:.45;cursor:default}
 
 .fin{background:var(--sup);border:1px solid var(--borde);border-radius:20px;padding:34px 26px;text-align:center;margin-top:40px}
