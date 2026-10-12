@@ -1221,9 +1221,53 @@ const CM=(ft,inc)=>Math.round(((+ft||0)*12+(+inc||0))*2.54);
 const pisoPeso=cm=>{const h=(+cm||0)/100;return h?Math.round(20*h*h*10)/10:0};
 const SALUD0=()=>({emb:false,lact:false,diab:"no",marca:[],alerg:[]});
 let ob={step:0,q:{prog:null,sexo:"F",edad:34,peso:72,est:162,act:"media",cond:[],dislikes:[],salud:SALUD0()}};
-const OB_STEPS=6;
 const TERMS_VER="2026-09-29";
-function obDots(){$("onbDots").innerHTML=Array.from({length:OB_STEPS},(_,i)=>`<i class="${i===ob.step?'on':''}"></i>`).join("")}
+/* El paso del correo se salta cuando ya lo tenemos (sesion abierta, o ya lo
+   dejo en un cuestionario anterior), asi que los puntos y el avance se arman
+   con la lista de pasos que de veras se van a ver, no con un numero fijo.
+   La lista se calcula una vez por cuestionario y se guarda en ob.pasos: si se
+   recalculara en cada render, al llenar el correo se encogeria a media corrida. */
+const OB_CORREO=5, OB_FIN=6;
+function correoConocido(){
+ if(typeof sbUser!=="undefined"&&sbUser&&sbUser.email)return sbUser.email;
+ if(S&&S.lead&&S.lead.correo)return S.lead.correo;
+ return null;
+}
+function obActivos(){
+ if(!ob.pasos)ob.pasos=correoConocido()?[0,1,2,3,4,OB_FIN]:[0,1,2,3,4,OB_CORREO,OB_FIN];
+ return ob.pasos;
+}
+function obSiguiente(){const a=obActivos(),i=a.indexOf(ob.step);ob.step=a[Math.min(i+1,a.length-1)];obRender()}
+function obDots(){const a=obActivos(),i=a.indexOf(ob.step);
+ $("onbDots").innerHTML=a.map((_,j)=>`<i class="${j===i?'on':''}"></i>`).join("")}
+
+/* Guarda a quien termino el cuestionario, aunque todavia no compre: antes esto
+   no se capturaba y quien no compraba se perdia para siempre.
+   No se espera la respuesta a proposito — el cuestionario no se traba por la
+   red. Si falla, queda marcado como pendiente y se reintenta al abrir el app. */
+async function guardarProspecto(lead,q){
+ if(!lead||!lead.correo||!q)return;
+ let g; try{g=calcGoals(q)}catch(e){g={}}
+ const pm=(typeof PROG_META!=="undefined"&&PROG_META[q.prog])||null;
+ lead.pendiente=true;
+ try{
+  const r=await fetch(API+"/api/prospecto",{method:"POST",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({correo:lead.correo,nombre:lead.nombre||null,
+    programa:(pm&&pm.label)||q.prog||null,plan:planDeProg(q.prog),
+    kcal:g.kcal||null,prot:g.prot||null,
+    quiz:{prog:q.prog,sexo:q.sexo,edad:q.edad,act:q.act,
+          cond:q.cond||[],dislikes:q.dislikes||[],salud:q.salud||null},
+    origen:"cuestionario"})});
+  if(!r.ok)throw new Error("http "+r.status);
+  lead.pendiente=false;
+ }catch(e){ /* se queda pendiente: lo reintenta reintentarProspecto() */ }
+ if(S&&S.lead)try{store.set("tnp",S)}catch(e){}
+}
+function reintentarProspecto(){
+ if(!S||!S.lead||!S.lead.pendiente||!S.quiz)return;
+ guardarProspecto(S.lead,S.quiz);
+}
 const obS=t=>`<div class="obS"><img src="stephy-hola.jpg" alt="Stephy Kantú"><div class="t"><b>Stephy Kantú</b><span>${t}</span></div></div>`;
 function obAlto(titulo,cuerpo,cta){
  $("onbDots").innerHTML="";
@@ -1273,6 +1317,13 @@ function obRender(){
   <div class="tags">${[["mariscos","Mariscos/pescado"],["lacteos","Lácteos"],["picante","Picante"]].map(c=>
    `<span class="fchip ${q.dislikes.includes(c[0])?'on':''}" data-oa="dis" data-p="${c[0]}">${c[1]}</span>`).join("")}</div>
   <button class="onbBtn" data-oa="next">Calcular mi plan</button>`;
+ }else if(ob.step===OB_CORREO){
+  const l=ob.lead||{};
+  h=obS("Déjame tu correo y te mando tus números — así no se te pierden si cierras esto.")+`<div class="k">Paso 6 · Tu correo</div><h1>¿A dónde te mandamos tu plan?</h1><div class="d">Te mandamos tus números y tu programa por escrito, para que los tengas aunque cambies de teléfono.</div>
+  <div class="inRow"><div class="inp"><label>Tu nombre<span class="uNote">opcional</span></label><input id="iNom" type="text" autocomplete="given-name" placeholder="Cómo te llamas" value="${esc(l.nombre||"")}"></div></div>
+  <div class="inRow"><div class="inp"><label>Tu correo</label><input id="iMail" type="email" inputmode="email" autocomplete="email" placeholder="tu@correo.com" value="${esc(l.correo||"")}"></div></div>
+  <div class="d" style="margin:8px 0 0;font-size:11.5px">Es para mandarte tu plan y avisarte cuando abra tu programa. No lo compartimos con nadie y te puedes dar de baja cuando quieras. Al continuar aceptas el <a href="https://tunuevoplan.com/privacidad.html" target="_blank" rel="noopener">Aviso de Privacidad</a>.</div>
+  <button class="onbBtn" data-oa="next">Ver mis números</button>`;
  }else{
   const g=calcGoals(q);
   h=obS("Estos números son tu punto de partida, no una regla. Se ajustan contigo.")+`<div class="k">Tu plan está listo</div><h1>Estos son tus números.</h1><div class="d">Programa ${PROG_META[q.prog].label} · el generador armó tu semana con comida real, ajustada a lo que nos contaste.</div>
@@ -1293,7 +1344,10 @@ function startApp(fromQuiz){
   if(q.cond.includes("glp1")&&q.prog!=="GLP1")toast("Te pusimos en GLP1 Pro por tu tratamiento");
   if(q.cond.includes("glp1"))q.prog="GLP1";
   q.dislikes=Array.from(new Set((q.dislikes||[]).concat((q.salud&&q.salud.alerg)||[])));
-  S={name:"Tú",quiz:q,goals:calcGoals(q),day:1,streak:0,inicio:hoyISO(),done:[false,false,false,false],swaps:{},acepto:ob.acepto||{v:TERMS_VER,t:new Date().toISOString()}};
+  S={name:(ob.lead&&ob.lead.nombre)||"Tú",quiz:q,goals:calcGoals(q),day:1,streak:0,inicio:hoyISO(),done:[false,false,false,false],swaps:{},acepto:ob.acepto||{v:TERMS_VER,t:new Date().toISOString()}};
+  /* por referencia a proposito: si el guardado termina despues de esto, el
+     pendiente se apaga solo en el mismo objeto */
+  if(ob.lead)S.lead=ob.lead; else if(correoConocido())S.lead={correo:correoConocido()};
  }
  if(!S.week)genWeek();
  ensureExtras();
@@ -1892,7 +1946,14 @@ document.body.addEventListener("click",e=>{
     if(imc<18.5){obAlto("Queremos revisar tus números contigo antes de seguir.",
       "Con el peso y la estatura que pusiste, tu cuerpo ya está por debajo del rango saludable. Un plan de pérdida de peso no es lo que te conviene ahora. Escríbenos y lo vemos con Stephy.");return}
    }
-   ob.step++;obRender();return}
+   if(ob.step===OB_CORREO){
+    const m=((($("iMail")||{}).value)||"").trim().toLowerCase();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m)){toast("Escribe un correo válido");return}
+    const nm=((($("iNom")||{}).value)||"").trim().slice(0,80);
+    ob.lead={correo:m,nombre:nm||null};
+    guardarProspecto(ob.lead,ob.q);
+   }
+   obSiguiente();return}
   if(t==="finish"){
    const ck=$("iAck");
    if(!ck||!ck.checked){ob.ack=false;toast("Marca la casilla para continuar");return}
@@ -3016,6 +3077,7 @@ else{
  S=store.get("tnp",null);
 }
 cuentaIniciar();
+reintentarProspecto();
 </script>
 </body>
 </html>
