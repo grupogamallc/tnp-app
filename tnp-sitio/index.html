@@ -3,192 +3,280 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#F2F4F8">
+<meta name="theme-color" content="#E9EEF7">
 <link rel="icon" href="/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/base.css">
 <title>TNP · Tu Nuevo Plan</title>
-<meta name="description" content="El método de la clínica Skinny Sekret, ahora en tu celular. Elige tu programa y empieza el mismo día.">
-<meta property="og:title" content="TNP · Tu Nuevo Plan"><meta property="og:description" content="El método de la clínica Skinny Sekret, ahora en tu celular. Elige tu programa y empieza el mismo día.">
-<meta property="og:type" content="website"><meta name="twitter:card" content="summary">
+<meta name="description" content="Tu plan de alimentación armado por una nutrióloga, en tu celular. Elige tu programa, contesta el cuestionario y empieza el mismo día.">
+<meta property="og:title" content="TNP · Tu Nuevo Plan"><meta property="og:description" content="Tu plan de alimentación armado por una nutrióloga, en tu celular.">
+<meta property="og:image" content="/img/foto-menu.jpg">
+<meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
-<div class="bar"><div class="wrap">
-  <a class="mark" href="/"><img src="/logo.svg" width="32" height="32" alt=""><b>Tu Nuevo Plan</b></a>
-  <a class="barCta" href="https://app.tunuevoplan.com/">Empezar</a>
+<div class="bar"><div class="wrap ancho">
+  <a class="mark" href="/"><img src="/logo.svg" width="34" height="34" alt=""><b>Tu Nuevo Plan</b></a>
+  <nav class="navl">
+    <a href="#programas">Programas</a><a href="#incluye">La app</a>
+    <a href="/tienda.html">Tienda</a><a href="#clinica">Quién está detrás</a>
+  </nav>
+  <a class="barCta" href="https://app.tunuevoplan.com/">Cuál es mi plan</a>
 </div></div>
-<style>
-.hero{padding-block:52px 44px;text-align:center}
-.hero .kick{font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--coral)}
-.hero h1{font-size:clamp(34px,8vw,58px);font-weight:800;line-height:1.04;margin:14px auto 0;max-width:15ch;text-wrap:balance}
-.hero h1 em{font-style:normal;color:var(--navy);position:relative;white-space:nowrap}
-.hero h1 em::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:4px;border-radius:3px;background:var(--coral)}
-.hero p{font-size:17.5px;color:var(--gris);margin:26px auto 0;max-width:44ch}
-.cta{display:inline-flex;align-items:center;gap:9px;background:var(--coral);color:#fff;text-decoration:none;
-  font-family:'Manrope',sans-serif;font-weight:700;font-size:16px;padding:16px 30px;border-radius:999px;margin-top:28px;
-  box-shadow:0 16px 30px -10px rgba(233,75,60,.6)}
-.cta svg{width:17px;height:17px}
-.hero .fine2{font-size:13px;color:var(--gris);margin-top:12px}
-.cred{display:inline-flex;align-items:center;gap:10px;background:var(--sup);border:1px solid var(--borde);
-  border-radius:999px;padding:9px 18px;margin-top:30px;font-size:13.5px;color:var(--gris)}
-.cred b{font-family:'Manrope',sans-serif;font-weight:700;color:var(--tinta);font-size:14px}
 
-.pasos{background:var(--tinta);color:#fff;padding-block:46px}
-.pasos h2{font-size:clamp(24px,5.4vw,32px);font-weight:800;color:#fff;text-align:center;text-wrap:balance}
-.pasos h2 em{font-style:normal;color:var(--coral)}
-.pg{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:26px}
-.pz{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:18px}
-.pz i{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:11px;
-  background:rgba(233,75,60,.16);border:1px solid rgba(233,75,60,.45);color:var(--coral);
-  font-family:'Manrope',sans-serif;font-weight:800;font-size:16px;font-style:normal}
-.pz b{display:block;font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-top:12px}
-.pz span{display:block;font-size:13.5px;color:rgba(242,244,248,.68);margin-top:4px;line-height:1.45}
+<!-- ======================= PORTADA ======================= -->
+<header class="hero">
+  <div class="wrap ancho heroIn">
+    <div class="heroTx">
+      <p class="kick anim" style="--d:40ms">Día uno</p>
+      <h1 class="d1 anim" style="--d:120ms">Comida real.<br>Un plan claro.<br><em>Tu nueva versión.</em></h1>
+      <p class="lede anim" style="--d:280ms">Contesta un cuestionario de dos minutos y una nutrióloga con cédula te arma el plan: tus porciones, tus menús y tu lista de súper. Se recalcula cada mes.</p>
+      <div class="heroActs anim" style="--d:400ms">
+        <a class="btn" href="#programas">Ver los programas<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn fantasma" href="#incluye">Qué incluye</a>
+      </div>
+      <p class="fina anim" style="--d:480ms">Contestar es gratis y sin tarjeta.</p>
+    </div>
 
-.sec{padding-block:52px}
-.sec .kick{font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--coral);text-align:center}
-.sec h2{font-size:clamp(25px,5.6vw,34px);font-weight:800;text-align:center;margin-top:9px;text-wrap:balance}
-.sec .sub{text-align:center;color:var(--gris);font-size:15.5px;margin:9px auto 0;max-width:46ch}
-
-.progs{display:grid;grid-template-columns:repeat(auto-fit,minmax(288px,1fr));gap:13px;margin-top:30px}
-.pr{background:var(--sup);border:1px solid var(--borde);border-radius:20px;padding:20px;display:flex;flex-direction:column;
-  box-shadow:0 14px 30px -26px rgba(var(--sombra),.5)}
-.pr .lbl{font-family:'Manrope',sans-serif;font-weight:800;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--coral)}
-.pr h3{font-size:20px;font-weight:800;margin-top:7px}
-.pr .tg{font-size:13.5px;color:var(--gris);margin-top:5px;line-height:1.45;flex:1}
-.pr .pie{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--borde)}
-.pr .pz2{font-family:'Manrope',sans-serif;font-weight:800;font-size:21px;color:var(--navy)}
-.pr .pz2 small{font-size:11.5px;font-weight:500;color:var(--gris);margin-left:3px}
-.pr.top{background:var(--tinta);border-color:var(--tinta)}
-.pr.top h3,.pr.top .pz2{color:#fff}
-.pr.top .tg{color:rgba(242,244,248,.72)}
-.pr.top .pie{border-top-color:rgba(255,255,255,.16)}
-.pr.top .pz2 small{color:rgba(242,244,248,.6)}
-.tag{display:inline-block;font-family:'Manrope',sans-serif;font-weight:800;font-size:8.5px;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--coral);background:rgba(233,75,60,.1);border:1px solid rgba(233,75,60,.28);
-  border-radius:999px;padding:3px 8px;margin-left:7px;vertical-align:2px}
-
-.esc{background:var(--sup);border:1px solid var(--borde);border-radius:20px;padding:6px 22px;margin-top:22px}
-.esc div{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding-block:14px;border-top:1px solid var(--borde);font-size:15px}
-.esc div:first-child{border-top:0}
-.esc b{font-family:'Manrope',sans-serif;font-weight:700}
-.esc span{font-family:'Manrope',sans-serif;font-weight:800;color:var(--navy);white-space:nowrap}
-
-#fundadores{background:linear-gradient(160deg,#1E3A8A 0%,var(--tinta) 55%,#0E1524 100%);color:#fff;scroll-margin-top:70px}
-#fundadores h2{color:#fff}
-#fundadores .sub{color:rgba(242,244,248,.72)}
-.form{display:flex;gap:9px;max-width:460px;margin:26px auto 0;flex-wrap:wrap}
-.form input{flex:1;min-width:200px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.26);
-  border-radius:999px;padding:15px 20px;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;outline:none}
-.form input::placeholder{color:rgba(242,244,248,.5)}
-.form input:focus{border-color:var(--coral);background:rgba(255,255,255,.14)}
-.form button{flex:none;background:var(--coral);color:#fff;border:none;border-radius:999px;padding:15px 26px;
-  font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;cursor:pointer}
-.form button:disabled{opacity:.6;cursor:default}
-.fmsg{max-width:460px;margin:14px auto 0;font-size:14.5px;text-align:center;min-height:22px;color:rgba(242,244,248,.82)}
-.fmsg.ok{color:#A8E0B4;font-weight:600}
-.fmsg.err{color:#FFB3A6}
-#fundadores .fine2{text-align:center;font-size:12.5px;color:rgba(242,244,248,.55);margin-top:16px}
-#fundadores .fine2 a{color:rgba(242,244,248,.8)}
-
-.clinica{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
-.clinica div{flex:1;min-width:150px;background:var(--sup);border:1px solid var(--borde);border-radius:16px;padding:18px;text-align:center}
-.clinica b{display:block;font-family:'Manrope',sans-serif;font-size:24px;font-weight:800;color:var(--navy)}
-.clinica span{display:block;font-size:12.5px;color:var(--gris);margin-top:4px}
-.nota{font-size:13px;color:var(--gris);text-align:center;margin-top:26px;line-height:1.6;max-width:62ch;margin-inline:auto}
-
-.cmp{font-family:'Manrope',sans-serif;font-weight:700;font-size:12.5px;letter-spacing:-.01em;
- background:var(--coral);color:#fff;border:none;border-radius:999px;padding:9px 18px;cursor:pointer;
- white-space:nowrap;transition:transform .12s ease,filter .12s ease}
-.cmp:hover{filter:brightness(1.06)} .cmp:active{transform:scale(.97)}
-.cmp[disabled]{opacity:.55;cursor:default}
-.cmp.chico{margin-top:9px;padding:7px 14px;font-size:11.5px}
-.pr.top .cmp{background:#fff;color:var(--navy)}
-#cmpBg{position:fixed;inset:0;background:rgba(17,24,39,.55);backdrop-filter:blur(3px);
- display:none;align-items:center;justify-content:center;padding:20px;z-index:200}
-#cmpBg.on{display:flex}
-.cmpCaja{background:#fff;border-radius:18px;padding:26px 24px;width:100%;max-width:400px;
- box-shadow:0 30px 60px -20px rgba(17,24,39,.4)}
-.cmpCaja h4{font-family:'Manrope',sans-serif;font-size:21px;font-weight:800;letter-spacing:-.02em}
-.cmpCaja .sub{font-size:13.5px;color:var(--gris);margin-top:6px;line-height:1.5}
-.cmpCaja label{display:block;font-family:'Manrope',sans-serif;font-size:10px;font-weight:700;
- letter-spacing:.09em;text-transform:uppercase;color:var(--gris);margin:16px 0 5px}
-.cmpCaja input{width:100%;border:1.5px solid var(--borde);border-radius:12px;padding:12px 14px;
- font-family:inherit;font-size:15px;color:var(--tinta);outline:none;background:#fff}
-.cmpCaja input:focus{border-color:var(--navy)}
-.cmpCaja .ir{width:100%;margin-top:18px;background:var(--coral);color:#fff;border:none;
- border-radius:999px;padding:15px;font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;cursor:pointer}
-.cmpCaja .ir[disabled]{opacity:.6;cursor:default}
-.cmpCaja .cancel{display:block;width:100%;text-align:center;margin-top:12px;background:none;border:none;
- font-size:13px;color:var(--gris);cursor:pointer;font-family:inherit}
-.cmpCaja .err{background:#FBE5E2;color:var(--coral);border-radius:10px;padding:10px 12px;
- font-size:12.5px;font-weight:600;margin-top:14px;line-height:1.45}
-.cmpCaja .fina{font-size:11.5px;color:var(--gris);margin-top:14px;line-height:1.5}
-</style>
-
-<div class="wrap hero">
-  <p class="kick">Día uno</p>
-  <h1>Comida real. Un plan claro. <em>Tu nueva versión.</em></h1>
-  <p>El método de la clínica Skinny Sekret, ahora en tu celular. Tu plan se arma con lo que nos cuentas, y se renueva cada mes.</p>
-  <a class="cta" href="#programas">Ver los programas<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-  <p class="fine2">Elige el tuyo y contesta el cuestionario · sin tarjeta</p>
-  <div class="cred"><b>Stephanie Kantú</b> · Nutrióloga</div>
-</div>
-
-<div class="pasos"><div class="wrap">
-  <h2>Tu Nuevo Plan es tan fácil como <em>1, 2, 3</em>.</h2>
-  <div class="pg">
-    <div class="pz"><i>1</i><b>Elige tu programa</b><span>El que va con tu meta. Abajo están los tres.</span></div>
-    <div class="pz"><i>2</i><b>Cuéntanos de ti</b><span>Un cuestionario corto: tus datos, tu salud, lo que te gusta comer.</span></div>
-    <div class="pz"><i>3</i><b>Empiezas el mismo día</b><span>Tu menú queda armado, con porciones y lista de súper.</span></div>
+    <div class="heroArt anim" style="--d:200ms">
+      <div class="halo">
+        <video id="vid" poster="/img/stephy-hola.jpg" muted loop playsinline autoplay preload="metadata"
+               disablepictureinpicture aria-label="Stephy Kantú te da la bienvenida">
+          <source src="/img/stephy-hola.mp4" type="video/mp4">
+        </video>
+        <button class="snd" id="snd" type="button" aria-label="Activar el sonido">
+          <svg class="ic1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M23 9l-6 6M17 9l6 6"/></svg>
+          <svg class="ic2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg>
+        </button>
+      </div>
+      <div class="flo f1"><b data-cuenta="70000">+70,000</b><span>clientes</span></div>
+      <div class="flo f2"><b data-cuenta="8">8</b><span>años</span></div>
+      <div class="flo f3">
+        <img src="/img/stephy.jpg" alt="" width="30" height="30" loading="lazy">
+        <span class="tx"><b>Stephanie Kantú</b><span>Nutrióloga certificada</span></span>
+      </div>
+    </div>
   </div>
-</div></div>
+  <span class="scrollHint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span>
+</header>
 
-<div class="sec" id="programas"><div class="wrap">
-  <p class="kick">Paso 1</p>
-  <h2>¿Cuál es el tuyo?</h2>
-  <p class="sub">Cada programa cambia el menú, los números y los productos que lo acompañan.</p>
-  <div class="progs">
-    <div class="pr"><span class="lbl">Si ya lo intentaste antes</span><h3>Skinny Plan<span class="tag">El más elegido</span></h3><p class="tg">Reseteo metabólico y pérdida de peso. Comida real, estructura clara.</p><div class="pie"><span class="pz2">$39.99<small>/mes</small></span><button class="cmp" data-prod="plan_peso" data-nom="Skinny Plan">Empezar</button></div></div>
-    <div class="pr"><span class="lbl">Si llevas tratamiento GLP-1</span><h3>GLP1 Pro</h3><p class="tg">Acompañamiento mientras dura tu tratamiento, para que lo que bajes sea grasa y no músculo.</p><div class="pie"><span class="pz2">$59.99<small>/mes</small></span><button class="cmp" data-prod="plan_glp1" data-nom="GLP1 Pro">Empezar</button></div></div>
-    <div class="pr" id="personalizado"><span class="lbl">Si tu caso pide algo propio</span><h3>Personalizado</h3><p class="tg">Menopausia, inflamación, glucosa inestable, recomposición: el plan se arma alrededor de tu caso, tus gustos y tus condiciones.</p><div class="pie"><span class="pz2">$79.99<small>/mes</small></span><button class="cmp" data-prod="plan_personalizado" data-nom="Personalizado">Empezar</button></div></div>
+<!-- marquesina -->
+<div class="marq" aria-hidden="true"><div class="marq__in" id="marq"></div></div>
+
+<!-- ======================= PASOS INTERACTIVOS ======================= -->
+<section class="sec oscuro" style="background:var(--noche)"><div class="wrap ancho">
+  <div class="pasos">
+    <div>
+     <div class="cab rev" style="margin-bottom:30px">
+       <p class="kick">Cómo funciona</p>
+       <h2 class="d2">Tres pasos.<br>Dos minutos.<br>Y ya tienes plan.</h2>
+     </div>
+     <div class="pasoLista rev" role="tablist" aria-label="Los tres pasos">
+      <button class="paso" type="button" role="tab" data-paso="0" aria-selected="true">
+        <span class="n">1</span>
+        <span><b>Cuéntanos de ti</b><span>Tu peso, tu meta, tu salud y lo que te gusta comer. Nada de llamadas ni de agendar cita.</span></span>
+        <span class="barra"></span>
+      </button>
+      <button class="paso" type="button" role="tab" data-paso="1" aria-selected="false">
+        <span class="n">2</span>
+        <span><b>Te armamos el plan</b><span>Tus calorías, tu proteína y tus cinco comidas del día, con porciones medidas y lista de súper.</span></span>
+        <span class="barra"></span>
+      </button>
+      <button class="paso" type="button" role="tab" data-paso="2" aria-selected="false">
+        <span class="n">3</span>
+        <span><b>Empiezas hoy mismo</b><span>Abres la app y ahí está tu menú. Marcas lo que cumpliste y ves tu avance desde el día uno.</span></span>
+        <span class="barra"></span>
+      </button>
+     </div>
+    </div>
+    <div class="pasoVisor rev r1">
+      <img src="/img/pv-personalizado.jpg" alt="Tu cuestionario" class="on" data-vis="0" loading="lazy">
+      <img src="/img/foto-menu.jpg" alt="Un plato de tu menú" data-vis="1" loading="lazy">
+      <img src="/img/foto-habitos.jpg" alt="Tu avance en la app" data-vis="2" loading="lazy">
+      <div class="pasoPie">
+        <b data-pie="0">Cinco preguntas</b>
+        <span data-pie-s="0">Sin llamadas, sin consultorio.</span>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ======================= PROGRAMAS ======================= -->
+<section class="sec" id="programas"><div class="wrap ancho">
+  <div class="cab centro rev">
+    <p class="kick">Elige el tuyo</p>
+    <h2 class="d2">No es el mismo plan<br>con otro nombre.</h2>
+    <p class="lede" style="text-align:center">Cada programa cambia tus números, tus menús y lo que la nutrióloga revisa de tu caso.</p>
   </div>
 
-  <p class="nota">Cada programa es un ciclo de cuatro semanas que se renueva cada mes, con tus números y tus menús recalculados. Todas son suscripciones y puedes cancelar cuando quieras desde la app.</p>
-</div></div>
+  <div class="planes">
+    <article class="plan rev">
+      <div class="foto"><img src="/img/pv-peso.jpg" alt="" loading="lazy"></div>
+      <div class="cuerpo">
+        <p class="et">Si ya lo intentaste antes</p>
+        <h3>Skinny Plan</h3>
+        <p class="tg">Reseteo metabólico y pérdida de peso, con comida latina de verdad.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Tus cinco comidas con porciones medidas</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Lista de súper de la semana</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Menús nuevos cada mes</li>
+        </ul>
+        <div class="precio"><b>$39.99</b><small>/mes</small></div>
+        <p class="aldia">$1.33 al día</p>
+        <button class="btn fantasma" data-prod="plan_peso" data-nom="Skinny Plan">Empezar</button>
+      </div>
+    </article>
 
-<div class="sec" style="background:var(--sup);border-block:1px solid var(--borde)"><div class="wrap">
-  <p class="kick">Esto no empezó en internet</p>
-  <h2>Atrás de la app hay una clínica.</h2>
-  <p class="sub">Skinny Sekret, la clínica que fundó Stephy Kantú en Dallas. TNP es ese mismo método, ahora en tu celular.</p>
-  <div class="clinica">
-    <div><b>Dallas</b><span>clínica física</span></div>
-    <div><b>8 años</b><span>atendiendo</span></div>
-    <div><b>+70,000</b><span>clientes atendidos</span></div>
+    <article class="plan top rev r2" id="personalizado">
+      <span class="cinta"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>El que más eligen</span>
+      <div class="foto"><img src="/img/pv-personalizado.jpg" alt="" loading="lazy"></div>
+      <div class="cuerpo">
+        <p class="et">Si tu caso pide algo propio</p>
+        <h3>Personalizado</h3>
+        <p class="tg">El único donde Stephy revisa tu caso antes de que el plan te llegue.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><b>Todo lo del Skinny Plan</b>, y encima:</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Una nutrióloga con cédula aprueba tu plan antes de entregártelo</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Menopausia, inflamación, glucosa inestable o recomposición</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Se arma alrededor de tus condiciones y tus alergias</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Se recalcula cada mes con lo que sí funcionó</li>
+        </ul>
+        <div class="precio"><b>$79.99</b><small>/mes</small></div>
+        <p class="aldia">$2.66 al día · menos que un café</p>
+        <button class="btn" data-prod="plan_personalizado" data-nom="Personalizado">Quiero el mío<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      </div>
+    </article>
+
+    <article class="plan rev r1">
+      <div class="foto"><img src="/img/pv-glp1.jpg" alt="" loading="lazy"></div>
+      <div class="cuerpo">
+        <p class="et">Si llevas tratamiento GLP-1</p>
+        <h3>GLP1 Pro</h3>
+        <p class="tg">Para que lo que bajes sea grasa y no músculo, mientras dura tu tratamiento.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Proteína alta para proteger tu músculo</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Porciones pensadas para poco apetito</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Acompaña a tu médico, no lo reemplaza</li>
+        </ul>
+        <div class="precio"><b>$59.99</b><small>/mes</small></div>
+        <p class="aldia">$2.00 al día</p>
+        <button class="btn fantasma" data-prod="plan_glp1" data-nom="GLP1 Pro">Empezar</button>
+      </div>
+    </article>
   </div>
-</div></div>
+  <p class="compara">Los tres son ciclos de cuatro semanas que se renuevan cada mes. Puedes cancelar cuando quieras desde la app y el cobro se detiene al siguiente mes.</p>
+</div></section>
 
-<div class="sec" id="empezar" style="background:linear-gradient(160deg,#1E3A8A 0%,var(--tinta) 55%,#0E1524 100%);color:#fff;scroll-margin-top:70px">
- <div class="wrap" style="text-align:center">
-  <p class="kick">Paso 2</p>
-  <h2 style="color:#fff">Cuéntanos de ti y te armamos el plan.</h2>
-  <p class="sub" style="color:rgba(242,244,248,.72)">Un cuestionario corto: tus datos, tu salud y lo que te gusta comer. Dos minutos.</p>
-  <a class="cta" href="https://app.tunuevoplan.com/" style="margin-top:26px">Empezar mi cuestionario<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-  <p style="font-size:12.5px;color:rgba(242,244,248,.55);margin-top:16px">Sin tarjeta para contestarlo.</p>
+<!-- ======================= LO QUE VIENE CONTIGO ======================= -->
+<section class="sec" id="incluye" style="background:var(--sup);border-block:1px solid var(--borde)">
+ <div class="wrap ancho">
+  <div class="cab rev">
+    <p class="kick">La app</p>
+    <h2 class="d2">Tu plan vive aquí,<br>no en un PDF.</h2>
+    <p class="lede">Se instala en el celular, funciona sin señal y cada mañana ya sabe qué te toca comer.</p>
+  </div>
+
+  <div class="bento">
+    <div class="bx foto b-menu rev">
+      <img src="/img/foto-menu.jpg" alt="Un plato de tu menú del día" loading="lazy">
+      <div class="tx"><h4>Tu menú del día</h4><p>Comida latina de verdad, con tus porciones ya medidas. Y la lista de súper de la semana.</p></div>
+    </div>
+    <div class="bx foto b-mov rev r1">
+      <img src="/img/foto-habitos.jpg" alt="Tus hábitos del día" loading="lazy">
+      <div class="tx"><h4>Movimiento y hábitos</h4><p>Rutinas en casa o gimnasio, con video de cada ejercicio. Agua y suplementos en un toque.</p></div>
+    </div>
+    <div class="bx b-peso rev r2">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg></span>
+      <h4>Tu peso, en gráfica</h4><p>Desde el día uno, para ver la tendencia y no el mal día.</p>
+    </div>
+    <div class="bx b-renu rev r3">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg></span>
+      <h4>Se renueva cada mes</h4><p>Números recalculados y menús nuevos. No es el mismo plan repetido.</p>
+    </div>
+    <div class="bx foto b-rec rev">
+      <div class="mosaico">
+        <img src="/img/plato-avenaCr.jpg" alt="" loading="lazy">
+        <img src="/img/plato-tacosPo.jpg" alt="" loading="lazy">
+        <img src="/img/plato-ensPollo.jpg" alt="" loading="lazy">
+        <img src="/img/plato-sopaVer.jpg" alt="" loading="lazy">
+      </div>
+      <div class="tx"><h4>Recetario</h4><p>Platillos que sí se cocinan en casa, con sus números ya sacados.</p></div>
+    </div>
+    <div class="bx b-com rev r1">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="3.5"/><path d="M22 20v-2a4 4 0 0 0-3-3.87"/></svg></span>
+      <h4>Comunidad</h4><p>El muro de quienes van en lo mismo que tú, con sus logros y sus semanas. Nadie empieza solo.</p>
+    </div>
+  </div>
  </div>
+</section>
+
+<!-- ======================= TIENDA ======================= -->
+<section class="sec ajust"><div class="wrap ancho">
+  <div class="cab rev">
+    <p class="kick">La línea TNP</p>
+    <h2 class="d2">Hechos para acompañar tu plan.</h2>
+    <p class="lede">Siete fórmulas propias. Cada una hace una cosa y la hace bien.</p>
+  </div>
 </div>
-<footer><div class="wrap">
+<div class="marq" style="background:transparent;padding-block:28px;margin-top:10px" aria-hidden="true">
+  <div class="marq__in" id="marqProd" style="animation-duration:46s"></div>
+</div>
+<div class="wrap ancho" style="text-align:center">
+  <a class="btn fantasma rev" href="/tienda.html">Ver la línea completa<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+</div></section>
+
+<!-- ======================= QUIÉN ESTÁ DETRÁS ======================= -->
+<section class="clinica" id="clinica">
+  <span class="glow" style="width:520px;height:520px;top:-180px;right:-140px;background:radial-gradient(circle,rgba(233,75,60,.26),transparent 68%)"></span>
+  <span class="glow" style="width:460px;height:460px;bottom:-200px;left:-150px;background:radial-gradient(circle,rgba(30,58,138,.4),transparent 70%);animation-delay:3s"></span>
+  <div class="wrap ancho clinicaIn">
+    <div class="retrato rev">
+      <img src="/img/stephy.jpg" alt="Stephanie Kantú, nutrióloga" loading="lazy">
+      <div class="retratoPie"><b>Stephanie Kantú</b><span>Nutrióloga certificada · fundadora</span></div>
+    </div>
+    <div class="rev r1">
+      <p class="kick">Quién está detrás</p>
+      <h2 class="d2" style="margin-top:14px">Esto no lo armó<br>un algoritmo solo.</h2>
+      <p class="lede" style="margin-top:20px">Detrás de cada plan hay una nutrióloga con cédula y ocho años viendo pacientes en consulta, uno por uno. El software hace las cuentas. El criterio es de ella.</p>
+      <div class="cifras">
+        <div class="cifra"><b data-cuenta="70000">+70,000</b><span>personas atendidas</span></div>
+        <div class="cifra"><b data-cuenta="8">8</b><span>años de consulta</span></div>
+        <div class="cifra"><b>Dallas</b><span>Texas</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= CIERRE ======================= -->
+<!-- Salida para quien no se decidio arriba. A proposito ya NO repite las tres
+     tarjetas de opciones: la eleccion de plan se hace en #programas, y dos
+     decisiones grandes en la misma pagina parten la atencion.
+     El verbo tambien cambio: "te decimos cual es tu plan", no "te armamos el
+     plan". Con el muro cerrado, quien contesta todavia no se lleva el plan. -->
+<section class="cierre">
+  <span class="glow" style="width:620px;height:620px;top:-240px;left:50%;margin-left:-310px;background:radial-gradient(circle,rgba(233,75,60,.3),transparent 66%)"></span>
+  <div class="wrap ancho">
+    <h2 class="d2 rev" style="max-width:19ch;margin-inline:auto">¿No sabes cuál es <em>el tuyo</em>?</h2>
+    <p class="lede rev r1" style="color:rgba(255,255,255,.74);margin:20px auto 0;text-align:center">Contesta dos minutos y te decimos cuál es tu plan, con tus números: tus calorías, tu proteína y el programa que te toca.</p>
+    <div class="cierreAct rev r2">
+      <a class="btn claro" href="https://app.tunuevoplan.com/">Ver cuál es mi plan<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <span class="cierreNota">Gratis &middot; sin tarjeta &middot; 2 minutos</span>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap ancho">
   <div>
     <div class="lks">
-      <a href="/">Inicio</a><a href="/#programas">Programas</a>
+      <a href="/">Inicio</a><a href="/#programas">Programas</a><a href="/#incluye">La app</a>
+      <a href="/tienda.html">Tienda</a><a href="/stephy.html">Stephy</a>
       <a href="/terminos.html">Términos</a><a href="/privacidad.html">Privacidad</a><a href="/reembolsos.html">Reembolsos</a>
       <a href="mailto:info@tunuevoplan.com">info@tunuevoplan.com</a>
     </div>
-    <p class="fine" style="margin-top:14px">Tu Nuevo Plan es acompañamiento nutricional. No diagnostica, trata ni cura ninguna enfermedad, y no sustituye la atención de tu médico. Los resultados varían de persona a persona.</p>
+    <p class="fine" style="margin-top:16px">Tu Nuevo Plan es acompañamiento nutricional. No diagnostica, trata ni cura ninguna enfermedad, y no sustituye la atención de tu médico. Los resultados varían de persona a persona.</p>
   </div>
   <p class="fine">© 2026 Tu Nuevo Plan</p>
 </div></footer>
-
 
 <div id="cmpBg"><div class="cmpCaja">
   <h4 id="cmpTit">Empezar</h4>
@@ -241,6 +329,108 @@
    })
    .catch(function(){fallo("No se pudo conectar. Revisa tu internet e intenta otra vez.")});
  });
+})();
+</script>
+<script>
+(function(){
+var quieto = window.matchMedia && window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+/* ---- 1. secciones que entran al asomarse ---- */
+var revs=[].slice.call(document.querySelectorAll(".rev"));
+if(quieto || !("IntersectionObserver" in window)){ revs.forEach(function(el){el.classList.add("visto")}) }
+else{
+  var ob=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add("visto");ob.unobserve(e.target)}})},
+    {rootMargin:"0px 0px -7% 0px",threshold:.1});
+  revs.forEach(function(el){
+    if(el.getBoundingClientRect().top < window.innerHeight) el.classList.add("visto"); else ob.observe(el);
+  });
+}
+
+/* ---- 2. contadores. El numero de verdad ya esta en el HTML y SIEMPRE vuelve a el:
+       si la pestana esta atras, requestAnimationFrame se congela y sin este
+       seguro la cifra se quedaria en 0. ---- */
+document.querySelectorAll("[data-cuenta]").forEach(function(el){
+  var txt=el.textContent;
+  function fijar(){ el.textContent=txt }
+  if(quieto || document.visibilityState!=="visible") return;
+  var fin=parseInt(el.getAttribute("data-cuenta"),10), mas=txt.indexOf("+")===0;
+  var t0=null, dur=1200, listo=false;
+  function paso(t){
+    if(listo) return;
+    if(!t0) t0=t;
+    var p=Math.min((t-t0)/dur,1), e=1-Math.pow(1-p,3);
+    el.textContent=(mas?"+":"")+Math.round(fin*e).toLocaleString("es-MX");
+    if(p<1) requestAnimationFrame(paso); else { listo=true; fijar() }
+  }
+  setTimeout(function(){ requestAnimationFrame(paso) },700);
+  setTimeout(function(){ listo=true; fijar() },2800);
+});
+
+/* ---- 3. marquesinas ---- */
+var frases=["Nutrióloga con cédula","Comida latina de verdad","Porciones ya medidas",
+  "Lista de súper incluida","Se recalcula cada mes","Sin consultas ni citas",
+  "Funciona sin señal","Cancela cuando quieras"];
+var m=document.getElementById("marq");
+if(m){ var una=frases.map(function(f){return "<i>"+f+"</i>"}).join("");
+       m.innerHTML=una+una; }           /* dos copias: el bucle no se nota */
+var prods=[["prod-ignite.jpg","Ignite"],["prod-interrupt.jpg","Interrupt"],["prod-perfecto.jpg","Perfect O"],
+           ["prod-vitatotal.jpg","Vita Total"],["prod-skinnytea.jpg","Skinny T"],["prod-hydra.jpg","Hydra"],
+           ["prod-skinnykit.jpg","El Kit"]];
+var mp=document.getElementById("marqProd");
+if(mp){
+  var tarjeta=function(p){
+    return '<a href="/tienda.html" style="flex:none;width:188px;margin-inline:9px;text-decoration:none;color:inherit">'+
+      '<span class="pimg" style="display:block"><img src="/img/'+p[0]+'" alt="'+p[1]+'" loading="lazy"></span>'+
+      '<span style="display:block;font-family:Manrope,sans-serif;font-weight:800;font-size:13.5px;margin-top:10px">'+p[1]+'</span></a>';
+  };
+  var fila=prods.map(tarjeta).join("");
+  mp.innerHTML=fila+fila;
+}
+
+/* ---- 4. los tres pasos: avanzan solos y se pueden tocar ---- */
+var pasos=[].slice.call(document.querySelectorAll(".paso"));
+var vistas=[].slice.call(document.querySelectorAll("[data-vis]"));
+var PIE=[["Cinco preguntas","Sin llamadas, sin consultorio."],
+         ["Tu menú, ya medido","Cinco comidas y lista de súper."],
+         ["Tu avance, desde hoy","Marcas y ves cómo vas."]];
+var act=0, reloj=null;
+function mostrar(i){
+  act=i;
+  pasos.forEach(function(b,j){ b.setAttribute("aria-selected", j===i?"true":"false") });
+  vistas.forEach(function(v,j){ v.classList.toggle("on", j===i) });
+  var b=document.querySelector("[data-pie]"), s=document.querySelector("[data-pie-s]");
+  if(b) b.textContent=PIE[i][0];
+  if(s) s.textContent=PIE[i][1];
+}
+function correr(){ if(quieto) return; clearInterval(reloj);
+  reloj=setInterval(function(){ mostrar((act+1)%pasos.length) },5200) }
+pasos.forEach(function(b,i){
+  b.addEventListener("click",function(){ mostrar(i); correr() });
+  b.addEventListener("mouseenter",function(){ clearInterval(reloj) });
+  b.addEventListener("mouseleave",correr);
+});
+if(pasos.length){
+  mostrar(0);
+  /* no gasta bateria mientras nadie lo ve */
+  if(!quieto && "IntersectionObserver" in window){
+    var zona=document.querySelector(".pasos");
+    new IntersectionObserver(function(es){
+      es.forEach(function(e){ e.isIntersecting ? correr() : clearInterval(reloj) });
+    },{threshold:.25}).observe(zona);
+  }
+}
+
+/* ---- 5. el video de Stephy: arranca mudo (es lo unico que deja el navegador) ---- */
+var v=document.getElementById("vid"), s=document.getElementById("snd");
+if(v&&s){
+  if(quieto){ v.removeAttribute("autoplay"); v.pause() } else { v.play().catch(function(){}) }
+  s.addEventListener("click",function(){
+    v.muted=!v.muted; s.classList.toggle("on",!v.muted);
+    s.setAttribute("aria-label", v.muted?"Activar el sonido":"Quitar el sonido");
+    if(!v.muted) v.play().catch(function(){});
+  });
+}
 })();
 </script>
 </body>
