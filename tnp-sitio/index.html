@@ -367,6 +367,19 @@ else{
   revs.forEach(function(el){
     if(el.getBoundingClientRect().top < window.innerHeight) el.classList.add("visto"); else ob.observe(el);
   });
+  /* SEGURO. En una pestaña de segundo plano Chrome congela el pintado y el
+     observador NO entrega nada: la pagina se queda en blanco con todo en
+     opacidad 0. Pasa si alguien abre el enlace con cmd+clic y entra despues.
+     Es el mismo fallo que ya se habia comido los contadores.
+     A los 2.5 s se revela todo pase lo que pase; si el observador si trabajo,
+     esto no cambia nada porque la clase ya esta puesta. */
+  setTimeout(function(){ revs.forEach(function(el){el.classList.add("visto")}) }, 2500);
+  document.addEventListener("visibilitychange",function(){
+    if(document.visibilityState==="visible")
+      revs.forEach(function(el){
+        if(el.getBoundingClientRect().top < window.innerHeight) el.classList.add("visto");
+      });
+  });
 }
 
 /* ---- 2. contadores. El numero de verdad ya esta en el HTML y SIEMPRE vuelve a el:
@@ -396,19 +409,7 @@ var frases=["Nutrióloga con cédula","Comida latina de verdad","Porciones ya me
 var m=document.getElementById("marq");
 if(m){ var una=frases.map(function(f){return "<i>"+f+"</i>"}).join("");
        m.innerHTML=una+una; }           /* dos copias: el bucle no se nota */
-var prods=[["prod-ignite.jpg","Ignite"],["prod-interrupt.jpg","Interrupt"],["prod-perfecto.jpg","Perfect O"],
-           ["prod-vitatotal.jpg","Vita Total"],["prod-skinnytea.jpg","Skinny T"],["prod-hydra.jpg","Hydra"],
-           ["prod-skinnykit.jpg","El Kit"]];
-var mp=document.getElementById("marqProd");
-if(mp){
-  var tarjeta=function(p){
-    return '<a href="/tienda.html" style="flex:none;width:188px;margin-inline:9px;text-decoration:none;color:inherit">'+
-      '<span class="pimg" style="display:block"><img src="/img/'+p[0]+'" alt="'+p[1]+'" loading="lazy"></span>'+
-      '<span style="display:block;font-family:var(--serif);font-weight:700;font-size:13.5px;margin-top:10px">'+p[1]+'</span></a>';
-  };
-  var fila=prods.map(tarjeta).join("");
-  mp.innerHTML=fila+fila;
-}
+/* la marquesina de productos se quito: ahora es la foto de grupo de la linea */
 
 /* ---- 4. los tres pasos: avanzan solos y se pueden tocar ---- */
 var pasos=[].slice.call(document.querySelectorAll(".paso"));
