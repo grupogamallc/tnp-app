@@ -287,12 +287,18 @@ img,video{max-width:100%;display:block}
 /* en escritorio el acomodo va dicho con nombre y no a como caiga */
 @media(min-width:1020px){
   .bento{grid-template-columns:repeat(4,1fr);
-    grid-template-rows:repeat(4,minmax(174px,auto));
+    grid-template-rows:repeat(4,minmax(166px,auto)) minmax(132px,auto);
     grid-template-areas:
       "menu menu peso peso"
       "menu menu peso peso"
       "mov  mov  rec  rec"
-      "mov  mov  renu com"}
+      "mov  mov  rec  rec"
+      "renu renu com  com"}
+  /* en el pie van acostadas: icono a la izquierda, texto a la derecha */
+  .bx.acento{display:grid;grid-template-columns:auto 1fr;gap:2px 20px;align-items:center;padding:24px 26px}
+  .bx.acento .ic{grid-row:1/3}
+  .bx.acento h4{grid-column:2;margin-top:0}
+  .bx.acento p{grid-column:2;max-width:52ch}
   .b-menu{grid-area:menu} .b-mov{grid-area:mov} .b-peso{grid-area:peso}
   .b-renu{grid-area:renu} .b-rec{grid-area:rec}  .b-com{grid-area:com}
 }
@@ -585,16 +591,6 @@ footer .fine{font-size:12px;color:var(--gris);max-width:54ch;line-height:1.6}
 .v-glp1{background:radial-gradient(125% 115% at 50% 0%,#FCFEFB 0%,#E5EEE5 100%)}
 
 /* ---- capsulas del bento que ya no estan vacias ---- */
-.bx.telbx{overflow:hidden;justify-content:flex-end;min-height:248px;
-  background:radial-gradient(125% 125% at 86% 0%,#FFFDF9 0%,var(--blush) 100%)}
-.bx.telbx h4,.bx.telbx p{position:relative;z-index:2}
-.bx.telbx p{max-width:56%}
-.telMini{position:absolute;right:7%;top:20px;bottom:-20%;width:auto;aspect-ratio:430/900;
-  border-radius:17px;overflow:hidden;border:1px solid rgba(31,43,69,.16);
-  box-shadow:0 26px 46px -24px rgba(31,43,69,.65);transition:transform .7s var(--fac)}
-.telMini img{width:100%;height:100%;object-fit:cover;object-position:50% 0;display:block}
-.bx.telbx:hover .telMini{transform:translateY(-7px)}
-@media(max-width:679px){.bx.telbx p{max-width:58%}.telMini{right:5%;top:18px;bottom:-16%}}
 
 .bx.lam{padding:0;overflow:hidden;justify-content:flex-start;
   background:linear-gradient(180deg,#FFFDF9,var(--sup))}
@@ -622,3 +618,25 @@ footer .fine{font-size:12px;color:var(--gris);max-width:54ch;line-height:1.6}
 .cierreTres span{font-family:var(--serif);font-weight:700;letter-spacing:-0.015em;
   font-size:clamp(15px,2.1vw,19px);color:rgba(245,242,235,.9)}
 .cierreTres i{display:block;width:5px;height:5px;border-radius:50%;background:var(--oro)}
+
+
+/* ---- LA LINEA: una sola escena, con el boton encima ----
+   Juan: "pon una imagen de una mujer en una cocina bonita y moderna, los
+   suplementos en el counter de la isla, y sobrepuesto el boton de ver la
+   linea completa". El strip con los cuatro nombres se fue: la tienda es la
+   que tiene que contar los siete, no la portada. */
+.lineaHero{position:relative;margin:clamp(26px,4vw,44px) auto 0;max-width:960px;border-radius:var(--r-l);
+  overflow:hidden;box-shadow:0 46px 90px -52px rgba(var(--sombra),.75);
+  border:1px solid rgba(201,169,106,.4)}
+/* sin aspect-ratio a proposito: la foto se enseña completa. Si se recorta a
+   16/9 se pierde la cara o se pierden los frascos de las orillas. */
+.lineaHero img{width:100%;height:auto;display:block}
+/* velo tenue abajo-izquierda: el boton tiene que pisar firme sin tapar la escena */
+.lineaHero::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top right,rgba(31,43,69,.42) 0%,rgba(31,43,69,.1) 34%,transparent 58%)}
+.lineaHero .btn{position:absolute;z-index:2;left:clamp(18px,3.2vw,40px);bottom:clamp(18px,3.2vw,40px);
+  font-size:clamp(14px,1.5vw,16px);padding:15px 26px}
+@media(max-width:620px){
+  .lineaHero .btn{left:50%;transform:translateX(-50%);bottom:18px;width:calc(100% - 32px);justify-content:center}
+  .lineaHero::after{background:linear-gradient(180deg,transparent 58%,rgba(31,43,69,.45) 100%)}
+}
