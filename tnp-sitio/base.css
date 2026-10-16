@@ -246,7 +246,7 @@ img,video{max-width:100%;display:block}
 
 /* el destacado: el de $79.99 */
 .plan.top{background:linear-gradient(170deg,#16203A 0%,var(--noche) 58%,#121929 100%);
-  border-color:transparent;color:var(--papel);box-shadow:0 40px 80px -42px rgba(22,30,49,.95)}
+  border-color:rgba(201,169,106,.55);color:var(--papel);box-shadow:0 40px 80px -42px rgba(22,30,49,.95)}
 @media(min-width:1060px){.plan.top{transform:scale(1.045);z-index:2}.plan.top:hover{transform:scale(1.045) translateY(-6px)}}
 .plan.top h3{color:var(--papel)}
 .plan.top .tg{color:rgba(245,242,235,.72)}
@@ -257,9 +257,9 @@ img,video{max-width:100%;display:block}
 .plan.top .precio small,.plan.top .aldia{color:rgba(245,242,235,.62)}
 .plan.top .foto::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(22,30,49,.85))}
 .cinta{position:absolute;top:16px;right:16px;z-index:3;display:inline-flex;align-items:center;gap:7px;
-  background:var(--coral);color:var(--tinta);border-radius:999px;padding:7px 14px;
+  background:var(--oro);color:var(--tinta);border-radius:999px;padding:7px 14px;
   font-family:var(--sans);font-weight:800;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
-  box-shadow:0 12px 24px -10px rgba(242,112,91,.9)}
+  box-shadow:0 12px 24px -10px rgba(201,169,106,.9)}
 .cinta svg{width:12px;height:12px}
 .compara{margin-top:26px;font-size:13px;color:var(--gris);text-align:center;max-width:70ch;margin-inline:auto;line-height:1.6}
 
@@ -338,6 +338,52 @@ img,video{max-width:100%;display:block}
 .oscuro .et,.plan.top .et,.clinica .et,
 .oscuro a:hover,.clinica a:hover{color:var(--coral)}
 .oscuro .tg,.clinica .tg,.oscuro .lede,.clinica .lede{color:rgba(245,242,235,.78)}
+/* ============ LA LÍNEA TNP ============
+   El oro es el detalle premium del manual, en dosis chicas. En todo el sitio
+   no se usaba ni una sola vez: estos filetes y la cinta del plan destacado
+   son donde entra. */
+.linea{position:relative}
+.lineaFoto{margin:clamp(26px,4vw,44px) 0 0;border-radius:var(--r-l);overflow:hidden;
+  background:var(--crema);box-shadow:0 40px 90px -58px rgba(var(--sombra),.5);
+  border:1px solid var(--borde)}
+.lineaFoto img{width:100%;height:auto;display:block}
+.roles{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:0;
+  margin:0;border-top:1px solid var(--borde)}
+.roles li{padding:16px 10px 14px;text-align:center;border-bottom:1px solid var(--borde)}
+.roles li:nth-child(odd){border-right:1px solid var(--borde)}
+.roles b{display:block;font-family:var(--serif);font-weight:700;font-size:16px;
+  letter-spacing:-.015em;color:var(--tinta)}
+.roles span{display:block;font-family:var(--sans);font-weight:700;font-size:9.5px;
+  letter-spacing:.17em;text-transform:uppercase;color:var(--oro-tx);margin-top:6px}
+.roles li::after{content:"";display:block;width:22px;height:2px;border-radius:2px;
+  background:var(--oro);margin:9px auto 0;opacity:.85}
+@media(min-width:760px){
+  .roles{grid-template-columns:repeat(4,1fr)}
+  .roles li{border-bottom:0;border-right:1px solid var(--borde)}
+  .roles li:last-child{border-right:0}
+}
+.lineaPie{display:flex;flex-direction:column;align-items:center;gap:16px;margin-top:30px;text-align:center}
+.lineaPie p{font-size:14px;color:var(--gris)}
+.lineaPie p b{color:var(--tinta);font-family:var(--serif);font-weight:700}
+
+/* ============ EL ABANICO DEL CIERRE ============
+   Tres piezas en abanico para que el boton tenga algo que mirar. Es
+   decorativo (aria-hidden) y se queda quieto si el sistema pide menos
+   movimiento. */
+.abanico{position:relative;height:clamp(190px,26vw,260px);margin:0 auto clamp(26px,4vw,40px);
+  width:min(100%,420px);display:flex;align-items:center;justify-content:center}
+.abanico .ab{position:absolute;width:clamp(118px,16vw,156px);aspect-ratio:3/4;
+  border-radius:18px;overflow:hidden;border:1px solid rgba(201,169,106,.5);
+  box-shadow:0 26px 50px -24px rgba(0,0,0,.6);background:var(--noche);
+  transition:transform .55s var(--fac)}
+.abanico .ab img{width:100%;height:100%;object-fit:cover;display:block}
+.abanico .a1{transform:rotate(-9deg) translate(-62%,8px)}
+.abanico .a2{transform:scale(1.1);z-index:2;border-color:var(--oro)}
+.abanico .a3{transform:rotate(9deg) translate(62%,8px)}
+.abanico.visto .a1{transform:rotate(-12deg) translate(-74%,10px)}
+.abanico.visto .a3{transform:rotate(12deg) translate(74%,10px)}
+@media(prefers-reduced-motion:reduce){.abanico .ab{transition:none}}
+
 .cierreAct{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:32px}
 .cierreNota{font-size:12.5px;color:rgba(255,255,255,.6)}
 @media(prefers-reduced-motion:reduce){
