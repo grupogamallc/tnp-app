@@ -8,6 +8,41 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/base.css">
+<style>
+/* Botones de compra en pausa: la página sale en vivo pero sin checkout todavía */
+.btn.prox{opacity:.72;cursor:default;background:transparent;color:var(--gris);box-shadow:inset 0 0 0 1.6px var(--gris-l)}
+.btn.prox svg{width:15px;height:15px}
+.prox-nota{margin-top:16px;text-align:center;font-size:12.5px;color:var(--gris);padding:13px 14px;border:1.4px dashed var(--gris-l);border-radius:14px;line-height:1.45}
+.legalnota{font-style:italic}
+.plan .precio small.uni{color:var(--gris)}
+/* Consulta presencial — bloque holístico */
+.presc{padding-top:6px}
+.presCab{margin-bottom:22px}
+.presCard{display:grid;grid-template-columns:1fr;gap:0;background:var(--sup);border:1px solid var(--borde);border-radius:28px;overflow:hidden;box-shadow:0 24px 60px -36px rgba(var(--sombra),.5)}
+@media(min-width:900px){.presCard{grid-template-columns:1.02fr 1fr}}
+.presFoto{position:relative;min-height:280px}
+.presFoto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.presTx{padding:30px 28px 32px}
+@media(min-width:900px){.presTx{padding:42px 46px}}
+.presBadge{display:inline-flex;align-items:center;gap:7px;font-family:var(--sans);font-weight:800;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--oro-tx);background:rgba(201,169,106,.18);border:1px solid rgba(201,169,106,.5);padding:6px 12px;border-radius:999px}
+.presBadge svg{width:12px;height:12px}
+.presTit{font-family:var(--serif);font-weight:700;font-size:31px;line-height:1.04;margin-top:14px}
+.presTit span{display:block;font-size:17px;color:var(--gris);font-weight:600;margin-top:5px}
+.presLede{font-size:14.5px;color:var(--gris);line-height:1.6;margin-top:14px}
+.presPil{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:20px 0 18px}
+.presPil div{background:#fff;border:1px solid var(--borde);border-radius:13px;padding:12px 11px}
+.presPil b{display:block;font-family:var(--sans);font-size:12.5px;color:var(--tinta)}
+.presPil span{font-size:10.5px;color:var(--gris);line-height:1.38;display:block;margin-top:3px}
+.presInc{list-style:none;display:grid;gap:9px;margin:0 0 22px;padding:0}
+.presInc li{display:flex;gap:10px;align-items:flex-start;font-size:13.8px;line-height:1.45}
+.presInc li svg{flex:none;width:17px;height:17px;margin-top:2px;color:var(--salvia-tx)}
+.presFoot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid var(--borde);padding-top:20px}
+.presFoot .precio{display:flex;align-items:baseline;gap:8px}
+.presFoot .precio b{font-family:var(--serif);font-weight:700;font-size:33px;letter-spacing:-.02em;color:var(--tinta)}
+.presFoot .precio small{font-size:13px;color:var(--gris)}
+.presFoot .btn{padding:14px 28px}
+.presNota{font-size:11px;color:var(--gris);margin-top:14px;line-height:1.5}
+</style>
 <title>TNP · Tu Nuevo Plan</title>
 <meta name="description" content="Tu plan de alimentación armado por una nutrióloga, en tu celular. Elige tu programa, contesta el cuestionario y empieza el mismo día.">
 <meta property="og:title" content="TNP · Tu Nuevo Plan"><meta property="og:description" content="Tu plan de alimentación armado por una nutrióloga, en tu celular.">
@@ -18,8 +53,8 @@
 <div class="bar"><div class="wrap ancho">
   <a class="mark" href="/"><img src="/logo.svg" width="34" height="34" alt=""><b>Tu Nuevo Plan</b></a>
   <nav class="navl">
-    <a href="#programas">Programas</a><a href="#incluye">La app</a>
-    <a href="/tienda.html">Tienda</a><a href="#clinica">Quién está detrás</a>
+    <a href="#programas">Programas</a><a href="#presencial">Presencial</a><a href="#incluye">La app</a>
+    <a href="#tienda">Tienda</a><a href="#clinica">Quién está detrás</a>
   </nav>
   <a class="barCta" href="https://app.tunuevoplan.com/">Cuál es mi plan</a>
 </div></div>
@@ -114,61 +149,154 @@
   </div>
 
   <div class="planes">
+
+    <!-- 1 · DESINFLAMA 10 DÍAS (antes Gut Reset) -->
     <article class="plan rev">
-      <div class="vitrina v-peso"><img src="/img/app-plan.jpg" alt="El Skinny Plan dentro de la app, con tu menú de la semana" loading="lazy"></div>
+      <span class="cinta"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>Empieza aquí</span>
+      <div class="foto"><img src="/img/plan-desinflama.jpg" alt="Desinflama 10 Días" loading="lazy"></div>
       <div class="cuerpo">
-        <p class="et">Si ya lo intentaste antes</p>
-        <h3>Skinny Plan</h3>
-        <p class="tg">Reseteo metabólico y pérdida de peso, con comida latina de verdad.</p>
+        <p class="et">Si te sientes inflamada</p>
+        <h3>Desinflama 10 Días</h3>
+        <p class="tg">Diez días con el menú ya escrito, día por día, para bajar la inflamación y arrancar.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Menú escrito día por día, los 10 días</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Lista de súper incluida</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Para ti si vives con inflamación o digestión lenta</li>
+        </ul>
+        <div class="precio"><b>$39.99</b><small class="uni">pago único</small></div>
+        <p class="aldia">No es suscripción · los 10 días completos</p>
+        <button class="btn fantasma prox" type="button" disabled>Próximamente</button>
+      </div>
+    </article>
+
+    <!-- 2 · PLAN LIGERO (antes Skinny Plan) -->
+    <article class="plan rev r1">
+      <span class="cinta"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>El que más eligen</span>
+      <div class="foto"><img src="/img/plan-ligero.jpg" alt="Plan Ligero" loading="lazy"></div>
+      <div class="cuerpo">
+        <p class="et">Si quieres bajar de peso</p>
+        <h3>Plan Ligero</h3>
+        <p class="tg">Bajar de peso con comida latina de verdad, por porciones. Sin contar calorías y sin pesar nada.</p>
         <ul>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Tus cinco comidas con porciones medidas</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Lista de súper de la semana</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Comida latina, sin contar calorías</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Menús nuevos cada mes</li>
         </ul>
-        <div class="precio"><b>$39.99</b><small>/mes</small></div>
-        <p class="aldia">$1.33 al día</p>
-        <button class="btn fantasma" data-prod="plan_peso" data-nom="Skinny Plan">Empezar</button>
+        <div class="precio"><b>$69.99</b><small>/mes</small></div>
+        <p class="aldia">$2.33 al día</p>
+        <button class="btn fantasma prox" type="button" disabled>Próximamente</button>
       </div>
     </article>
 
-    <article class="plan top rev r2" id="personalizado">
-      <span class="cinta"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>El que más eligen</span>
-      <div class="foto"><img src="/img/stephy.jpg" alt="Stephanie Kantú, la nutrióloga que revisa tu plan" loading="lazy" style="object-position:50% 26%"></div>
+    <!-- 3 · BODY RECOMP (sin cambio de nombre) -->
+    <article class="plan rev r2">
+      <span class="cinta"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>Lo más completo</span>
+      <div class="foto"><img src="/img/plan-recomp.jpg" alt="Body Recomp" loading="lazy"></div>
       <div class="cuerpo">
-        <p class="et">Si tu caso pide algo propio</p>
-        <h3>Personalizado</h3>
-        <p class="tg">El único donde Stephy revisa tu caso antes de que el plan te llegue.</p>
+        <p class="et">Grasa, músculo y forma</p>
+        <h3>Body Recomp</h3>
+        <p class="tg">El único donde Stephy revisa tu caso y aprueba tu plan antes de que te llegue. Comida y entrenamiento en el mismo lugar.</p>
         <ul>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span><b>Todo lo del Skinny Plan</b>, y encima:</span></li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Una nutrióloga con cédula aprueba tu plan antes de entregártelo</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Menopausia, inflamación, glucosa inestable o recomposición</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Se arma alrededor de tus condiciones y tus alergias</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Se recalcula cada mes con lo que sí funcionó</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Stephy revisa y aprueba tu plan</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Comida y entrenamiento en el mismo lugar</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Bajar grasa, marcarte y construir músculo</li>
         </ul>
-        <div class="precio"><b>$79.99</b><small>/mes</small></div>
-        <p class="aldia">$2.66 al día · menos que un café</p>
-        <button class="btn" data-prod="plan_personalizado" data-nom="Personalizado">Quiero el mío<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <div class="precio"><b>$69.99</b><small>/mes</small></div>
+        <p class="aldia">$2.33 al día</p>
+        <button class="btn fantasma prox" type="button" disabled>Próximamente</button>
       </div>
     </article>
 
-    <article class="plan rev r1">
-      <div class="vitrina v-glp1"><img src="/img/app-glp1.jpg" alt="El GLP1 Pro dentro de la app, con porciones para poco apetito" loading="lazy"></div>
+    <!-- 4 · AMIGO GLP-1 (antes GLP1 Pro) -->
+    <article class="plan rev">
+      <span class="cinta"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>Tratamiento GLP-1</span>
+      <div class="foto"><img src="/img/plan-glp1.jpg" alt="Amigo GLP-1" loading="lazy"></div>
       <div class="cuerpo">
-        <p class="et">Si llevas tratamiento GLP-1</p>
-        <h3>GLP1 Pro</h3>
+        <p class="et">Si llevas GLP-1 con tu médico</p>
+        <h3>Amigo GLP-1</h3>
         <p class="tg">Para que lo que bajes sea grasa y no músculo, mientras dura tu tratamiento.</p>
         <ul>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Proteína alta para proteger tu músculo</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Porciones pensadas para poco apetito</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Acompaña a tu médico, no lo reemplaza</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span class="legalnota">Acompaña a tu médico, no lo reemplaza.</span></li>
         </ul>
-        <div class="precio"><b>$59.99</b><small>/mes</small></div>
-        <p class="aldia">$2.00 al día</p>
-        <button class="btn fantasma" data-prod="plan_glp1" data-nom="GLP1 Pro">Empezar</button>
+        <div class="precio"><b>$69.99</b><small>/mes</small></div>
+        <p class="aldia">$2.33 al día</p>
+        <button class="btn fantasma prox" type="button" disabled>Próximamente</button>
       </div>
     </article>
+
+    <!-- 5 · PLENA (antes Meno Smart) -->
+    <article class="plan rev r1">
+      <span class="cinta"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>Menopausia</span>
+      <div class="foto"><img src="/img/plan-plena.jpg" alt="Plena" loading="lazy"></div>
+      <div class="cuerpo">
+        <p class="et">Perimenopausia o menopausia</p>
+        <h3>Plena</h3>
+        <p class="tg">No es para bajar de peso. Es cuidar tu músculo, mantener tu peso y sentirte mejor en esta etapa.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Cuida tu músculo y mantén tu peso</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Para cuando tu cuerpo dejó de responder como antes</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span class="legalnota">Solo para mujeres. No promete nada hormonal.</span></li>
+        </ul>
+        <div class="precio"><b>$69.99</b><small>/mes</small></div>
+        <p class="aldia">$2.33 al día</p>
+        <button class="btn fantasma prox" type="button" disabled>Próximamente</button>
+      </div>
+    </article>
+
+    <!-- 6 · LIFESTYLE (nuevo · sin botón de compra) -->
+    <article class="plan rev r2">
+      <span class="cinta"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>Mantenimiento</span>
+      <div class="foto"><img src="/img/plan-lifestyle.jpg" alt="Lifestyle" loading="lazy"></div>
+      <div class="cuerpo">
+        <p class="et">Para después de tu meta</p>
+        <h3>Lifestyle</h3>
+        <p class="tg">Cuando ya llegaste a tu meta y lo que sigue es no regresar.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Para mantener lo que ya lograste</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Hábitos y menús de mantenimiento</li>
+        </ul>
+        <div class="precio"><b>$39.99</b><small>/mes</small></div>
+        <div class="prox-nota">Se desbloquea cuando terminas tu programa.</div>
+      </div>
+    </article>
+
   </div>
-  <p class="compara">Los tres son ciclos de cuatro semanas que se renuevan cada mes. Puedes cancelar cuando quieras desde la app y el cobro se detiene al siguiente mes.</p>
+  <p class="compara">Desinflama 10 Días es un pago único; los demás son mensuales y se renuevan cada mes. Los botones de compra se activan muy pronto — la página ya está en vivo con todos los programas.</p>
+</div></section>
+
+<!-- ======================= CONSULTA PRESENCIAL ======================= -->
+<section class="sec presc" id="presencial"><div class="wrap ancho">
+  <div class="cab centro rev presCab">
+    <p class="kick">¿La prefieres cara a cara?</p>
+    <h2 class="d2">También en persona,<br>en Dallas.</h2>
+  </div>
+  <div class="presCard rev r1">
+    <div class="presFoto"><img src="/img/plan-presencial.jpg" alt="Consulta presencial con la nutrióloga en el consultorio de Dallas" loading="lazy"></div>
+    <div class="presTx">
+      <span class="presBadge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>Presencial · Dallas, TX</span>
+      <h3 class="presTit">Consulta Presencial<span>Método &ldquo;Skinny Sekret&rdquo;</span></h3>
+      <p class="presLede">Bajar de peso es un proceso de tres dimensiones: <b>cuerpo, mente y espíritu</b>. Una consulta holística, en persona y bilingüe, donde armamos tu plan alrededor de ti — sin dejar de comer comida real.</p>
+      <div class="presPil">
+        <div><b>Cuerpo</b><span>Nutrición de precisión y energía</span></div>
+        <div><b>Mente</b><span>Bloqueos, miedos y hábitos</span></div>
+        <div><b>Espíritu</b><span>Reconstruir tu confianza</span></div>
+      </div>
+      <ul class="presInc">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Evaluación de tu composición corporal</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Plan de nutrición personalizado — sigues comiendo comida real</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Acompañamiento profesional y hábitos sostenibles</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Suplementación profesional opcional</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Atención bilingüe (español e inglés)</li>
+      </ul>
+      <div class="presFoot">
+        <div class="precio"><b>$200</b><small>la consulta</small></div>
+        <button class="btn prox" type="button" disabled>Próximamente</button>
+      </div>
+      <p class="presNota">La consulta presencial es acompañamiento nutricional y no sustituye la atención de tu médico. Los resultados varían.</p>
+    </div>
+  </div>
 </div></section>
 
 <!-- ======================= LO QUE VIENE CONTIGO ======================= -->
@@ -209,28 +337,32 @@
  </div>
 </section>
 
-<!-- ======================= LA LÍNEA TNP ======================= -->
-<!-- Antes esto era una marquesina de frascos que "nada mas caminaba": el ojo
-     no se detiene en nada y no hay razon para comprar. Ahora es una foto de
-     grupo con los nombres legibles y, debajo, el rol de cada frasco — que es
-     el sistema que ya existe en las etiquetas (ENERGIA, CONTROL, DIARIO,
-     ESENCIAL). Los filetes son de oro: el manual lo reserva para el detalle
-     premium, en dosis chicas, y en el sitio no se estaba usando ni una vez. -->
-<section class="sec linea" id="linea"><div class="wrap ancho">
-  <div class="cab centro rev">
-    <p class="kick">La línea TNP</p>
-    <h2 class="d2">Cada frasco<br>tiene un trabajo.</h2>
-    <p class="lede" style="text-align:center">Siete fórmulas propias. Ninguna hace de todo: cada una hace una cosa, y por eso se nota.</p>
+<!-- ======================= LA TIENDA (FARMASI) ======================= -->
+<!-- Los suplementos TNP se quitaron por ahora (decisión de Juan). La tienda del
+     sitio es la tienda de Farmasi de Stephy, externa y en vivo. El botón abre
+     https://www.farmasius.com/stephykantu en una pestaña nueva. -->
+<section class="sec presc" id="tienda"><div class="wrap ancho">
+  <div class="cab centro rev presCab">
+    <p class="kick">La tienda de Stephy</p>
+    <h2 class="d2">Belleza y bienestar,<br>elegidos por Stephy.</h2>
   </div>
-
-  <!-- Antes: la foto de grupo arriba y debajo un strip con los cuatro nombres.
-       Juan: "quita todo eso y solo crea una imagen grande, muy estetica". Queda
-       una sola escena — la cocina, los frascos en la isla — con el boton encima.
-       Los siete siguen a un clic en la tienda. -->
-  <figure class="lineaHero rev r1">
-    <img src="/img/cocina-linea.jpg" alt="Los frascos de la línea TNP en la isla de una cocina">
-    <a class="btn" href="/tienda.html">Ver la línea completa<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-  </figure>
+  <div class="presCard rev r1">
+    <div class="presFoto"><img src="/img/tienda-belleza.jpg" alt="Productos de belleza y bienestar de la tienda de Stephy" loading="lazy"></div>
+    <div class="presTx">
+      <span class="presBadge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.3 6.1L20.5 10l-6.2 1.9L12 18l-2.3-6.1L3.5 10l6.2-1.9z"/></svg>Belleza &amp; Bienestar</span>
+      <h3 class="presTit">La tienda de Stephy<span>Belleza y bienestar · Farmasi</span></h3>
+      <p class="presLede">La selección de Stephy para cuidarte por fuera y por dentro. Skincare, maquillaje y bienestar, en su tienda oficial de Farmasi.</p>
+      <ul class="presInc">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Skincare y cuidado de la piel</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Maquillaje</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Bienestar y cuidado personal</li>
+      </ul>
+      <div class="presFoot">
+        <span class="presNota" style="margin:0;max-width:18ch">Compra directo en la tienda oficial de Stephy.</span>
+        <a class="btn" href="https://www.farmasius.com/stephykantu" target="_blank" rel="noopener noreferrer">Ver la tienda<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+  </div>
 </div></section>
 
 <!-- ======================= QUIÉN ESTÁ DETRÁS ======================= -->
@@ -268,7 +400,7 @@
          arriba. Lo que el boton necesita es la pregunta, no un collage: van
          los tres nombres, que es justo entre lo que hay que elegir. -->
     <div class="cierreTres rev" aria-hidden="true">
-      <span>Skinny Plan</span><i></i><span>Personalizado</span><i></i><span>GLP1 Pro</span>
+      <span>Desinflama 10 Días</span><i></i><span>Plan Ligero</span><i></i><span>Body Recomp</span>
     </div>
 
     <h2 class="d2 rev r1" style="max-width:19ch;margin-inline:auto">¿No sabes cuál es <em>el tuyo</em>?</h2>
@@ -284,7 +416,7 @@
   <div>
     <div class="lks">
       <a href="/">Inicio</a><a href="/#programas">Programas</a><a href="/#incluye">La app</a>
-      <a href="/tienda.html">Tienda</a><a href="/stephy.html">Stephy</a>
+      <a href="/#tienda">Tienda</a><a href="/stephy.html">Stephy</a>
       <a href="/terminos.html">Términos</a><a href="/privacidad.html">Privacidad</a><a href="/reembolsos.html">Reembolsos</a>
       <a href="mailto:info@tunuevoplan.com">info@tunuevoplan.com</a>
     </div>
