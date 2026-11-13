@@ -1184,10 +1184,30 @@ const TPL={
    su menu se genera igual, y para cobrarlos se ofrece Personalizado, que se arma
    alrededor del caso de cada quien. Cuando abra un plan, basta agregarlo aqui. */
 const SITIO="https://tunuevoplan.com";
-const PROG_PROD={PESO:"plan_peso",GLP1:"plan_glp1",PERSONALIZADO:"plan_personalizado"};
+/* Los SEIS programas de Stephy. Cada uno con el id que ya tiene en la base
+   (tabla `productos`, columna `programa`): ahi FUERTE ya es `plan_fuerte` y se
+   llama "Body Recomp", asi que Body Recomp NO es `plan_personalizado`.
+   `plan_personalizado` es otro programa (PERSONALIZADO) y no es de los seis. */
+const PROG_PROD={
+ DESINFLAMAR:"plan_desinflamar",
+ PESO:"plan_peso",
+ FUERTE:"plan_fuerte",
+ GLP1:"plan_glp1",
+ MENOPAUSIA:"plan_menopausia",
+ LIFESTYLE:"plan_lifestyle",
+};
+/* OJO antes de publicar: en Supabase solo estan ACTIVOS plan_peso y plan_glp1.
+   plan_desinflamar, plan_fuerte y plan_menopausia estan INACTIVOS, y
+   plan_lifestyle TODAVIA NO EXISTE. Y los precios de la base siguen en
+   3999/5999/7999: no coinciden con esta escalera. Hasta que Juan los acomode,
+   esos botones no deben completar una compra. */
 const PROD_INFO={
- plan_peso:{n:"Skinny Plan",precio:"$39.99",ancla:"/#programas"},
- plan_glp1:{n:"GLP1 Pro",precio:"$59.99",ancla:"/#programas"},
+ plan_desinflamar:{n:"Desinflama 10 Días",precio:"$39.99",ancla:"/#programas"},
+ plan_peso:{n:"Plan Ligero",precio:"$69.99",ancla:"/#programas"},
+ plan_fuerte:{n:"Body Recomp",precio:"$69.99",ancla:"/#programas"},
+ plan_glp1:{n:"Amigo GLP-1",precio:"$69.99",ancla:"/#programas"},
+ plan_menopausia:{n:"Plena",precio:"$69.99",ancla:"/#programas"},
+ plan_lifestyle:{n:"Lifestyle",precio:"$39.99",ancla:"/#programas"},
  plan_personalizado:{n:"Personalizado",precio:"$79.99",ancla:"/#personalizado"},
 };
 const SUPLE="plan_personalizado";
@@ -1195,22 +1215,51 @@ const SUPLE="plan_personalizado";
    mencionaban apuntan al plan Personalizado mientras no se vendan. */
 const TOP_EN_VENTA=false;
 const progPropio=p=>!!PROG_PROD[p];
-const planDeProg=p=>PROG_PROD[p]||SUPLE;
+/* Antes, un programa sin producto caia en SUPLE (plan_personalizado, $79.99):
+   el usuario terminaba pagando otra cosa sin enterarse. Ahora devuelve null y
+   quien lo use tiene que decidir que hacer. */
+const planDeProg=p=>PROG_PROD[p]||null;
+/* ===== INTERRUPTOR MAESTRO DE LA VENTA =====
+   Mientras VENTA_ABIERTA sea false, NINGUN boton de esta app manda a pagar
+   ni abre un checkout: todos caen en la hoja de "Proximamente". El quiz,
+   los numeros y el menu de 7 dias siguen funcionando completos y gratis.
+   Esta en false porque en Stripe solo estan activos plan_peso y plan_glp1;
+   plan_desinflamar, plan_fuerte y plan_menopausia estan inactivos,
+   plan_lifestyle no existe, y los precios de la base (3999/5999/7999) no
+   coinciden con esta escalera. Cobrar asi le cobraria a la gente el precio
+   equivocado, o el producto equivocado.
+   Cuando Juan acomode los seis productos: poner esto en true. Es el unico
+   cambio necesario — la venta abre completa por los mismos botones. */
+const VENTA_ABIERTA=false;
+function hojaProximamente(){
+ sheet(`<h3>Muy pronto</h3>
+  <div class="sm" style="margin-top:7px">Los programas abren en unos días. Todavía no se puede comprar aquí.</div>
+  <div class="sm" style="margin-top:9px">Lo que ya es tuyo y funciona desde hoy: tus números, tu menú de 7 días y tu seguimiento. Están guardados en este teléfono.</div>
+  <div class="sm" style="margin-top:9px">Te avisamos al correo que nos dejaste en cuanto abra tu programa.</div>
+  <button class="btn solid" style="width:100%;margin-top:14px" data-a="proxOk">Entendido</button>`);
+}
 function irAPlanes(){
+ if(!VENTA_ABIERTA){hojaProximamente();return}
  /* sin programa elegido no se le manda a una tarjeta en particular */
  const prog=S&&S.quiz?S.quiz.prog:null;
- const d=prog?PROD_INFO[planDeProg(prog)]:null;
+ const idp=prog?planDeProg(prog):null;
+ const d=idp?PROD_INFO[idp]:null;
  location.href=SITIO+(d?d.ancla:"/#programas");
 }
 
 const PROG_META={
- PESO:{label:"SKINNY PLAN",adj:-400,gkg:1.4},
- DESINFLAMAR:{label:"GUT RESET",adj:-250,gkg:1.2},
+ PESO:{label:"PLAN LIGERO",adj:-400,gkg:1.4},
+ DESINFLAMAR:{label:"DESINFLAMA 10 DÍAS",adj:-250,gkg:1.2},
  FUERTE:{label:"BODY RECOMP",adj:0,gkg:1.6},
  BALANCE:{label:"GLUCO CONTROL",adj:-250,gkg:1.2},
- GLP1:{label:"GLP1 PRO",adj:-300,gkg:1.5},
+ GLP1:{label:"AMIGO GLP-1",adj:-300,gkg:1.5},
  PERSONALIZADO:{label:"PERSONALIZADO",adj:-300,gkg:1.5},
- MENOPAUSIA:{label:"MENO SMART",adj:-250,gkg:1.6},
+ MENOPAUSIA:{label:"PLENA",adj:-250,gkg:1.6},
+ /* Lifestyle es mantenimiento: no lleva deficit. El motor nuevo lo arma por
+    porciones (nivel de Plan Ligero + 2 almidones + 1 grasa + 1 proteina) y no
+    calcula calorias; estos numeros son solo para la calculadora vieja de la
+    app, que se va a reemplazar por el motor. */
+ LIFESTYLE:{label:"LIFESTYLE",adj:0,gkg:1.2},
 };
 const SLOTS=["Desayuno","Comida","Colación","Cena"];
 const PROG_ICON={
@@ -1405,7 +1454,7 @@ function obRender(){
 function startApp(fromQuiz){
  if(fromQuiz){
   const q=ob.q;
-  if(q.cond.includes("glp1")&&q.prog!=="GLP1")toast("Te pusimos en GLP1 Pro por tu tratamiento");
+  if(q.cond.includes("glp1")&&q.prog!=="GLP1")toast("Te pusimos en Amigo GLP-1 por tu tratamiento");
   if(q.cond.includes("glp1"))q.prog="GLP1";
   q.dislikes=Array.from(new Set((q.dislikes||[]).concat((q.salud&&q.salud.alerg)||[])));
   S={name:(ob.lead&&ob.lead.nombre)||"Tú",quiz:q,goals:calcGoals(q),day:1,streak:0,inicio:hoyISO(),done:[false,false,false,false],swaps:{},acepto:ob.acepto||{v:TERMS_VER,t:new Date().toISOString()}};
@@ -1550,7 +1599,7 @@ function renderHoy(){
      return `<div class="rcard" data-rec="${k}"><div class="rimg"><img src="plato-${k}.jpg" alt="${d.n}" loading="lazy"></div><div class="rbody"><div class="rt">${d.p} g prot · ${d.min} min</div><h4>${d.n}</h4><p>${d.k} kcal</p></div></div>`}).join("")}</div>
     <div class="upCard"><h4>Tu plan personalizado te espera</h4>${TOP_EN_VENTA
      ?`<p>Con la membresía TOP, el generador arma tu menú de cada día — tú solo palomeas. Kit + plan vivo + app.</p><button class="upBtn" data-a="up">Conocer TOP · $129.99/mes</button>`
-     :`<p>El plan Personalizado se arma alrededor de tu cuerpo, tus gustos y tus condiciones. El generador te deja el menú de cada día — tú solo palomeas.</p><button class="upBtn" data-a="up">Ver Personalizado · ${PROD_INFO[SUPLE].precio}/mes</button>`}</div>`;
+     :`<p>El plan Personalizado se arma alrededor de tu cuerpo, tus gustos y tus condiciones. El generador te deja el menú de cada día — tú solo palomeas.</p><button class="upBtn" data-a="up">Ver Personalizado · ${VENTA_ABIERTA?PROD_INFO[SUPLE].precio+"/mes":"muy pronto"}</button>`}</div>`;
  const totalD=28, pct=Math.max(0,Math.min(100,Math.round(S.day/totalD*100)));
  const tsk=S.tasks||(S.tasks={});
  const tareasHTML=TAREAS.map(t=>`<div class="hTask ${tsk[t.k]?'on':''}" data-a="task" data-p="${t.k}">
@@ -1629,18 +1678,18 @@ function renderHoy(){
 
 /* ================== RENDER: PLAN ================== */
 /* Brand Bible: un solo color institucional para todos los programas — prohibido un color por plan */
-const PROG_ACCENT={PESO:"var(--tinta)",DESINFLAMAR:"var(--tinta)",FUERTE:"var(--tinta)",BALANCE:"var(--tinta)",GLP1:"var(--tinta)",PERSONALIZADO:"var(--tinta)",MENOPAUSIA:"var(--tinta)"};
+const PROG_ACCENT={PESO:"var(--tinta)",DESINFLAMAR:"var(--tinta)",FUERTE:"var(--tinta)",BALANCE:"var(--tinta)",GLP1:"var(--tinta)",PERSONALIZADO:"var(--tinta)",MENOPAUSIA:"var(--tinta)",LIFESTYLE:"var(--tinta)"};
 /* ---- Detalle de los planes. PLAN_ORDER decide cuales se muestran ---- */
 const PLAN_INFO={
- PESO:{n:"Skinny Plan",tag:"Reseteo metabólico. Comida real, estructura clara.",precio:"$39.99",
+ PESO:{n:"Plan Ligero",tag:"Reseteo metabólico. Comida real, estructura clara.",precio:"$69.99",
   who:"Para ti si quieres bajar de peso y <b>mantenerlo</b> — con un plan armado, no a punta de fuerza de voluntad.",
   dia:"4 tiempos al día",kit:"Skinny Kit + tus suplementos",
   inc:["Tu menú armado desde el banco de alimentos de Stephy","Porciones definidas: nada que pesar ni contar","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Guía de arranque del programa"]},
- DESINFLAMAR:{n:"Gut Reset",tag:"Menos inflamación. Una digestión que no pesa.",precio:"$39.99",
+ DESINFLAMAR:{n:"Desinflama 10 Días",tag:"Menos inflamación. Una digestión que no pesa.",precio:"$39.99",
   who:"Para ti si vives con inflamación, digestión lenta o te sientes pesado aunque comas sano.",
   dia:"4 tiempos al día",kit:"Skinny Kit + tus suplementos",
   inc:["Menú enfocado en microbiota y digestión","Alimentos que desinflaman, sin cortar grupos completos","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Guía de arranque del programa"]},
- FUERTE:{n:"Body Recomp",tag:"Menos grasa, más músculo. Transforma tu cuerpo.",precio:"$39.99",
+ FUERTE:{n:"Body Recomp",tag:"Menos grasa, más músculo. Transforma tu cuerpo.",precio:"$69.99",
   who:"Para ti si esto no se trata solo del número en la báscula: quieres bajar grasa, marcarte y construir músculo.",
   dia:"4 tiempos al día",kit:"Skinny Kit + tus suplementos",
   inc:["Menú construido alrededor de tu proteína del día","Pensado para acompañar tu entrenamiento","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Guía de arranque del programa"]},
@@ -1649,16 +1698,21 @@ const PLAN_INFO={
   dia:"4 tiempos al día",kit:"Skinny Kit + tus suplementos",
   inc:["Menú que evita los picos de azúcar","Proteína y fibra en cada comida del día","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Guía de arranque del programa"],
   nota:"Acompañamiento nutricional. No es tratamiento médico ni sustituye el control, los estudios ni el medicamento que te indicó tu doctor."},
- GLP1:{n:"GLP1 Pro",tag:"Come bien mientras dura tu tratamiento.",precio:"$59.99",
+ GLP1:{n:"Amigo GLP-1",tag:"Come bien mientras dura tu tratamiento.",precio:"$69.99",
   who:"Para ti si llevas un tratamiento GLP-1 <b>con tu médico</b> y quieres que lo que bajes sea grasa, no músculo.",
   dia:"Porciones suaves, fáciles de tolerar",kit:"Skinny Kit + tus suplementos",
   inc:["Menú fácil de pasar cuando el hambre casi no aparece","Enfocado en que no pierdas músculo","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Guía de arranque del programa"],
   nota:"Acompañamiento nutricional para personas bajo cuidado médico. No sustituye ni reemplaza tu tratamiento."},
- MENOPAUSIA:{n:"Meno Smart",tag:"Peri y menopausia, con un plan que sí entiende tu etapa.",precio:"$59.99",
+ MENOPAUSIA:{n:"Plena",tag:"Peri y menopausia, con un plan que sí entiende tu etapa.",precio:"$69.99",
   who:"Para ti si estás en perimenopausia o menopausia y tu cuerpo dejó de responder como antes.",
   dia:"4 tiempos al día",kit:"Skinny Kit + tus suplementos",
   inc:["Menú que protege músculo y hueso","Calcio y vitamina D desde comida real","Recetas del programa y lista de súper","Intercambios: cambia un alimento sin salirte del plan","Guía de arranque del programa"],
   nota:"Acompañamiento nutricional de la etapa. No es tratamiento de síntomas."},
+ LIFESTYLE:{n:"Lifestyle",tag:"Ya llegaste. Ahora el plan es que se quede.",precio:"$39.99",
+  who:"Para ti si ya bajaste lo que querías y ahora lo que sigue es <b>mantenerlo</b>, sin volver a empezar de cero.",
+  dia:"5 momentos al día",kit:"Skinny Kit + tus suplementos",
+  inc:["Tu mismo plan, con más porciones: ya no estás bajando","Transición de 2 semanas desde el programa que traías","Hasta 2 comidas libres por semana","Revisión mensual con los principios de acompañamiento de Stephy","Recetas, lista de súper e intercambios, como siempre"],
+  nota:"Mantenimiento. Si tu peso se mueve, la app ajusta una porción: tú no calculas nada."},
  PERSONALIZADO:{n:"Personalizado",tag:"Menopausia, inflamación, glucosa o músculo: armado para tu caso.",precio:"$79.99",
   who:"Para ti si quieres el plan más afinado a tu cuerpo, tus gustos y tus condiciones — y para ti si tu caso es menopausia, inflamación, glucosa inestable o recomposición: todo eso se arma aquí, uno por uno, con el método de Stephy.",
   dia:"4 tiempos al día",kit:"Skinny Kit + tus suplementos",
@@ -1669,7 +1723,7 @@ const PLAN_INFO={
                     o     {yt:"ID_DE_YOUTUBE"}   (Short vertical)
    Vacio {} = todavia no hay video: se ve el poster y avisa que esta en grabacion. */
 const VID_POSTER="stephy.jpg";
-const PLAN_VID={PESO:{poster:"pv-peso.jpg",mp4:"vid-peso.mp4"},MENOPAUSIA:{poster:"pv-menopausia.jpg"},GLP1:{poster:"pv-glp1.jpg"},DESINFLAMAR:{poster:"pv-desinflamar.jpg"},BALANCE:{poster:"pv-balance.jpg"},FUERTE:{poster:"pv-fuerte.jpg"},PERSONALIZADO:{poster:"pv-personalizado.jpg"}};
+const PLAN_VID={PESO:{poster:"pv-peso.jpg",mp4:"vid-peso.mp4"},MENOPAUSIA:{poster:"pv-menopausia.jpg"},GLP1:{poster:"pv-glp1.jpg"},DESINFLAMAR:{poster:"pv-desinflamar.jpg"},BALANCE:{poster:"pv-balance.jpg"},FUERTE:{poster:"pv-fuerte.jpg"},PERSONALIZADO:{poster:"pv-personalizado.jpg"},LIFESTYLE:{}};
 const PL_SVG='<svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>';
 function planVidInner(k){
  const v=PLAN_VID[k]||{},p=v.poster||VID_POSTER;
@@ -1686,6 +1740,7 @@ const PLAN_LBL={
  DESINFLAMAR:"Si vives inflamada",
  BALANCE:"Si tu azúcar anda inestable",
  FUERTE:"Si quieres marcarte",
+ LIFESTYLE:"Si ya llegaste a tu meta",
  PERSONALIZADO:"Si tu caso pide algo propio",
 };
 /* Foto vertical de cada programa en la pastilla */
@@ -1693,10 +1748,14 @@ const PLAN_FOTO={
  PESO:"pv-peso.jpg",MENOPAUSIA:"pv-menopausia.jpg",GLP1:"pv-glp1.jpg",
  DESINFLAMAR:"pv-desinflamar.jpg",BALANCE:"pv-balance.jpg",
  FUERTE:"pv-fuerte.jpg",PERSONALIZADO:"pv-personalizado.jpg",
+ /* PENDIENTE: Lifestyle no tiene foto propia todavia. Mientras, la de Stephy. */
+ LIFESTYLE:"stephy.jpg",
 };
-/* Solo los planes en venta. Las fichas de los otros se quedan completas abajo:
-   el dia que abra uno, se agrega aqui y a PROG_PROD y vuelve a aparecer. */
-const PLAN_ORDER=["PESO","GLP1","PERSONALIZADO"];
+/* Los SEIS programas de Stephy, en el mismo orden que el sitio:
+   Desinflama es la entrada, luego los tres de bajar de peso, luego Plena y
+   Lifestyle. GLUCO CONTROL y PERSONALIZADO se quedan fuera: no son de los
+   seis. Sus fichas siguen completas abajo por si se reabren. */
+const PLAN_ORDER=["DESINFLAMAR","PESO","FUERTE","GLP1","MENOPAUSIA","LIFESTYLE"];
 function renderPills(){
  const el=$("wPills"); if(!el) return;
  const CH='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
@@ -1745,7 +1804,7 @@ function renderPlan(){
   body=`<div class="chips">${F.map(f=>`<span class="fchip ${ui.recFilter===f[0]?'on':''}" data-a="filter" data-p="${f[0]}">${f[1]}</span>`).join("")}</div>
    <div class="rgrid">${list.map(([k,d])=>`<div class="rcard" data-rec="${k}"><div class="rimg"><img src="plato-${k}.jpg" alt="${d.n}" loading="lazy"></div><div class="rbody"><div class="rt">${d.p} g prot · ${d.min} min</div><h4>${d.n}</h4><p>${d.k} kcal</p></div></div>`).join("")}</div>`;
  } else if(S.nivel==="app"){
-  body=`<div class="upCard" style="margin-top:16px"><h4>Aún no tienes un plan activo</h4><p>Tu membresía incluye comunidad, videos y recetario. Compra el programa de tu meta para abrir tu menú, tus números y tu seguimiento.</p><button class="upBtn" data-a="up">Ver programas</button></div>
+  body=`<div class="upCard" style="margin-top:16px"><h4>Aún no tienes un plan activo</h4><p>Tu membresía incluye comunidad, videos y recetario. ${VENTA_ABIERTA?"Compra el programa de tu meta":"Los programas abren muy pronto"} para abrir tu menú, tus números y tu seguimiento.</p><button class="upBtn" data-a="up">Ver programas</button></div>
    <div class="secT" style="margin-top:18px"><h3>Recetas para hoy</h3></div>
    <div class="rgrid">${["avenaCr","tacosPo","ensPollo","sopaVer"].map(k=>{const d=DP[k];return `<div class="rcard" data-rec="${k}"><div class="rimg"><img src="plato-${k}.jpg" alt="${d.n}" loading="lazy"></div><div class="rbody"><div class="rt">${d.p} g prot</div><h4>${d.n}</h4><p>${d.k} kcal</p></div>`}).join("")}</div>`;
  } else {
@@ -2100,7 +2159,7 @@ document.body.addEventListener("click",e=>{
  else if(act==="saveProgreso"){const inp=$("iPesoP");const val=inp?KG(inp.value):0;if(val){S.habits.peso=val;pushProgress(val)}save();renderHoy();renderPerfil();$("sheetBg").classList.remove("on");toast("Progreso guardado");if(val)setTimeout(revisarPremios,420)}
  else if(act==="sub"){ui.sub=!ui.sub;renderTienda();toast(ui.sub?"Suscríbete y ahorra activado — 15% off":"Suscripción desactivada")}
  else if(act==="add"){toast(a.dataset.p+" agregado al carrito")}
- else if(act==="buy"){toast("Checkout se conecta con Shopify en Fase 1")}
+ else if(act==="buy"){if(!VENTA_ABIERTA){hojaProximamente();return} toast("Checkout se conecta en Fase 1")}
  else if(act==="abrirCuenta"){accAbrir("entrar");return}
  else if(act==="salirCuenta"){salirCuenta();return}
  else if(act==="verPlanes"){irAPlanes();return}
@@ -2159,6 +2218,7 @@ document.body.addEventListener("click",e=>{
  else if(act==="gratAll"){gratitudTodo()}
  else if(act==="premioVer"){const m=premiosLista().find(x=>x.id===a.dataset.p);if(m)celebrar(m)}
  else if(act==="premioOk"){$("sheetBg").classList.remove("on")}
+ else if(act==="proxOk"){$("sheetBg").classList.remove("on")}
  else if(act==="pdPlay"){
   const k=a.dataset.p,v=PLAN_VID[k]||{},box=a.closest(".pdVid")||a;
   const yav=box.querySelector("video");
