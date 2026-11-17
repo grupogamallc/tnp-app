@@ -1196,11 +1196,20 @@ const PROG_PROD={
  MENOPAUSIA:"plan_menopausia",
  LIFESTYLE:"plan_lifestyle",
 };
-/* OJO antes de publicar: en Supabase solo estan ACTIVOS plan_peso y plan_glp1.
-   plan_desinflamar, plan_fuerte y plan_menopausia estan INACTIVOS, y
-   plan_lifestyle TODAVIA NO EXISTE. Y los precios de la base siguen en
-   3999/5999/7999: no coinciden con esta escalera. Hasta que Juan los acomode,
-   esos botones no deben completar una compra. */
+/* Estado al 17 de noviembre de 2026. LA VENTA ESTA ABIERTA.
+   Los 7 productos estan en Stripe, cuenta "Tu Nuevo Plan"
+   (acct_1UNIfoI9LezkSoCM), en PRODUCCION, cada uno con su lookup key igual
+   al id de aqui (plan_peso, plan_lifestyle, ...), y los 7 price_id de
+   produccion ya estan guardados en productos.stripe_price con activo=true.
+   Las dos llaves de produccion (STRIPE_SECRET_KEY y STRIPE_WEBHOOK_SECRET)
+   estan cargadas en Vercel y redesplegadas.
+   Probado con dinero real el 16 de noviembre: compra -> acceso abierto ->
+   reembolso -> acceso cerrado. El webhook de produccion es
+   we_1UcVJrI9LezkSoCMMPJ5ic41; hay otros dos en la cuenta que NO son este.
+   OJO con lo que el cliente recibe: la nutriologa todavia no valida los dias
+   de menu de Plan Ligero, Lifestyle y Plena, y Body Recomp sale sin videos de
+   ejercicio. Juan lo sabe y decidio abrir los botones igual (17 nov).
+   Para cerrar la venta otra vez: VENTA_ABIERTA = false, una sola linea. */
 const PROD_INFO={
  plan_desinflamar:{n:"Desinflama 10 Días",precio:"$39.99",ancla:"/#programas"},
  plan_peso:{n:"Plan Ligero",precio:"$69.99",ancla:"/#programas"},
@@ -1230,7 +1239,7 @@ const planDeProg=p=>PROG_PROD[p]||null;
    equivocado, o el producto equivocado.
    Cuando Juan acomode los seis productos: poner esto en true. Es el unico
    cambio necesario — la venta abre completa por los mismos botones. */
-const VENTA_ABIERTA=false;
+const VENTA_ABIERTA=true;
 function hojaProximamente(){
  sheet(`<h3>Muy pronto</h3>
   <div class="sm" style="margin-top:7px">Los programas abren en unos días. Todavía no se puede comprar aquí.</div>
